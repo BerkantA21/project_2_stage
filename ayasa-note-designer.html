@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <script src="https://unpkg.com/konva@9.2.0/konva.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>
         KONVA SVG EDIT DEMO
     </title>
@@ -18,33 +19,43 @@
 </head>
 
 <body>
-
     <input type="text" id="circleText">
     <button class="create">gen</button>
+    <button onclick="deleteSelectedCircles()">delete</button>
 
     <div id="container"></div>
 
     <script>
-        // Definieer de breedte en hoogte als de innerWidth en innerHeight van het venster
         const width = window.innerWidth;
         const height = window.innerHeight;
-    
-        // Maak een nieuwe Konva Stage met de container 'container' en de gedefinieerde breedte en hoogte
+
         const stage = new Konva.Stage({
             container: 'container',
             width: width,
             height: height,
         });
-    
-        // Ik maak hier een functie genaamd createCircle.
-        //Ikgebruik hier de cirkel die kasper heeft gemaakt alleen dan met een andere kleur.
+
+        const boundaryLayer = new Konva.Layer();
+        stage.add(boundaryLayer);
+
+        const SOURCE = '/x.svg';
+        Konva.Image.fromURL(SOURCE, (imageNode) => {
+            boundaryLayer.add(imageNode);
+            imageNode.setAttrs({
+                strokeWidth: 1,
+                width: 600,
+                height: 925,
+            });
+            boundaryLayer.draw();
+        });
+
+        const attributeLayer = new Konva.Layer();
+        stage.add(attributeLayer);
+
         function createCircle(text) {
-            // Maak een nieuwe Konva Layer
-            const boundaryLayer = new Konva.Layer({
+            const group = new Konva.Group({
                 draggable: true,
             });
-            // Voeg de gemaakte laag toe aan de stage
-            stage.add(boundaryLayer);
 
             const circle = new Konva.Circle({
                 x: stage.width() / 2,
@@ -68,25 +79,45 @@
                     y: 20 / 2 
                 }
             });
-        
-            boundaryLayer.add(circle);
-            boundaryLayer.add(textNode);
-            boundaryLayer.draw();
-        }
 
-        //hier wordt fucntie geroepen als we op de de gen knop drukken de document.querySelector selecteerd de knop.
-        document.querySelector('.create').addEventListener('click', function() {
-            gen();
-        });
+            group.add(circle);
+            group.add(textNode);
+            attributeLayer.add(group);
+            attributeLayer.draw();
 
-        function gen() {
-            var text = document.getElementById('circleText').value;
-            createCircle(text);
-            const data = stage.toDataURL({
-                pixelRatio: 1
+            group.on('click', function () {
+                const isSelected = circle.stroke() === 'blue';
+                circle.stroke(isSelected ? 'black' : 'blue');
+                attributeLayer.draw();
             });
-            // Doe iets met 'data' als je wilt, zoals het opslaan of weergeven
+
+            group.on('dblclick', function () {
+                group.destroy();
+                attributeLayer.draw();
+            });
         }
-    </script> 
+
+        function deleteSelectedCircles() {
+            const selectedGroups = attributeLayer.getChildren(node => {
+                if (node instanceof Konva.Group) {
+                    const circle = node.getChildren(c => c instanceof Konva.Circle)[0];
+                    return circle.stroke() === 'blue';
+                }
+                return false;
+            });
+
+            selectedGroups.forEach(group => {
+                group.destroy();
+            });
+
+            attributeLayer.draw();
+        }
+
+        document.querySelector('.create').addEventListener('click', function () {
+            const text = document.getElementById('circleText').value;
+            createCircle(text);
+        });
+    </script>
 </body>
+
 </html>
