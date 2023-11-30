@@ -44,16 +44,39 @@
         });
     });
 
+    // Ik maak hier een functie genaamd createCircle.
+    //Ik pak hier de cirkel die kasper heeft gemaakt alleen dan met een andere kleur.
+    function createCircle(){
+        const circle = new Konva.Circle({
+            x: stage.width() / 2,
+            y: stage.height() / 2,
+            radius: 70,
+            draggable: true,
+            fill: 'yellow',
+            stroke: 'black',
+            strokeWidth: 4,
+        });
+
+        //hier tekent hij de cirkel en voegt deze toe aan de boundry layer. 
+        boundaryLayer.add(circle);
+        boundaryLayer.draw();
+    }
+
+    //hier wordt fucntie geroepen als we op de de gen knop drukken de querySelector selecteerd de knop 
+    document.querySelector('button').addEventListener('click', createCircle);
+
+    // kasper cirkel 1
     const circle = new Konva.Circle({
         x: stage.width() / 2,
         y: stage.height() / 2,
         radius: 70,
         draggable: true,
-        fill: 'red',
+        fill: 'blue',
         stroke: 'black',
         strokeWidth: 4,
     });
 
+    //kasper cirkel 2
     const circle2 = new Konva.Circle({
         x: stage.width() / 2,
         y: stage.height() / 2,
