@@ -19,8 +19,10 @@
 
 <body>
 <button onclick="gen()">gen</button>
+<button onclick="deleteSelectedCircles()">delete</button>
 
 <div id="container"></div>
+
 <script>
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -42,8 +44,53 @@
             width: 600,
             height: 925,
         });
-    });
 
+        boundaryLayer.draw(); // Zorg ervoor dat de laag opnieuw wordt getekend na het toevoegen van de afbeelding
+
+    });
+    
+    // De nieuwe functie om een cirkel te maken
+    function createCircle(){
+        const circle = new Konva.Circle({
+            x: stage.width() / 2,
+            y: stage.height() / 2,
+            radius: 70,
+            draggable: true,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+        });
+
+        //voeg de circel toe aan de boundarylayer
+        attributeLayer.add(circle);
+        attributeLayer.draw();
+
+        // Voeg een click eventlistener toe voor het selecteren van de cirkel
+        circle.on('click', function() {
+            const isSelected = circle.stroke() === 'blue';
+            circle.stroke(isSelected ? 'black' : 'blue');
+            attributeLayer.draw();
+        });
+
+
+    }
+
+    // De nieuwe functie om een cirkel te verwijderen
+    function deleteSelectedCircles() {
+            const selectedCircles = attributeLayer.getChildren(node => node.stroke() === 'blue');
+        // Loop door alle geselecteerde cirkels en verwijder ze
+            selectedCircles.forEach(circle => {
+                circle.destroy();
+            });
+
+            attributeLayer.draw();
+        }
+
+    //voeg een eventlistener toe aan de knop
+    document.querySelector('button').addEventListener('click', createCircle);
+
+
+    // Kasper's code
     const circle = new Konva.Circle({
         x: stage.width() / 2,
         y: stage.height() / 2,
@@ -54,6 +101,7 @@
         strokeWidth: 4,
     });
 
+    // Kasper's code
     const circle2 = new Konva.Circle({
         x: stage.width() / 2,
         y: stage.height() / 2,
@@ -64,13 +112,16 @@
         strokeWidth: 4,
     });
 
+    // Kasper's code
     const attributeLayer = new Konva.Layer();
     stage.add(attributeLayer);
 
     attributeLayer.add(circle)
     attributeLayer.add(circle2)
+    attributeLayer.draw();
 
     attributeLayer.zIndex(1)
+    // einde Kasper's code
 
     function gen() {
         const data = stage.toDataURL({
