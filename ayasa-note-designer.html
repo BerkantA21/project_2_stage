@@ -20,10 +20,10 @@
 <body>
 
     <input type="text" id="circleText">
-    <button onclick="gen()">gen</button>
-
+    <button class="create">gen</button>
 
     <div id="container"></div>
+
     <script>
         // Definieer de breedte en hoogte als de innerWidth en innerHeight van het venster
         const width = window.innerWidth;
@@ -36,75 +36,57 @@
             height: height,
         });
     
-        // Maak een nieuwe Konva Layer
-        const boundaryLayer = new Konva.Layer();
-        // Voeg de gemaakte laag toe aan de stage
-        stage.add(boundaryLayer)
-    
-        // Definieer de bron van de SVG afbeelding
-        const SOURCE = '/x.svg';
-        // Laad de SVG afbeelding van de bron URL
-        Konva.Image.fromURL(SOURCE, (imageNode) => {
-            // Voeg de geladen afbeelding toe aan de laag
-            boundaryLayer.add(imageNode);
-            // Stel de attributen van de afbeelding in
-            imageNode.setAttrs({
-                strokeWidth: 1,
-                width: 600,
-                height: 925,
+        // Ik maak hier een functie genaamd createCircle.
+        //Ikgebruik hier de cirkel die kasper heeft gemaakt alleen dan met een andere kleur.
+        function createCircle(text) {
+            // Maak een nieuwe Konva Layer
+            const boundaryLayer = new Konva.Layer({
+                draggable: true,
             });
+            // Voeg de gemaakte laag toe aan de stage
+            stage.add(boundaryLayer);
+
+            const circle = new Konva.Circle({
+                x: stage.width() / 2,
+                y: stage.height() / 2,
+                radius: 70,
+                fill: 'yellow',
+                stroke: 'black',
+                strokeWidth: 4,
+            });
+
+            const textNode = new Konva.Text({
+                x: circle.x(),
+                y: circle.y(),
+                text: text,
+                fontSize: 20,
+                fontFamily: 'Calibri',
+                fill: 'black',
+                align: 'center',
+                offset: {
+                    x: text.length * 10 / 2, 
+                    y: 20 / 2 
+                }
+            });
+        
+            boundaryLayer.add(circle);
+            boundaryLayer.add(textNode);
+            boundaryLayer.draw();
+        }
+
+        //hier wordt fucntie geroepen als we op de de gen knop drukken de document.querySelector selecteerd de knop.
+        document.querySelector('.create').addEventListener('click', function() {
+            gen();
         });
 
-    // Ik maak hier een functie genaamd createCircle.
-    //Ikgebruik hier de cirkel die kasper heeft gemaakt alleen dan met een andere kleur.
-    function createCircle(text){
-    // Verwijder alle kinderen van de boundaryLayer anders maakt hij 2 cirkels aan.
-    boundaryLayer.removeChildren();
-
-
-    const circle = new Konva.Circle({
-        x: stage.width() / 2,
-        y: stage.height() / 2,
-        radius: 70,
-        draggable: true,
-        fill: 'yellow',
-        stroke: 'black',
-        strokeWidth: 4,
-    });
-
-    const textNode = new Konva.Text({
-    x: circle.x(),
-    y: circle.y(),
-    text: text,
-    fontSize: 20,
-    fontFamily: 'Calibri',
-    fill: 'black',
-    align: 'center',
-    offset: {
-        x: text.length * 10 / 2, 
-        y: 20 / 2 
-    }
-});
-    boundaryLayer.add(circle);
-    boundaryLayer.add(textNode);
-    boundaryLayer.draw();
-}
-
-    //hier wordt fucntie geroepen als we op de de gen knop drukken de document.querySelector selecteerd de knop.
-    document.querySelector('button').addEventListener('click', function() {
-    gen();
-});
-
-function gen() {
-    var text = document.getElementById('circleText').value;
-    createCircle(text);
-    const data = stage.toDataURL({
-        pixelRatio: 1
-    });
-    // Doe iets met 'data' als je wilt, zoals het opslaan of weergeven
-}
-        console.log(data)
-    
-</script>
+        function gen() {
+            var text = document.getElementById('circleText').value;
+            createCircle(text);
+            const data = stage.toDataURL({
+                pixelRatio: 1
+            });
+            // Doe iets met 'data' als je wilt, zoals het opslaan of weergeven
+        }
+    </script> 
 </body>
 </html>
