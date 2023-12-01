@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <script src="https://unpkg.com/konva@9.2.0/konva.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>
         KONVA SVG EDIT DEMO
     </title>
@@ -18,34 +19,45 @@
 </head>
 
 <body>
-
     <input type="text" id="circleText">
     <button class="create">gen</button>
+    <button class="delete">delete</button>
 
     <div id="container"></div>
 
     <script>
-        // Definieer de breedte en hoogte als de innerWidth en innerHeight van het venster
         const width = window.innerWidth;
         const height = window.innerHeight;
-    
-        // Maak een nieuwe Konva Stage met de container 'container' en de gedefinieerde breedte en hoogte
+
         const stage = new Konva.Stage({
             container: 'container',
             width: width,
             height: height,
         });
-    
-        // Ik maak hier een functie genaamd createCircle.
-        //Ikgebruik hier de cirkel die kasper heeft gemaakt alleen dan met een andere kleur.
+
+        const boundaryLayer = new Konva.Layer();
+        stage.add(boundaryLayer);
+
+        const SOURCE = '/x.svg';
+        Konva.Image.fromURL(SOURCE, (imageNode) => {
+            boundaryLayer.add(imageNode);
+            imageNode.setAttrs({
+                strokeWidth: 1,
+                width: 600,
+                height: 925,
+            });
+            boundaryLayer.draw();
+        });
+
+        const attributeLayer = new Konva.Layer();
+        stage.add(attributeLayer);
+
         function createCircle(text) {
-            // Maak een nieuwe Konva Layer
-            const boundaryLayer = new Konva.Layer({
+            const group = new Konva.Group({
                 draggable: true,
             });
-            // Voeg de gemaakte laag toe aan de stage
-            stage.add(boundaryLayer);
 
+            //deze code maakt een cirkel aan met de gegeven waardes
             const circle = new Konva.Circle({
                 x: stage.width() / 2,
                 y: stage.height() / 2,
@@ -55,6 +67,7 @@
                 strokeWidth: 4,
             });
 
+            //deze code maakt een text aan met de gegeven waardes
             const textNode = new Konva.Text({
                 x: circle.x(),
                 y: circle.y(),
@@ -68,25 +81,93 @@
                     y: 20 / 2 
                 }
             });
-        
-            boundaryLayer.add(circle);
-            boundaryLayer.add(textNode);
-            boundaryLayer.draw();
+
+            //deze code zorgt ervoor dat de text in het midden van de cirkel komt te staan
+            group.add(circle);
+            group.add(textNode);
+            attributeLayer.add(group);
+            attributeLayer.draw();
+
+            //deze code zorgt ervoor dat je de cirkel kan verwijderen door erop te dubbelklikken
+            group.on('dblclick', function () {
+            // als de circel geslecteerd is, deselecteer hem dan
+            if (isSelected) {
+            isSelected = false;
+            circle.stroke('black');
+            transformer.detach();
+            attributeLayer.draw();
+    }
+            // verwijder daarna de cirkel
+           group.destroy();
+           attributeLayer.draw();
+            });
+
+            // Maak een nieuwe Konva transformer aan
+            const transformer = new Konva.Transformer();
+             attributeLayer.add(transformer);
+
+             //een boolean die kijkt of de cirkel geselecteerd is
+             let isSelected = false;
+
+             //een eventlistener die kijkt of de cirkel geselecteerd is
+                group.on('click', function () {
+                isSelected = !isSelected;
+                circle.stroke(isSelected ? 'blue' : 'black');
+
+                if (isSelected) {
+                    // Voeg de transformer toe aan de cirkel
+                    transformer.attachTo(circle);
+                } else {
+                    // Verwijder de transformer van de cirkel
+                    transformer.detach();
+                }
+
+                attributeLayer.draw();
+            });
         }
 
-        //hier wordt fucntie geroepen als we op de de gen knop drukken de document.querySelector selecteerd de knop.
-        document.querySelector('.create').addEventListener('click', function() {
-            gen();
+        //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
+        function deleteSelectedCircles() {
+            const selectedGroups = attributeLayer.getChildren(node => {
+                if (node instanceof Konva.Group) {
+                const circle = node.getChildren(c => c instanceof Konva.Circle)[0];
+                return circle && circle.stroke() === 'blue';
+        }
+                return false;
+            });
+
+    selectedGroups.forEach(group => {
+        //Deselcteer de cirkel
+        const circle = group.getChildren(c => c instanceof Konva.Circle)[0];
+        circle.stroke('black');
+
+        // Verwijder de transformer van de cirkel
+        const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
+        transformers.forEach(transformer => {
+            if (transformer.node() === circle) {
+                transformer.detach();
+            }
         });
 
-        function gen() {
-            var text = document.getElementById('circleText').value;
+        // verwijder de cirkel
+        group.destroy();
+    });
+
+        attributeLayer.draw();
+}
+        
+        //Hij selecteerd hier de button met de class create en voert de functie createCircle daarmee uit
+        document.querySelector('.create').addEventListener('click', function () {
+            const text = document.getElementById('circleText').value;
             createCircle(text);
-            const data = stage.toDataURL({
-                pixelRatio: 1
-            });
-            // Doe iets met 'data' als je wilt, zoals het opslaan of weergeven
-        }
-    </script> 
+        });
+
+        //Hij selecteerd hier de button met de class delete en voert de functie DeleteSelectedCircles daarmee uit
+        document.querySelector('.delete').addEventListener('click', function () {
+            deleteSelectedCircles();
+        });
+
+    </script>
 </body>
+
 </html>
