@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <script src="https://unpkg.com/konva@9.2.0/konva.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>
         KONVA SVG EDIT DEMO
     </title>
@@ -18,118 +19,105 @@
 </head>
 
 <body>
-<button onclick="gen()">gen</button>
-<button onclick="deleteSelectedCircles()">delete</button>
+    <input type="text" id="circleText">
+    <button class="create">gen</button>
+    <button onclick="deleteSelectedCircles()">delete</button>
 
-<div id="container"></div>
+    <div id="container"></div>
 
-<script>
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    <script>
+        const width = window.innerWidth;
+        const height = window.innerHeight;
 
-    const stage = new Konva.Stage({
-        container: 'container',
-        width: width,
-        height: height,
-    });
-
-    const boundaryLayer = new Konva.Layer();
-    stage.add(boundaryLayer)
-
-    const SOURCE = '/x.svg';
-    Konva.Image.fromURL(SOURCE, (imageNode) => {
-        boundaryLayer.add(imageNode);
-        imageNode.setAttrs({
-            strokeWidth: 1,
-            width: 600,
-            height: 925,
+        const stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height,
         });
 
-        boundaryLayer.draw(); // Zorg ervoor dat de laag opnieuw wordt getekend na het toevoegen van de afbeelding
+        const boundaryLayer = new Konva.Layer();
+        stage.add(boundaryLayer);
 
-    });
-    
-    // De nieuwe functie om een cirkel te maken
-    function createCircle(){
-        const circle = new Konva.Circle({
-            x: stage.width() / 2,
-            y: stage.height() / 2,
-            radius: 70,
-            draggable: true,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
+        const SOURCE = '/x.svg';
+        Konva.Image.fromURL(SOURCE, (imageNode) => {
+            boundaryLayer.add(imageNode);
+            imageNode.setAttrs({
+                strokeWidth: 1,
+                width: 600,
+                height: 925,
+            });
+            boundaryLayer.draw();
         });
 
-        //voeg de circel toe aan de boundarylayer
-        attributeLayer.add(circle);
-        attributeLayer.draw();
+        const attributeLayer = new Konva.Layer();
+        stage.add(attributeLayer);
 
-        // Voeg een click eventlistener toe voor het selecteren van de cirkel
-        circle.on('click', function() {
-            const isSelected = circle.stroke() === 'blue';
-            circle.stroke(isSelected ? 'black' : 'blue');
+        function createCircle(text) {
+            const group = new Konva.Group({
+                draggable: true,
+            });
+
+            const circle = new Konva.Circle({
+                x: stage.width() / 2,
+                y: stage.height() / 2,
+                radius: 70,
+                fill: 'yellow',
+                stroke: 'black',
+                strokeWidth: 4,
+            });
+
+            const textNode = new Konva.Text({
+                x: circle.x(),
+                y: circle.y(),
+                text: text,
+                fontSize: 20,
+                fontFamily: 'Calibri',
+                fill: 'black',
+                align: 'center',
+                offset: {
+                    x: text.length * 10 / 2, 
+                    y: 20 / 2 
+                }
+            });
+
+            group.add(circle);
+            group.add(textNode);
+            attributeLayer.add(group);
             attributeLayer.draw();
-        });
 
+            group.on('click', function () {
+                const isSelected = circle.stroke() === 'blue';
+                circle.stroke(isSelected ? 'black' : 'blue');
+                attributeLayer.draw();
+            });
 
-    }
+            group.on('dblclick', function () {
+                group.destroy();
+                attributeLayer.draw();
+            });
+        }
 
-    // De nieuwe functie om een cirkel te verwijderen
-    function deleteSelectedCircles() {
-            const selectedCircles = attributeLayer.getChildren(node => node.stroke() === 'blue');
-        // Loop door alle geselecteerde cirkels en verwijder ze
-            selectedCircles.forEach(circle => {
-                circle.destroy();
+        function deleteSelectedCircles() {
+            const selectedGroups = attributeLayer.getChildren(node => {
+                if (node instanceof Konva.Group) {
+                    const circle = node.getChildren(c => c instanceof Konva.Circle)[0];
+                    return circle.stroke() === 'blue';
+                }
+                return false;
+            });
+
+            selectedGroups.forEach(group => {
+                group.destroy();
             });
 
             attributeLayer.draw();
         }
 
-    //voeg een eventlistener toe aan de knop
-    document.querySelector('button').addEventListener('click', createCircle);
-
-
-    // Kasper's code
-    const circle = new Konva.Circle({
-        x: stage.width() / 2,
-        y: stage.height() / 2,
-        radius: 70,
-        draggable: true,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 4,
-    });
-
-    // Kasper's code
-    const circle2 = new Konva.Circle({
-        x: stage.width() / 2,
-        y: stage.height() / 2,
-        radius: 70,
-        draggable: true,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 4,
-    });
-
-    // Kasper's code
-    const attributeLayer = new Konva.Layer();
-    stage.add(attributeLayer);
-
-    attributeLayer.add(circle)
-    attributeLayer.add(circle2)
-    attributeLayer.draw();
-
-    attributeLayer.zIndex(1)
-    // einde Kasper's code
-
-    function gen() {
-        const data = stage.toDataURL({
-            pixelRatio: 1
-        })
-
-        console.log(data)
-    }
-</script>
+        document.querySelector('.create').addEventListener('click', function () {
+            const text = document.getElementById('circleText').value;
+            createCircle(text);
+        });
+    </script>
 </body>
+
 </html>
