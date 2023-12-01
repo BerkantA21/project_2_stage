@@ -20,12 +20,15 @@
 
 <body>
     <input type="text" id="circleText">
+    Kies cirkel kleur:<input type="color" role="colorSelect">
+    Kies tekst kleur:<input type="color" role="colorSelect">
     <button class="create">gen</button>
     <button class="delete">delete</button>
 
     <div id="container"></div>
 
-    <script>
+    <script>//begin van de script
+        
         const width = window.innerWidth;
         const height = window.innerHeight;
 
@@ -49,20 +52,59 @@
             boundaryLayer.draw();
         });
 
+        
+        // Define the attributeLayer first
         const attributeLayer = new Konva.Layer();
-        stage.add(attributeLayer);
 
-        function createCircle(text) {
+        
+        
+     // Create the square
+    const square = new Konva.Rect({
+        x: stage.width() / 2 - 450, 
+        y: stage.height() / 2 - 450, 
+        width: 900,
+        height: 900,
+        draggable: false,
+        fill: 'white',
+        stroke: 'black',
+        strokeWidth: 4,
+    });
+
+    const circle = new Konva.Circle({
+        x: stage.width() / 2,
+        y: stage.height() / 2,
+        radius: 300,
+        draggable: false,
+        fill: 'white',
+        stroke: 'black',
+        strokeWidth: 4,
+    });
+
+    // Add the shapes to the attributeLayer
+    attributeLayer.add(square);
+    attributeLayer.add(circle);
+
+    // Draw the layer
+    attributeLayer.draw();
+
+        // Add the attributeLayer to the stage
+        stage.add(attributeLayer);
+        //createCircle is een functie die een cirkel maakt
+        function createCircle(text, colors) {
+            const colorObj = {
+                background: colors[0],
+                text: colors[1],
+            }
+            //const group is een groep die de cirkel en de tekst bevat.
             const group = new Konva.Group({
                 draggable: true,
             });
-
-            //deze code maakt een cirkel aan met de gegeven waardes
+            //const circle is de cirkel die in de groep zit.
             const circle = new Konva.Circle({
                 x: stage.width() / 2,
                 y: stage.height() / 2,
                 radius: 70,
-                fill: 'yellow',
+                fill: colorObj.background,
                 stroke: 'black',
                 strokeWidth: 4,
             });
@@ -74,7 +116,7 @@
                 text: text,
                 fontSize: 20,
                 fontFamily: 'Calibri',
-                fill: 'black',
+                fill: colorObj.text,
                 align: 'center',
                 offset: {
                     x: text.length * 10 / 2, 
@@ -82,62 +124,56 @@
                 }
             });
 
-            //deze code zorgt ervoor dat de text in het midden van de cirkel komt te staan
             group.add(circle);
             group.add(textNode);
             attributeLayer.add(group);
             attributeLayer.draw();
 
-            //deze code zorgt ervoor dat je de cirkel kan verwijderen door erop te dubbelklikken
             group.on('dblclick', function () {
-            // als de circel geslecteerd is, deselecteer hem dan
-            if (isSelected) {
-            isSelected = false;
-            circle.stroke('black');
-            transformer.detach();
-            attributeLayer.draw();
-    }
-            // verwijder daarna de cirkel
-           group.destroy();
+           
+           if (isSelected) {
+           isSelected = false;
+           circle.stroke('black');
+           transformer.detach();
            attributeLayer.draw();
-            });
+   }
+          group.destroy();
+          attributeLayer.draw();
+           });
 
-            // Maak een nieuwe Konva transformer aan
-            const transformer = new Konva.Transformer();
-             attributeLayer.add(transformer);
+           const transformer = new Konva.Transformer();
+            attributeLayer.add(transformer);
 
-             //een boolean die kijkt of de cirkel geselecteerd is
-             let isSelected = false;
+            let isSelected = false;
 
-             //een eventlistener die kijkt of de cirkel geselecteerd is
-                group.on('click', function () {
-                isSelected = !isSelected;
-                circle.stroke(isSelected ? 'blue' : 'black');
+               group.on('click', function () {
+               isSelected = !isSelected;
+               circle.stroke(isSelected ? 'blue' : 'black');
 
-                if (isSelected) {
-                    // Voeg de transformer toe aan de cirkel
-                    transformer.attachTo(circle);
-                } else {
-                    // Verwijder de transformer van de cirkel
-                    transformer.detach();
-                }
-                // update de layer
-                attributeLayer.draw();
-            });
-        }
+               if (isSelected) {
+                   // Voeg de transformer toe aan de cirkel
+                   transformer.attachTo(circle);
+               } else {
+                   // Verwijder de transformer van de cirkel
+                   transformer.detach();
+               }
+               // update de layer.
+               attributeLayer.draw();
+           });
+       }
 
-        //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
+               //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
         function deleteSelectedCircles() {
             const selectedGroups = attributeLayer.getChildren(node => {
                 if (node instanceof Konva.Group) {
-                const circle = node.getChildren(c => c instanceof Konva.Circle)[0];
+            const circle = node.getChildren(c => c instanceof Konva.Circle)[0];
                 return circle && circle.stroke() === 'blue';
-        }
+            }
                 return false;
             });
     // Loop door alle geselecteerde groepen heen
-    selectedGroups.forEach(group => {
-        //Deselcteer de cirkel
+        selectedGroups.forEach(group => {
+    //Deselcteer de cirkel
         const circle = group.getChildren(c => c instanceof Konva.Circle)[0];
         circle.stroke('black');
 
@@ -149,24 +185,31 @@
             }
         });
 
-        // verwijder de cirkel
-        group.destroy();
-    });
-
-        attributeLayer.draw();
-}
-        
-        //Hij selecteerd hier de button met de class create en voert de functie createCircle daarmee uit
-        document.querySelector('.create').addEventListener('click', function () {
-            const text = document.getElementById('circleText').value;
-            createCircle(text);
+            // verwijder de cirkel
+            group.destroy();
         });
 
-        //Hij selecteerd hier de button met de class delete en voert de functie DeleteSelectedCircles daarmee uit
+            attributeLayer.draw();
+        }
+
+        //deze eventlistener luistert naar een click event en voert de functie createCircle uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createCircle.
+        document.querySelector('.create').addEventListener('click', function () {
+            const text = document.getElementById('circleText').value;
+            
+            const colors = Array.from(document.querySelectorAll('[role="colorSelect"]')).map((c) => c.value)
+            const colorObj = {
+                background: colors[0],
+                text: colors[1],
+            }
+
+            console.log(colorObj);
+
+            createCircle(text, colors);
+        });
+
         document.querySelector('.delete').addEventListener('click', function () {
             deleteSelectedCircles();
         });
-
     </script>
 </body>
 
