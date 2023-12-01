@@ -67,7 +67,7 @@
                 strokeWidth: 4,
             });
 
-            //deze code maakt een text aan met de gegeven waardes
+            //deze code maakt de text aan met de gegeven waardes in de cirkel
             const textNode = new Konva.Text({
                 x: circle.x(),
                 y: circle.y(),
@@ -121,7 +121,7 @@
                     // Verwijder de transformer van de cirkel
                     transformer.detach();
                 }
-
+                // update de layer
                 attributeLayer.draw();
             });
         }
@@ -135,7 +135,7 @@
         }
                 return false;
             });
-
+    // Loop door alle geselecteerde groepen heen
     selectedGroups.forEach(group => {
         //Deselcteer de cirkel
         const circle = group.getChildren(c => c instanceof Konva.Circle)[0];
