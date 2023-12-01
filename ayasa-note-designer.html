@@ -20,12 +20,15 @@
 
 <body>
     <input type="text" id="circleText">
+    Kies cirkel kleur:<input type="color" role="colorSelect">
+    Kies tekst kleur:<input type="color" role="colorSelect">
     <button class="create">gen</button>
-    <button onclick="deleteSelectedCircles()">delete</button>
+    <button class="delete">delete</button>
 
     <div id="container"></div>
 
-    <script>
+    <script>//begin van de script
+        
         const width = window.innerWidth;
         const height = window.innerHeight;
 
@@ -52,27 +55,33 @@
         const attributeLayer = new Konva.Layer();
         stage.add(attributeLayer);
 
-        function createCircle(text) {
+        //createCircle is een functie die een cirkel maakt
+        function createCircle(text, colors) {
+            const colorObj = {
+                background: colors[0],
+                text: colors[1],
+            }
+            //const group is een groep die de cirkel en de tekst bevat.
             const group = new Konva.Group({
                 draggable: true,
             });
-
+            //const circle is de cirkel die in de groep zit.
             const circle = new Konva.Circle({
                 x: stage.width() / 2,
                 y: stage.height() / 2,
                 radius: 70,
-                fill: 'yellow',
+                fill: colorObj.background,
                 stroke: 'black',
                 strokeWidth: 4,
             });
-
+            //const textNode is de tekst die in de groep zit.
             const textNode = new Konva.Text({
                 x: circle.x(),
                 y: circle.y(),
                 text: text,
                 fontSize: 20,
                 fontFamily: 'Calibri',
-                fill: 'black',
+                fill: colorObj.text,
                 align: 'center',
                 offset: {
                     x: text.length * 10 / 2, 
@@ -85,6 +94,7 @@
             attributeLayer.add(group);
             attributeLayer.draw();
 
+            //group.on is een eventlistener die luistert naar een click event.
             group.on('click', function () {
                 const isSelected = circle.stroke() === 'blue';
                 circle.stroke(isSelected ? 'black' : 'blue');
@@ -96,7 +106,7 @@
                 attributeLayer.draw();
             });
         }
-
+        //deleteSelectedCircles is een functie die de geselecteerde cirkels verwijderd.
         function deleteSelectedCircles() {
             const selectedGroups = attributeLayer.getChildren(node => {
                 if (node instanceof Konva.Group) {
@@ -112,10 +122,23 @@
 
             attributeLayer.draw();
         }
-
+        //deze eventlistener luistert naar een click event en voert de functie createCircle uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createCircle.
         document.querySelector('.create').addEventListener('click', function () {
             const text = document.getElementById('circleText').value;
-            createCircle(text);
+            
+            const colors = Array.from(document.querySelectorAll('[role="colorSelect"]')).map((c) => c.value)
+            const colorObj = {
+                background: colors[0],
+                text: colors[1],
+            }
+
+            console.log(colorObj);
+
+            createCircle(text, colors);
+        });
+
+        document.querySelector('.delete').addEventListener('click', function () {
+            deleteSelectedCircles();
         });
     </script>
 </body>
