@@ -26,6 +26,11 @@
     <button class="delete">delete</button>
     <button id="save">Save as png</button>
 
+    <input type="text" id="ellipseText">
+    Kies cirkel kleur:<input type="color" role="colorSelectEllipse">
+    Kies tekst kleur:<input type="color" role="colorSelectEllipse">
+    <button class="createEllipse">ellipse</button>
+
     <div id="container"></div>
 
     <script>//begin van de script
@@ -59,7 +64,7 @@
 
         
         
-     // Create the square
+     // Create the square (euer)
     const square = new Konva.Rect({
         x: stage.width() / 2 - 450, 
         y: stage.height() / 2 - 450, 
@@ -233,6 +238,129 @@
         false
       );
       
+        //createEllipse is een functie die een ellipse maakt
+        function createEllipse(text, colors) {
+            const colorObj = {
+                background: colors[0],
+                text: colors[1],
+            }
+            //const group is een groep die de ellipse en de tekst bevat.
+            const group = new Konva.Group({
+                draggable: true,
+            });
+            //const ellipse is de ellipse die in de groep zit.
+            const ellipse = new Konva.Ellipse({
+                x: stage.width() / 2,
+                y: stage.height() / 2,
+                radiusX: 100,
+                radiusY: 50,
+                fill: colorObj.background,
+                stroke: 'black',
+                strokeWidth: 4,
+            });
+            
+
+            //deze code maakt de text aan met de gegeven waardes in de ellipse
+            const textNode = new Konva.Text({
+                x: ellipse.x(),
+                y: ellipse.y(),
+                text: text,
+                fontSize: 20,
+                fontFamily: 'Calibri',
+                fill: colorObj.text,
+                align: 'center',
+                offset: {
+                    x: text.length * 10 / 2, 
+                    y: 20 / 2 
+                }
+            });
+
+            group.add(ellipse);
+            group.add(textNode);
+            attributeLayer.add(group);
+            attributeLayer.draw();
+
+            group.on('dblclick', function () {
+           
+           if (isSelected) {
+           isSelected = false;
+           ellipse.stroke('black');
+           transformer.detach();
+           attributeLayer.draw();
+        }
+            group.destroy();
+            attributeLayer.draw();
+           });
+
+           const transformer = new Konva.Transformer();
+            attributeLayer.add(transformer);
+
+            let isSelected = false;
+
+               group.on('click', function () {
+               isSelected = !isSelected;
+               ellipse.stroke(isSelected ? 'blue' : 'black');
+
+               if (isSelected) {
+                   // Voeg de transformer toe aan de ellipse
+                   transformer.attachTo(ellipse);
+               } else {
+                   // Verwijder de transformer van de ellipse
+                   transformer.detach();
+               }
+               // update de layer.
+               attributeLayer.draw();
+           });
+       }
+
+        //deze functie zorgt ervoor dat je meerdere ellipses tegelijk kan verwijderen
+        function deleteSelectedEllipses() {
+            const selectedGroups = attributeLayer.getChildren(node => {
+                if (node instanceof Konva.Group) {
+            const ellipse = node.getChildren(c => c instanceof Konva.Ellipse)[0];
+                return ellipse && ellipse.stroke() === 'blue';
+            }
+                return false;
+            });
+        // Loop door alle geselecteerde groepen heen
+        selectedGroups.forEach(group => {
+        //Deselcteer de ellipse
+        const ellipse = group.getChildren(c => c instanceof Konva.Ellipse)[0];
+        ellipse.stroke('black');
+
+        // Verwijder de transformer van de ellipse
+        const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
+            transformers.forEach(transformer => {
+                if (transformer.node() === ellipse) {
+                    transformer.detach();
+                }
+            });
+
+            // verwijder de ellipse
+            group.destroy();
+            });
+
+            attributeLayer.draw();
+        }
+
+        //deze eventlistener luistert naar een click event en voert de functie createEllipse uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createEllipse.
+        document.querySelector('.createEllipse').addEventListener('click', function () {
+            const text = document.getElementById('ellipseText').value;
+            
+            const colors = Array.from(document.querySelectorAll('[role="colorSelectEllipse"]')).map((c) => c.value)
+            const colorObj = {
+                background: colors[0],
+                text: colors[1],
+            }
+
+            console.log(colorObj);
+
+            createEllipse(text, colors);
+        });
+
+        document.querySelector('.delete').addEventListener('click', function () {
+            deleteSelectedEllipses();
+        });
 
     </script>
 </body>
