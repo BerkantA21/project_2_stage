@@ -20,6 +20,7 @@
 </head>
 
 <body>
+    
     <div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: -20px; width: 260px; bottom: 0px;">
         <h2>Circle:</h2>
         <div>Tekst: <input type="text" id="circleText"></div>
@@ -74,31 +75,65 @@
         
         
      // Create the square (euer)
-    const square = new Konva.Rect({
-        x: stage.width() / 2 - 450, 
-        y: stage.height() / 2 - 450, 
-        width: 900,
-        height: 900,
-        draggable: false,
-        fill: 'white',
-        stroke: 'black',
-        strokeWidth: 4,
-    });
-    //maak de cirkel (de grote default cirkel)
-    const circle = new Konva.Circle({
-        x: stage.width() / 2,
-        y: stage.height() / 2,
-        radius: 300,
-        draggable: false,
-        fill: 'white',
-        stroke: 'black',
-        strokeWidth: 4,
-    });
+const square = new Konva.Rect({
+    x: stage.width() / 2 - 650, 
+    y: stage.height() / 2 - 450, 
+    width:1400,
+    height: 900,
+    draggable: false,
+    fill: 'white',
+    stroke: 'black',
+    strokeWidth: 4,
+});
+
+//text van cirkel 1
+const text1 = new Konva.Text({
+    x: stage.width() / 2 - 350,
+    y: stage.height() / 2 - 200 - 150, // position it above the circle
+    text: 'Voorkant',
+    fontSize: 30,
+    fontFamily: 'Calibri',
+    fill: 'black',
+    align: 'center', // center the text
+});
+// Create the first circle
+const circle = new Konva.Circle({
+    x: stage.width() / 2 - 290, // move the circle to the left
+    y: stage.height() / 2,
+    radius: 230,
+    draggable: false,
+    fill: 'white',
+    stroke: 'black',
+    strokeWidth: 4,
+});
+
+//text van cirkel 2
+const text2 = new Konva.Text({
+    x: stage.width() / 2 + 330,
+    y: stage.height() / 2 - 200 - 150, // position it above the circle
+    text: 'Achterkant',
+    fontSize: 30,
+    fontFamily: 'Calibri',
+    fill: 'black',
+    align: 'center', // center the text
+});
+// Create the second circle
+const circle2 = new Konva.Circle({
+    x: stage.width() / 2 + 400, // move the circle to the right
+    y: stage.height() / 2,
+    radius: 230,
+    draggable: false,
+    fill: 'white',
+    stroke: 'black',
+    strokeWidth: 4,
+});
 
     // Add the shapes to the attributeLayer
     attributeLayer.add(square);
     attributeLayer.add(circle);
-
+    attributeLayer.add(circle2);
+    attributeLayer.add(text1);
+    attributeLayer.add(text2);
     // Draw the layer
     attributeLayer.draw();
 
@@ -119,7 +154,7 @@
             const circle = new Konva.Circle({
                 x: stage.width() / 2,
                 y: stage.height() / 2,
-                radius: 70,
+                radius: 40,
                 fill: colorObj.background,
                 stroke: 'black',
                 strokeWidth: 4,
