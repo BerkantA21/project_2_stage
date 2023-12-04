@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<head> 
     <script src="https://unpkg.com/konva@9.2.0/konva.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
     <meta charset="utf-8" />
@@ -90,6 +90,14 @@
 
         // Add the attributeLayer to the stage
         stage.add(attributeLayer);
+    //EUer bezig hier
+        stage.on('click', function (event) {
+            if(event.target !== circle) {
+                transformer.detach();
+                attributeLayer.draw();
+            }
+        });
+    //euer einde hier
         //createCircle is een functie die een cirkel maakt
         function createCircle(text, colors) {
             const colorObj = {
@@ -138,8 +146,8 @@
            transformer.detach();
            attributeLayer.draw();
    }
-          group.destroy();
-          attributeLayer.draw();
+            group.destroy();
+            attributeLayer.draw();
            });
 
            const transformer = new Konva.Transformer();
