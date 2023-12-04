@@ -26,8 +26,12 @@
     <button class="delete">delete</button>
     <button id="save">Save as png</button>
 
-    <div id="container"></div>
+    <div id="container">
 
+        <div id="menu" hidden>
+            <button id="sendToBack">Naar achter</button>
+          </div>
+    
     <script>//begin van de script
         
         const width = window.innerWidth;
@@ -54,12 +58,12 @@
         });
 
         
-        // Define the attributeLayer first
+        //maak de layer aan
         const attributeLayer = new Konva.Layer();
 
         
         
-     // Create the square
+     //maak de vierkant
     const square = new Konva.Rect({
         x: stage.width() / 2 - 450, 
         y: stage.height() / 2 - 450, 
@@ -70,7 +74,7 @@
         stroke: 'black',
         strokeWidth: 4,
     });
-
+    //maak de cirkel (de grote default cirkel)
     const circle = new Konva.Circle({
         x: stage.width() / 2,
         y: stage.height() / 2,
@@ -90,7 +94,7 @@
 
         // Add the attributeLayer to the stage
         stage.add(attributeLayer);
-    
+
         //createCircle is een functie die een cirkel maakt
         function createCircle(text, colors) {
             const colorObj = {
@@ -147,10 +151,11 @@
             attributeLayer.add(transformer);
 
             let isSelected = false;
-
-               group.on('click', function () {
-               isSelected = !isSelected;
-               circle.stroke(isSelected ? 'blue' : 'black');
+               group.on('mousedown', function (e) {
+                //kijk of de linkermuisknop is ingedrukt
+                if (e.evt.button === 0) {
+                    isSelected = !isSelected;
+                    circle.stroke(isSelected ? 'blue' : 'black');
 
                if (isSelected) {
                    // Voeg de transformer toe aan de cirkel
@@ -161,7 +166,8 @@
                }
                // update de layer.
                attributeLayer.draw();
-           });
+           }
+        });
        }
 
                //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
