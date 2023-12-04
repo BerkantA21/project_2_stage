@@ -52,9 +52,43 @@
             boundaryLayer.draw();
         });
 
+        
+        // Define the attributeLayer first
         const attributeLayer = new Konva.Layer();
-        stage.add(attributeLayer);
 
+        
+        
+     // Create the square
+    const square = new Konva.Rect({
+        x: stage.width() / 2 - 450, 
+        y: stage.height() / 2 - 450, 
+        width: 900,
+        height: 900,
+        draggable: false,
+        fill: 'white',
+        stroke: 'black',
+        strokeWidth: 4,
+    });
+
+    const circle = new Konva.Circle({
+        x: stage.width() / 2,
+        y: stage.height() / 2,
+        radius: 300,
+        draggable: false,
+        fill: 'white',
+        stroke: 'black',
+        strokeWidth: 4,
+    });
+
+    // Add the shapes to the attributeLayer
+    attributeLayer.add(square);
+    attributeLayer.add(circle);
+
+    // Draw the layer
+    attributeLayer.draw();
+
+        // Add the attributeLayer to the stage
+        stage.add(attributeLayer);
         //createCircle is een functie die een cirkel maakt
         function createCircle(text, colors) {
             const colorObj = {
