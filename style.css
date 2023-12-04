@@ -1,0 +1,28 @@
+.sidebar {
+    height: 100%;
+    width: 200px; /* Increased width */
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding-top: 50px; /* Increased padding-top */
+    background-color: rgb(229, 113, 113);
+    box-shadow: 2px 0px 5px rgba(0,0,0,0.1); /* Added shadow */
+    transition: all 0.3s ease; /* Added transition */
+}
+
+.sidebar div {
+    padding: 16px; /* Increased padding */
+    font-size: 20px; /* Decreased font size for better readability */
+    display: block;
+    transition: all 0.3s ease; /* Added transition */
+}
+
+.sidebar div:hover {
+    background-color: rgba(0,0,0,0.1); /* Added hover effect */
+}
+
+.body-text {
+    margin-left: 210px; /* Increased margin-left to match the increased width of the sidebar */
+    font-size: 18px;
+    padding: 20px; /* Added padding */
+}
