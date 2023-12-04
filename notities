@@ -7,10 +7,10 @@
     - opslaan als json knop
 
 2. canvas opties fixen
-    - dingen achter de orginele cirkel kunnen zetten
+    - dingen achter de orginele cirkel kunnen zetten DONE
     - text in cirkel gecentreerd houden
     - multi element select als een sleep window
-    - select en deselect buiten de cirkel
+    - select en deselect buiten de cirkel DONE
 
 3. importeren van json
     - het inladen van een json bestand die de stage herbouwd

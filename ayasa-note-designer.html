@@ -213,6 +213,15 @@ const circle2 = new Konva.Circle({
                attributeLayer.draw();
            }
         });
+            stage.on('mousedown', function(e) {
+                // Hier kijkt hij of de target niet de cirkel is
+                if (e.target !== circle) {
+                 isSelected = false;
+                    circle.stroke('black');
+                    transformer.detach();
+                    attributeLayer.draw();
+                }
+        });
        }
 
                //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
@@ -298,8 +307,8 @@ const circle2 = new Konva.Circle({
             const ellipse = new Konva.Ellipse({
                 x: stage.width() / 2,
                 y: stage.height() / 2,
-                radiusX: 100,
-                radiusY: 50,
+                radiusX: 80,
+                radiusY: 30,
                 fill: colorObj.background,
                 stroke: 'black',
                 strokeWidth: 4,
@@ -357,6 +366,16 @@ const circle2 = new Konva.Circle({
                // update de layer.
                attributeLayer.draw();
            });
+
+           stage.on('mousedown', function(e) {
+                // Hier kijkt hij of de target niet de ovaal is
+                if (e.target !== ellipse) {
+                 isSelected = false;
+                    ellipse.stroke('black');
+                    transformer.detach();
+                    attributeLayer.draw();
+                }
+            });
        }
 
         //deze functie zorgt ervoor dat je meerdere ellipses tegelijk kan verwijderen
