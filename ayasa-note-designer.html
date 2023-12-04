@@ -4,6 +4,7 @@
 <head> 
     <script src="https://unpkg.com/konva@9.2.0/konva.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
     <meta charset="utf-8" />
     <title>
         KONVA SVG EDIT DEMO
@@ -19,24 +20,28 @@
 </head>
 
 <body>
-    <input type="text" id="circleText">
-    Kies cirkel kleur:<input type="color" role="colorSelect">
-    Kies tekst kleur:<input type="color" role="colorSelect">
-    <button class="create">gen</button>
-    <button class="delete">delete</button>
-    <button id="save">Save as png</button>
+    <div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: -20px; width: 260px; bottom: 0px;">
+        <h2>Circle:</h2>
+        <div>Tekst: <input type="text" id="circleText"></div>
+        <div>Kies cirkel kleur:<input type="color" role="colorSelect"></div>
+        <div>Kies tekst kleur:<input type="color" role="colorSelect"></div>
+        <div><button class="create">Cirkel knop</button></div>
 
-    <input type="text" id="ellipseText">
-    Kies cirkel kleur:<input type="color" role="colorSelectEllipse">
-    Kies tekst kleur:<input type="color" role="colorSelectEllipse">
-    <button class="createEllipse">ellipse</button>
+        <h2>-----------------------------</h2>
+
+        <h2>Ovaal:</h2>
+        <div>Tekst: <input type="text" id="ellipseText"></div>
+        <div>Kies ovaal kleur:<input type="color" role="colorSelectEllipse"></div>
+        <div>Kies tekst kleur:<input type="color" role="colorSelectEllipse"></div>
+        <div><button class="createEllipse">Ovaal knop</button></div>
+
+        <h2>-----------------------------</h2>
+
+        <div><button class="delete">Verwijder</button></div>
+        <div><button id="save">Opslaan als png</button></div>
+    </div>
 
     <div id="container"></div>
-
-        <div id="menu" hidden>
-            <button id="sendToBack">Naar achter</button>
-          </div>
-    
     <script>//begin van de script
         
         const width = window.innerWidth;
@@ -367,6 +372,10 @@
         document.querySelector('.delete').addEventListener('click', function () {
             deleteSelectedEllipses();
         });
+
+        var json = stage.toJSON();
+
+        console.log(json);
 
     </script>
 </body>
