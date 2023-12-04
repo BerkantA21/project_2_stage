@@ -24,6 +24,7 @@
     Kies tekst kleur:<input type="color" role="colorSelect">
     <button class="create">gen</button>
     <button class="delete">delete</button>
+    <button id="save">Save as png</button>
 
     <div id="container"></div>
 
@@ -210,6 +211,28 @@
         document.querySelector('.delete').addEventListener('click', function () {
             deleteSelectedCircles();
         });
+
+        function downloadURI(uri, filename) {
+        var link = document.createElement('a');
+        link.href = uri;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        delete link;
+        }
+
+
+        document.getElementById('save').addEventListener(
+        'click',
+        function () {
+          var dataURL = stage.toDataURL({ pixelRatio: 3 });
+          downloadURI(dataURL, 'stage.png');
+        },
+        false
+      );
+      
+
     </script>
 </body>
 
