@@ -90,14 +90,7 @@
 
         // Add the attributeLayer to the stage
         stage.add(attributeLayer);
-    //EUer bezig hier
-        stage.on('click', function (event) {
-            if(event.target !== circle) {
-                transformer.detach();
-                attributeLayer.draw();
-            }
-        });
-    //euer einde hier
+    
         //createCircle is een functie die een cirkel maakt
         function createCircle(text, colors) {
             const colorObj = {

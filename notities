@@ -1,6 +1,16 @@
-1: we moeten alles kunnen selecteren.
-2: je moet ervoor kunnen zorgan dat je buiten de cirke kan drukken om de geselcteerde cirkel te kunnen deslecteren. Euer bezig
-3: de cirkel een optir geven om van layer te switchen.
-4: maak een side menu.
-5: toevoegen van een ovaal.
-6: text in de cirkel moet in het midden blijven.
+1. maak sidemenu
+    - ovaal toevoegen
+    - cirkel toegeven
+    - kleur selectie
+    - letter input
+    - opslaan als png knop
+    - opslaan als json knop
+
+2. canvas opties fixen
+    - dingen achter de orginele cirkel kunnen zetten
+    - text in cirkel gecentreerd houden
+    - multi element select als een sleep window
+    - select en deselect buiten de cirkel
+
+3. importeren van json
+    - het inladen van een json bestand die de stage herbouwd
