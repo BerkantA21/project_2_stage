@@ -26,6 +26,7 @@
         <div>Kies cirkel kleur:<input type="color" role="colorSelect"></div>
         <div>Kies tekst kleur:<input type="color" role="colorSelect"></div>
         <div><button class="create">Cirkel knop</button></div>
+        <div><button id="ricardo-knop">Ricardo</button></div>
 
         <h2>-----------------------------</h2>
 
@@ -39,6 +40,11 @@
 
         <div><button class="delete">Verwijder</button></div>
         <div><button id="save">Opslaan als png</button></div>
+
+        <button id="export">Exporteren</button><br />
+
+        <input type="file" id="selectFiles" value="Import" /><br />
+        <button id="import">Import</button>
     </div>
 
     <div id="container"></div>
@@ -104,6 +110,15 @@
 
         // Add the attributeLayer to the stage
         stage.add(attributeLayer);
+
+        const createKonvaCircle = (x, y) => new Konva.Circle({
+            x: x,
+            y: y,
+            radius: 70,
+            fill: 'white',
+            stroke: 'black',
+            strokeWidth: 4,
+        });
     
         //createCircle is een functie die een cirkel maakt
         function createCircle(text, colors) {
@@ -114,16 +129,11 @@
             //const group is een groep die de cirkel en de tekst bevat.
             const group = new Konva.Group({
                 draggable: true,
+                exportable: true
             });
+
             //const circle is de cirkel die in de groep zit.
-            const circle = new Konva.Circle({
-                x: stage.width() / 2,
-                y: stage.height() / 2,
-                radius: 70,
-                fill: colorObj.background,
-                stroke: 'black',
-                strokeWidth: 4,
-            });
+            const circle = createConvaCircle(stage.width() / 2, stage.height() / 2);
 
             //deze code maakt de text aan met de gegeven waardes in de cirkel
             const textNode = new Konva.Text({
@@ -237,15 +247,14 @@
         delete link;
         }
 
+      const saveKnop = document.getElementById('save');
 
-        document.getElementById('save').addEventListener(
-        'click',
-        function () {
+      const savePng = () => {
           var dataURL = stage.toDataURL({ pixelRatio: 3 });
           downloadURI(dataURL, 'stage.png');
-        },
-        false
-      );
+      };
+
+      saveKnop.addEventListener('click', savePng);
       
         //createEllipse is een functie die een ellipse maakt
         function createEllipse(text, colors) {
@@ -256,7 +265,9 @@
             //const group is een groep die de ellipse en de tekst bevat.
             const group = new Konva.Group({
                 draggable: true,
+                exportable: true
             });
+            
             //const ellipse is de ellipse die in de groep zit.
             const ellipse = new Konva.Ellipse({
                 x: stage.width() / 2,
@@ -371,10 +382,38 @@
             deleteSelectedEllipses();
         });
 
-        var json = stage.toJSON();
+        document.getElementById('import').onclick = function() {
+            var files = document.getElementById('selectFiles').files;
+            console.log(files);
 
-        console.log(json);
+            if (files.length <= 0) {
+                return false;
+            }
 
+            var fr = new FileReader();
+
+            fr.onload = function(e) { 
+                console.log(e);
+                var result = JSON.parse(e.target.result);
+                var formatted = JSON.stringify(result, null, 2);
+                document.getElementById('result').value = formatted;
+            }
+
+            fr.readAsText(files.item(0));
+        };
+
+        const exportButton = document.getElementById('export');
+        exportButton.addEventListener('click', function () {
+            console.log(
+                attributeLayer.getChildren((node) => {
+                    return node.getClassName() === 'Group';
+
+                    console.log(node);
+                }).map(child => ({
+                    x: child.getAttr('x')
+                }))
+            );
+        });
     </script>
 </body>
 
