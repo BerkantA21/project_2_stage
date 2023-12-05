@@ -26,7 +26,7 @@
         <div>Kies cirkel kleur:<input type="color" role="colorSelect"></div>
         <div>Kies tekst kleur:<input type="color" role="colorSelect"></div>
         <div><button class="create">Cirkel knop</button></div>
-        <div><button id="ricardo-knop">Ricardo</button></div>
+        <button id="export">Exporteren</button><br />
 
         <h2>-----------------------------</h2>
 
@@ -41,14 +41,14 @@
         <div><button class="delete">Verwijder</button></div>
         <div><button id="save">Opslaan als png</button></div>
 
-        <button id="export">Exporteren</button><br />
+
 
         <input type="file" id="selectFiles" value="Import" /><br />
         <button id="import">Import</button>
     </div>
 
     <div id="container"></div>
-    <script>//begin van de script
+    <script>
         
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -61,23 +61,9 @@
 
         const boundaryLayer = new Konva.Layer();
         stage.add(boundaryLayer);
-
-        const SOURCE = '/x.svg';
-        Konva.Image.fromURL(SOURCE, (imageNode) => {
-            boundaryLayer.add(imageNode);
-            imageNode.setAttrs({
-                strokeWidth: 1,
-                width: 600,
-                height: 925,
-            });
-            boundaryLayer.draw();
-        });
-
-        
+       
         // Define the attributeLayer first
-        const attributeLayer = new Konva.Layer();
-
-        
+        const attributeLayer = new Konva.Layer();   
         
      // Create the square (euer)
     const square = new Konva.Rect({
@@ -110,15 +96,6 @@
 
         // Add the attributeLayer to the stage
         stage.add(attributeLayer);
-
-        const createKonvaCircle = (x, y) => new Konva.Circle({
-            x: x,
-            y: y,
-            radius: 70,
-            fill: 'white',
-            stroke: 'black',
-            strokeWidth: 4,
-        });
     
         //createCircle is een functie die een cirkel maakt
         function createCircle(text, colors) {
@@ -133,8 +110,14 @@
             });
 
             //const circle is de cirkel die in de groep zit.
-            const circle = createConvaCircle(stage.width() / 2, stage.height() / 2);
-
+            const circle = new Konva.Circle({
+                x: stage.width() / 2,
+                y: stage.height() / 2,
+                radius: 70,
+                fill: colorObj.background,
+                stroke: 'black',
+                strokeWidth: 4,
+            });
             //deze code maakt de text aan met de gegeven waardes in de cirkel
             const textNode = new Konva.Text({
                 x: circle.x(),
@@ -351,7 +334,7 @@
         // Verwijder de transformer van de ellipse
         const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
             transformers.forEach(transformer => {
-                if (transformer.node() === ellipse) {
+                if (transformer.node() === ellipse) {                 
                     transformer.detach();
                 }
             });
@@ -402,18 +385,40 @@
             fr.readAsText(files.item(0));
         };
 
-        const exportButton = document.getElementById('export');
-        exportButton.addEventListener('click', function () {
-            console.log(
-                attributeLayer.getChildren((node) => {
-                    return node.getClassName() === 'Group';
+const exportButton = document.getElementById('export');
+exportButton.addEventListener('click', function () {
+    console.log(
+        attributeLayer.getChildren((node) => {
+            return node.getClassName() === 'Group';
+        }).map(child => {
+            const shape = child.getChildren((node) => {
+                return (
+                    node.getClassName() === 'Circle' ||
+                    node.getClassName() === 'Ellipse'
+                );
+            })[0];
 
-                    console.log(node);
-                }).map(child => ({
-                    x: child.getAttr('x')
-                }))
-            );
-        });
+            const textNode = child.getChildren((node) => {
+                return node.getClassName() === 'Text';
+            })[0];
+
+            return {
+                x: child.getAttr('x'), // positie
+                y: child.getAttr('y'), // positie
+                radius: shape.getAttr('radius'), // cirkel radius
+                shapeFill: shape.getAttr('fill'),   // vorm kleur
+                text: textNode.getAttr('text'), // tekst
+                fontSize: textNode.getAttr('fontSize'), // tekst grootte
+                fontFamily: textNode.getAttr('fontFamily'), // tekst font
+                textFill: textNode.getAttr('fill'),  // tekst kleur
+                align: textNode.getAttr('align'), // tekst align
+                offset: textNode.getAttr('offset'), // tekst offset
+            };
+        })
+    );
+});
+
+
     </script>
 </body>
 
