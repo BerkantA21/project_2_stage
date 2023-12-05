@@ -89,16 +89,16 @@ const square = new Konva.Rect({
 //text van cirkel 1
 const text1 = new Konva.Text({
     x: stage.width() / 2 - 350,
-    y: stage.height() / 2 - 200 - 150, // position it above the circle
+    y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
     text: 'Voorkant',
     fontSize: 30,
     fontFamily: 'Calibri',
     fill: 'black',
-    align: 'center', // center the text
+    align: 'center', 
 });
 // Create the first circle
 const circle = new Konva.Circle({
-    x: stage.width() / 2 - 290, // move the circle to the left
+    x: stage.width() / 2 - 290, // move de cirkel naar links
     y: stage.height() / 2,
     radius: 230,
     draggable: false,
@@ -110,16 +110,17 @@ const circle = new Konva.Circle({
 //text van cirkel 2
 const text2 = new Konva.Text({
     x: stage.width() / 2 + 330,
-    y: stage.height() / 2 - 200 - 150, // position it above the circle
+    y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
     text: 'Achterkant',
     fontSize: 30,
     fontFamily: 'Calibri',
     fill: 'black',
-    align: 'center', // center the text
+    align: 'center', 
 });
+
 // Create the second circle
 const circle2 = new Konva.Circle({
-    x: stage.width() / 2 + 400, // move the circle to the right
+    x: stage.width() / 2 + 400, // move de cirkel naar rechts
     y: stage.height() / 2,
     radius: 230,
     draggable: false,
@@ -128,7 +129,7 @@ const circle2 = new Konva.Circle({
     strokeWidth: 4,
 });
 
-    // Add the shapes to the attributeLayer
+    // voeg de vormen toe aan de aatributelayer
     attributeLayer.add(square);
     attributeLayer.add(circle);
     attributeLayer.add(circle2);
@@ -180,17 +181,13 @@ const circle2 = new Konva.Circle({
             attributeLayer.add(group);
             attributeLayer.draw();
 
-            group.on('dblclick', function () {
-           
-           if (isSelected) {
-           isSelected = false;
-           circle.stroke('black');
-           transformer.detach();
-           attributeLayer.draw();
-   }
-            group.destroy();
-            attributeLayer.draw();
-           });
+            circle.on('transformend', () => {
+                // Update de positie van de tekst wannneer de cirkel wordt getransformeerd
+                textNode.position({
+                    x: circle.x(),
+                    y: circle.y()
+                });
+            });
 
            const transformer = new Konva.Transformer();
             attributeLayer.add(transformer);
@@ -340,18 +337,13 @@ const circle2 = new Konva.Circle({
             attributeLayer.add(group);
             attributeLayer.draw();
 
-            group.on('dblclick', function () {
-           
-           if (isSelected) {
-           isSelected = false;
-           ellipse.stroke('black');
-           transformer.detach();
-           attributeLayer.draw();
-        }
-            group.destroy();
-            attributeLayer.draw();
-           });
-
+            ellipse.on('transformend', () => {
+                // Update de positie van de tekst wannneer de ovaal wordt getransformeerd
+                textNode.position({
+                    x: ellipse.x(),
+                    y: ellipse.y()
+                });
+            });
            const transformer = new Konva.Transformer();
             attributeLayer.add(transformer);
 
