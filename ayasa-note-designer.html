@@ -213,18 +213,25 @@ const circle2 = new Konva.Circle({
                attributeLayer.draw();
            }
         });
-            stage.on('mousedown', function(e) {
-                // Hier kijkt hij of de target niet de cirkel is
-                if (e.target !== circle) {
-                 isSelected = false;
-                    circle.stroke('black');
-                    transformer.detach();
-                    attributeLayer.draw();
-                }
-        });
-       }
 
-               //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
+        
+
+        stage.on('mousedown', function(e) {
+                // Check if the target is a circle or the parent of the target is a transformer
+            if (e.target instanceof Konva.Circle || e.target.getParent() instanceof Konva.Transformer) {
+                // The circle is already selected or the transformer is active, so don't deselect it
+                return;
+            }
+
+            // Het doel is niet de cirkel of de parent van het doel is een transformer
+            isSelected = false;
+            circle.stroke('black');
+            transformer.detach();
+            attributeLayer.draw();
+        });
+    }
+
+         //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
         function deleteSelectedCircles() {
             const selectedGroups = attributeLayer.getChildren(node => {
                 if (node instanceof Konva.Group) {
@@ -283,7 +290,6 @@ const circle2 = new Konva.Circle({
         delete link;
         }
 
-
         document.getElementById('save').addEventListener(
         'click',
         function () {
@@ -314,7 +320,6 @@ const circle2 = new Konva.Circle({
                 strokeWidth: 4,
             });
             
-
             //deze code maakt de text aan met de gegeven waardes in de ellipse
             const textNode = new Konva.Text({
                 x: ellipse.x(),
@@ -366,16 +371,20 @@ const circle2 = new Konva.Circle({
                // update de layer.
                attributeLayer.draw();
            });
-
            stage.on('mousedown', function(e) {
-                // Hier kijkt hij of de target niet de ovaal is
-                if (e.target !== ellipse) {
-                 isSelected = false;
-                    ellipse.stroke('black');
-                    transformer.detach();
-                    attributeLayer.draw();
-                }
-            });
+                // Check if the target is a Ellipse or the parent of the target is a transformer
+            if (e.target instanceof Konva.Ellipse || e.target.getParent() instanceof Konva.Transformer) {
+                // The Ellipse is already selected or the transformer is active, so don't deselect it
+                return;
+            }
+
+            // Het doel is niet de cirkel of de parent van het doel is een transformer
+            isSelected = false;
+            ellipse.stroke('black');
+            transformer.detach();
+            attributeLayer.draw();
+        });
+    
        }
 
         //deze functie zorgt ervoor dat je meerdere ellipses tegelijk kan verwijderen
