@@ -47,9 +47,8 @@
         <button id="import">Import</button>
     </div>
 
-    <div id="container">
-        <canvas id="result"></canvas>
-    </div>
+    <div id="container"></div>
+
     <script>
         
         const width = window.innerWidth;
@@ -380,21 +379,21 @@ document.getElementById('import').onclick = function() {
         console.log(e);
         var result = JSON.parse(e.target.result);
         var formatted = JSON.stringify(result, null, 2);
-        var resultElement = document.getElementById('result');
-        if (resultElement) {
-            resultElement.value = formatted;
-        } else {
-            console.error("Element met id 'result' niet geveonden.");
-        }
+
+        // TODO make json parse function
+        result.forEach((item) => {
+            console.log(item)
+        });
+
     }
 
     fr.readAsText(files.item(0));
 };
 
-        
 
-const exportButton = document.getElementById('exportButton').addEventListener('click', function () {
+const exportButton = document.getElementById('exportButton');
 
+exportButton.addEventListener('click', function () {
         const data = attributeLayer.getChildren((node) => {
             return node.getClassName() === 'Group';
         }).map(child => {
