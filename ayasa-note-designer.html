@@ -71,60 +71,60 @@
         //maak de layer aan
         const attributeLayer = new Konva.Layer();
         
-     // Create the square (euer)
-const square = new Konva.Rect({
-    x: stage.width() / 2 - 650, 
-    y: stage.height() / 2 - 450, 
-    width:1400,
-    height: 900,
-    draggable: false,
-    fill: 'white',
-    stroke: 'black',
-    strokeWidth: 4,
-});
+            // Create the square (euer)
+        const square = new Konva.Rect({
+            x: stage.width() / 2 - 650, 
+            y: stage.height() / 2 - 450, 
+            width:1400,
+            height: 900,
+            draggable: false,
+            fill: 'white',
+            stroke: 'black',
+            strokeWidth: 4,
+        });
 
-//text van cirkel 1
-const text1 = new Konva.Text({
-    x: stage.width() / 2 - 350,
-    y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
-    text: 'Voorkant',
-    fontSize: 30,
-    fontFamily: 'Calibri',
-    fill: 'black',
-    align: 'center', 
-});
-// Create the first circle
-const circle = new Konva.Circle({
-    x: stage.width() / 2 - 290, // move de cirkel naar links
-    y: stage.height() / 2,
-    radius: 230,
-    draggable: false,
-    fill: 'white',
-    stroke: 'black',
-    strokeWidth: 4,
-});
+        //text van cirkel 1
+        const text1 = new Konva.Text({
+            x: stage.width() / 2 - 350,
+            y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
+            text: 'Voorkant',
+            fontSize: 30,
+            fontFamily: 'Calibri',
+            fill: 'black',
+            align: 'center', 
+        });
+        // Create the first circle
+        const circle = new Konva.Circle({
+            x: stage.width() / 2 - 290, // move de cirkel naar links
+            y: stage.height() / 2,
+            radius: 230,
+            draggable: false,
+            fill: 'white',
+            stroke: 'black',
+            strokeWidth: 4,
+        });
 
-//text van cirkel 2
-const text2 = new Konva.Text({
-    x: stage.width() / 2 + 330,
-    y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
-    text: 'Achterkant',
-    fontSize: 30,
-    fontFamily: 'Calibri',
-    fill: 'black',
-    align: 'center', 
-});
+        //text van cirkel 2
+        const text2 = new Konva.Text({
+            x: stage.width() / 2 + 330,
+            y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
+            text: 'Achterkant',
+            fontSize: 30,
+            fontFamily: 'Calibri',
+            fill: 'black',
+            align: 'center', 
+        });
 
-// Create the second circle
-const circle2 = new Konva.Circle({
-    x: stage.width() / 2 + 400, // move de cirkel naar rechts
-    y: stage.height() / 2,
-    radius: 230,
-    draggable: false,
-    fill: 'white',
-    stroke: 'black',
-    strokeWidth: 4,
-});
+        // Create the second circle
+        const circle2 = new Konva.Circle({
+            x: stage.width() / 2 + 400, // move de cirkel naar rechts
+            y: stage.height() / 2,
+            radius: 230,
+            draggable: false,
+            fill: 'white',
+            stroke: 'black',
+            strokeWidth: 4,
+        });
 
     // voeg de vormen toe aan de aatributelayer
     attributeLayer.add(square);
@@ -251,7 +251,6 @@ const circle2 = new Konva.Circle({
                 transformer.detach();
             }
         });
-
             // verwijder de cirkel
             group.destroy();
         });
@@ -370,14 +369,12 @@ const circle2 = new Konva.Circle({
                 // The Ellipse is already selected or the transformer is active, so don't deselect it
                 return;
             }
-
-            // Het doel is niet de cirkel of de parent van het doel is een transformer
+             // Het doel is niet de cirkel of de parent van het doel is een transformer
             isSelected = false;
             ellipse.stroke('black');
             transformer.detach();
             attributeLayer.draw();
-        });
-    
+         });
        }
 
         //deze functie zorgt ervoor dat je meerdere ellipses tegelijk kan verwijderen
@@ -389,11 +386,11 @@ const circle2 = new Konva.Circle({
             }
                 return false;
             });
-        // Loop door alle geselecteerde groepen heen
-        selectedGroups.forEach(group => {
-        //Deselcteer de ellipse
-        const ellipse = group.getChildren(c => c instanceof Konva.Ellipse)[0];
-        ellipse.stroke('black');
+            // Loop door alle geselecteerde groepen heen
+            selectedGroups.forEach(group => {
+            //Deselcteer de ellipse
+            const ellipse = group.getChildren(c => c instanceof Konva.Ellipse)[0];
+            ellipse.stroke('black');
 
         // Verwijder de transformer van de ellipse
         const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
@@ -434,59 +431,58 @@ const circle2 = new Konva.Circle({
         console.log(json);
 
         let selectionRectangle = null;
-let selectionStarted = false;
+        let selectionStarted = false;
 
-stage.on('mousedown', (e) => {
-    if (e.target instanceof Konva.Circle) {
-        return;
-    }
+        stage.on('mousedown', (e) => {
+            if (e.target instanceof Konva.Circle) {
+                return;
+            }
 
-    const pos = stage.getPointerPosition();
-    selectionStarted = true;
-    selectionRectangle = new Konva.Rect({
-        x: pos.x,
-        y: pos.y,
-        width: 0,
-        height: 0,
-        fill: 'rgba(0,0,255,0.5)'
-    });
-    attributeLayer.add(selectionRectangle);
-});
+            const pos = stage.getPointerPosition();
+            selectionStarted = true;
+            selectionRectangle = new Konva.Rect({
+                x: pos.x,
+                y: pos.y,
+                width: 0,
+                height: 0,
+                fill: 'rgba(0,0,255,0.5)'
+            });
+            attributeLayer.add(selectionRectangle);
+        });
 
-stage.on('mousemove', (e) => {
-    if (!selectionStarted) {
-        return;
-    }
+        stage.on('mousemove', (e) => {
+            if (!selectionStarted) {
+                return;
+            }
 
-    const pos = stage.getPointerPosition();
-    selectionRectangle.width(pos.x - selectionRectangle.x());
-    selectionRectangle.height(pos.y - selectionRectangle.y());
-    attributeLayer.batchDraw();
-});
+            const pos = stage.getPointerPosition();
+            selectionRectangle.width(pos.x - selectionRectangle.x());
+            selectionRectangle.height(pos.y - selectionRectangle.y());
+            attributeLayer.batchDraw();
+        });
 
-stage.on('mouseup', (e) => {
-    if (!selectionStarted) {
-        return;
-    }
-    selectionStarted = false;
+        stage.on('mouseup', (e) => {
+            if (!selectionStarted) {
+                return;
+            }
+            selectionStarted = false;
 
-    // check for circles in the selection rectangle and select them
-    circles.forEach((circle) => {
-        const circlePos = circle.getAbsolutePosition();
-        if (circlePos.x >= selectionRectangle.x() &&
-            circlePos.y >= selectionRectangle.y() &&
-            circlePos.x <= selectionRectangle.x() + selectionRectangle.width() &&
-            circlePos.y <= selectionRectangle.y() + selectionRectangle.height()) {
-            // the circle is in the selection rectangle
-            circle.stroke('blue');
-        }
-    });
+            // check for circles in the selection rectangle and select them
+            circles.forEach((circle) => {
+                const circlePos = circle.getAbsolutePosition();
+                if (circlePos.x >= selectionRectangle.x() &&
+                    circlePos.y >= selectionRectangle.y() &&
+                    circlePos.x <= selectionRectangle.x() + selectionRectangle.width() &&
+                    circlePos.y <= selectionRectangle.y() + selectionRectangle.height()) {
+                    // the circle is in the selection rectangle
+                    circle.stroke('blue');
+                }
+            });
 
-    selectionRectangle.destroy();
-    selectionRectangle = null;
-    attributeLayer.batchDraw();
-});
+            selectionRectangle.destroy();
+            selectionRectangle = null;
+            attributeLayer.batchDraw();
+        });
     </script>
 </body>
-
 </html>
