@@ -26,7 +26,7 @@
         <div>Kies cirkel kleur:<input type="color" role="colorSelect"></div>
         <div>Kies tekst kleur:<input type="color" role="colorSelect"></div>
         <div><button class="create">Cirkel knop</button></div>
-        <button id="export">Exporteren</button><br />
+        <button id="exportButton">Download JSON</button>
 
         <h2>-----------------------------</h2>
 
@@ -47,7 +47,9 @@
         <button id="import">Import</button>
     </div>
 
-    <div id="container"></div>
+    <div id="container">
+        <canvas id="result"></canvas>
+    </div>
     <script>
         
         const width = window.innerWidth;
@@ -145,7 +147,7 @@
            circle.stroke('black');
            transformer.detach();
            attributeLayer.draw();
-   }
+        }
             group.destroy();
             attributeLayer.draw();
            });
@@ -365,30 +367,35 @@
             deleteSelectedEllipses();
         });
 
-        document.getElementById('import').onclick = function() {
-            var files = document.getElementById('selectFiles').files;
-            console.log(files);
+document.getElementById('import').onclick = function() {
+    var files = document.getElementById('selectFiles').files;
 
-            if (files.length <= 0) {
-                return false;
-            }
+    if (files.length <= 0) {
+        return false;
+    }
 
-            var fr = new FileReader();
+    var fr = new FileReader();
 
-            fr.onload = function(e) { 
-                console.log(e);
-                var result = JSON.parse(e.target.result);
-                var formatted = JSON.stringify(result, null, 2);
-                document.getElementById('result').value = formatted;
-            }
+    fr.onload = function(e) {
+        console.log(e);
+        var result = JSON.parse(e.target.result);
+        var formatted = JSON.stringify(result, null, 2);
+        var resultElement = document.getElementById('result');
+        if (resultElement) {
+            resultElement.value = formatted;
+        } else {
+            console.error("Element met id 'result' niet geveonden.");
+        }
+    }
 
-            fr.readAsText(files.item(0));
-        };
+    fr.readAsText(files.item(0));
+};
 
-const exportButton = document.getElementById('export');
-exportButton.addEventListener('click', function () {
-    console.log(
-        attributeLayer.getChildren((node) => {
+        
+
+const exportButton = document.getElementById('exportButton').addEventListener('click', function () {
+
+        const data = attributeLayer.getChildren((node) => {
             return node.getClassName() === 'Group';
         }).map(child => {
             const shape = child.getChildren((node) => {
@@ -414,11 +421,18 @@ exportButton.addEventListener('click', function () {
                 align: textNode.getAttr('align'), // tekst align
                 offset: textNode.getAttr('offset'), // tekst offset
             };
-        })
-    );
+        });
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.json';
+    a.click();
+
+    URL.revokeObjectURL(url);
 });
-
-
     </script>
 </body>
 
