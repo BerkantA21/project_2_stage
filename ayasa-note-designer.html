@@ -102,6 +102,7 @@ const circle = new Konva.Circle({
     fill: 'white',
     stroke: 'black',
     strokeWidth: 4,
+    listening: false,
 });
 
 //text van cirkel 2
@@ -124,6 +125,7 @@ const circle2 = new Konva.Circle({
     fill: 'white',
     stroke: 'black',
     strokeWidth: 4,
+    listening: false,
 });
 
 // voeg de vormen toe aan de aatributelayer
@@ -137,6 +139,8 @@ attributeLayer.draw();
 
 // Add the attributeLayer to the stage
 stage.add(attributeLayer);
+
+let selectedTransformer = null;
 
 //createCircle is een functie die een cirkel maakt
 function createCircle(text, colors) {
@@ -152,7 +156,7 @@ function createCircle(text, colors) {
 
     //const circle is de cirkel die in de groep zit.
     const circle = new Konva.Circle({
-        x: stage.width() / 2,
+        x: stage.width() / 2 +50,
         y: stage.height() / 2,
         radius: 40,
         fill: colorObj.background,
@@ -196,20 +200,24 @@ function createCircle(text, colors) {
     group.on('mousedown', function (e) {
         //kijk of de linkermuisknop is ingedrukt
         if (e.evt.button === 0) {
+            if (selectedTransformer) {
+                // Verwijder de transformer van de huidige geselecteerde vorm
+                selectedTransformer.detach();
+            }
+
             isSelected = !isSelected;
             circle.stroke(isSelected ? 'blue' : 'black');
 
             if (isSelected) {
                 // Voeg de transformer toe aan de cirkel
                 transformer.attachTo(circle);
+                selectedTransformer = transformer;
             } else {
-                // Verwijder de transformer van de cirkel
-                transformer.detach();
+                selectedTransformer = null;
             }
             // update de layer.
             attributeLayer.draw();
         }
-
     });
 
     stage.on('mousedown', function (e) {
@@ -222,10 +230,15 @@ function createCircle(text, colors) {
         // Het doel is niet de cirkel of de parent van het doel is een transformer
         isSelected = false;
         circle.stroke('black');
-        transformer.detach();
+        if (selectedTransformer) {
+            selectedTransformer.detach();
+            selectedTransformer = null;
+        }
         attributeLayer.draw();
     });
 }
+    
+
 
 //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
 function deleteSelectedCircles() {
@@ -292,8 +305,6 @@ document.getElementById('save').addEventListener(
     false
 );
 
-
-
 //createEllipse is een functie die een ellipse maakt
 function createEllipse(text, colors) {
     const colorObj = {
@@ -306,7 +317,7 @@ function createEllipse(text, colors) {
     });
     //const ellipse is de ellipse die in de groep zit.
     const ellipse = new Konva.Ellipse({
-        x: stage.width() / 2,
+        x: stage.width() / 2 + 50,
         y: stage.height() / 2,
         radiusX: 80,
         radiusY: 30,
@@ -343,36 +354,48 @@ function createEllipse(text, colors) {
             y: ellipse.y()
         });
     });
+
     const transformer = new Konva.Transformer();
     attributeLayer.add(transformer);
 
     let isSelected = false;
+    group.on('mousedown', function (e) {
+        //kijk of de linkermuisknop is ingedrukt
+        if (e.evt.button === 0) {
+            if (selectedTransformer) {
+                // Verwijder de transformer van de huidige geselecteerde vorm
+                selectedTransformer.detach();
+            }
 
-    group.on('click', function () {
-        isSelected = !isSelected;
-        ellipse.stroke(isSelected ? 'blue' : 'black');
+            isSelected = !isSelected;
+            ellipse.stroke(isSelected ? 'blue' : 'black');
 
-        if (isSelected) {
-            // Voeg de transformer toe aan de ellipse
-            transformer.attachTo(ellipse);
-        } else {
-            // Verwijder de transformer van de ellipse
-            transformer.detach();
+            if (isSelected) {
+                // Voeg de transformer toe aan de ovaal
+                transformer.attachTo(ellipse);
+                selectedTransformer = transformer;
+            } else {
+                selectedTransformer = null;
+            }
+            // update de layer.
+            attributeLayer.draw();
         }
-        // update de layer.
-        attributeLayer.draw();
     });
 
     stage.on('mousedown', function (e) {
-        // Check if the target is a Ellipse or the parent of the target is a transformer
+        // Check if the target is a ellipse or the parent of the target is a transformer
         if (e.target instanceof Konva.Ellipse || e.target.getParent() instanceof Konva.Transformer) {
-            // The Ellipse is already selected or the transformer is active, so don't deselect it
+            // The ellipse is already selected or the transformer is active, so don't deselect it
             return;
         }
-        // Het doel is niet de cirkel of de parent van het doel is een transformer
+
+        // Het doel is niet de ovaal of de parent van het doel is een transformer
         isSelected = false;
         ellipse.stroke('black');
-        transformer.detach();
+        if (selectedTransformer) {
+            selectedTransformer.detach();
+            selectedTransformer = null;
+        }
         attributeLayer.draw();
     });
 }
