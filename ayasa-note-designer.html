@@ -23,8 +23,8 @@
     <div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: -20px; width: 260px; bottom: 0px;">
         <h2>Circle:</h2>
         <div>Tekst: <input type="text" id="circleText"></div>
-        <div>Kies cirkel kleur:<input type="color" role="colorSelect"></div>
-        <div>Kies tekst kleur:<input type="color" role="colorSelect"></div>
+        <div>Kies cirkel kleur:<input type="color" id="backgroundColor"></div>
+        <div>Kies tekst kleur:<input type="color" id="textColor"></div>
         <div><button class="create">Cirkel knop</button></div>
         <button id="exportButton">Download JSON</button>
 
@@ -97,13 +97,15 @@
 
         // Add the attributeLayer to the stage
         stage.add(attributeLayer);
-    
+   
+        
+        function createCenterCircle(text, textColor, backgroundColor) {
+            createCircle(text, textColor, backgroundColor, x, y);
+        }
+
         //createCircle is een functie die een cirkel maakt
-        function createCircle(text, colors) {
-            const colorObj = {
-                background: colors[0],
-                text: colors[1],
-            }
+        // function createCircle(text, colors) {
+        function createCircle(text, textColor, backgroundColor, x, y) {
             //const group is een groep die de cirkel en de tekst bevat.
             const group = new Konva.Group({
                 draggable: true,
@@ -112,10 +114,10 @@
 
             //const circle is de cirkel die in de groep zit.
             const circle = new Konva.Circle({
-                x: stage.width() / 2,
-                y: stage.height() / 2,
+                x: x,
+                y: y,
                 radius: 70,
-                fill: colorObj.background,
+                fill: backgroundColor,
                 stroke: 'black',
                 strokeWidth: 4,
             });
@@ -126,7 +128,7 @@
                 text: text,
                 fontSize: 20,
                 fontFamily: 'Calibri',
-                fill: colorObj.text,
+                fill: textColor,
                 align: 'center',
                 offset: {
                     x: text.length * 10 / 2, 
@@ -205,16 +207,13 @@
         //deze eventlistener luistert naar een click event en voert de functie createCircle uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createCircle.
         document.querySelector('.create').addEventListener('click', function () {
             const text = document.getElementById('circleText').value;
-            
-            const colors = Array.from(document.querySelectorAll('[role="colorSelect"]')).map((c) => c.value)
-            const colorObj = {
-                background: colors[0],
-                text: colors[1],
-            }
+            const backgroundColor = document.getElementById('backgroundColor').value;
+            const textColor = document.getElementById('textColor').value;
+            const x = stage.width() / 2;
+            const y = stage.height() / 2;
 
-            console.log(colorObj);
 
-            createCircle(text, colors);
+            createCircle(text, textColor, backgroundColor, x, y);
         });
 
         document.querySelector('.delete').addEventListener('click', function () {
@@ -381,6 +380,7 @@ document.getElementById('import').onclick = function() {
         var formatted = JSON.stringify(result, null, 2);
 
         // TODO make json parse function
+
         result.forEach((item) => {
             console.log(item)
         });
@@ -411,14 +411,9 @@ exportButton.addEventListener('click', function () {
             return {
                 x: child.getAttr('x'), // positie
                 y: child.getAttr('y'), // positie
-                radius: shape.getAttr('radius'), // cirkel radius
                 shapeFill: shape.getAttr('fill'),   // vorm kleur
                 text: textNode.getAttr('text'), // tekst
-                fontSize: textNode.getAttr('fontSize'), // tekst grootte
-                fontFamily: textNode.getAttr('fontFamily'), // tekst font
                 textFill: textNode.getAttr('fill'),  // tekst kleur
-                align: textNode.getAttr('align'), // tekst align
-                offset: textNode.getAttr('offset'), // tekst offset
             };
         });
     const json = JSON.stringify(data, null, 2);
