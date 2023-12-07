@@ -375,7 +375,50 @@ function createEllipse(text, colors) {
         attributeLayer.draw();
     });
 }
+    
+    let selectedShapes = [];
+    
+    // Controleer welke cirkels zijn geselecteerd
+    circles.forEach((circle) => {
+        if (circle.stroke() === 'blue') {
+            selectedShapes.push(circle);
+        }
+    });
 
+    // Controleer welke ovalen zijn geselecteerd
+    ellipses.forEach((ellipse) => {
+        if (ellipse.stroke() === 'blue') {
+            selectedShapes.push(ellipse);
+        }
+    });
+
+    // Maak een nieuwe laag
+    let layer = new Konva.Layer();
+
+    // Voeg de laag toe aan de stage
+    stage.add(layer);
+
+    // Maak een nieuwe groep
+    let group = new Konva.Group({
+        draggable: true
+    });
+
+    // Voeg de groep toe aan de laag
+    layer.add(group);
+
+    
+    // Voeg geselecteerde objecten toe aan de groep
+    selectedShapes.forEach((shape) => {
+    shape.draggable(false); // Schakel draggable uit voor individuele vormen
+    group.add(shape);
+});
+
+// Maak de groep draggable
+group.draggable(true);
+
+    // Teken de laag opnieuw om de wijzigingen te laten zien
+    layer.draw();
+    
 //deze functie zorgt ervoor dat je meerdere ellipses tegelijk kan verwijderen
 function deleteSelectedEllipses() {
     const selectedGroups = attributeLayer.getChildren(node => {
@@ -479,11 +522,8 @@ stage.on('mouseup', (e) => {
         }
     });
 
-
     // check voor alle ellipses of ze in de selectie rechthoek zitten en verander de kleur naar blauw
     ellipses.forEach((ellipse) => {
-        console.log(ellipse);
-
         const ellipsePos = ellipse.getAbsolutePosition();
         if (ellipsePos.x >= selectionRectangle.x() &&
             ellipsePos.y >= selectionRectangle.y() &&
@@ -491,6 +531,19 @@ stage.on('mouseup', (e) => {
             ellipsePos.y <= selectionRectangle.y() + selectionRectangle.height()) {
             // de ellipse zit in de selectie rechthoek
             ellipse.stroke('blue');
+        }
+    });
+
+    // Vul de selectedShapes array met de geselecteerde vormen
+    let selectedShapes = [];
+    circles.forEach((circle) => {
+        if (circle.stroke() === 'blue') {
+            selectedShapes.push(circle);
+        }
+    });
+    ellipses.forEach((ellipse) => {
+        if (ellipse.stroke() === 'blue') {
+            selectedShapes.push(ellipse);
         }
     });
 
