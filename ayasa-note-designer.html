@@ -55,6 +55,10 @@
 const width = window.innerWidth;
 const height = window.innerHeight;
 
+let circles = []; // globale array voor de cirkels
+let ellipses = []; // globale array voor de ellipses
+let selectedShapes = [];// globale array voor de geselecteerde vormen
+
 const stage = new Konva.Stage({
     container: 'container',
     width: width,
@@ -134,8 +138,6 @@ attributeLayer.draw();
 // Add the attributeLayer to the stage
 stage.add(attributeLayer);
 
-let circles = []; // globale array voor de cirkels
-
 
 //createCircle is een functie die een cirkel maakt
 function createCircle(text, colors) {
@@ -179,7 +181,7 @@ function createCircle(text, colors) {
     attributeLayer.add(group);
     attributeLayer.draw();
     circles.push(circle);
-
+    
     circle.on('transformend', () => {
         // Update de positie van de tekst wannneer de cirkel wordt getransformeerd
         textNode.position({
@@ -208,6 +210,7 @@ function createCircle(text, colors) {
             // update de layer.
             attributeLayer.draw();
         }
+
     });
 
     stage.on('mousedown', function (e) {
@@ -264,8 +267,6 @@ document.querySelector('.create').addEventListener('click', function () {
         text: colors[1],
     }
 
-    console.log(colorObj);
-
     createCircle(text, colors);
 });
 
@@ -292,7 +293,7 @@ document.getElementById('save').addEventListener(
     false
 );
 
-let ellipses = []; // globale array voor de ellipses
+
 
 //createEllipse is een functie die een ellipse maakt
 function createEllipse(text, colors) {
@@ -362,6 +363,7 @@ function createEllipse(text, colors) {
         // update de layer.
         attributeLayer.draw();
     });
+
     stage.on('mousedown', function (e) {
         // Check if the target is a Ellipse or the parent of the target is a transformer
         if (e.target instanceof Konva.Ellipse || e.target.getParent() instanceof Konva.Transformer) {
@@ -376,21 +378,6 @@ function createEllipse(text, colors) {
     });
 }
     
-    let selectedShapes = [];
-    
-    // Controleer welke cirkels zijn geselecteerd
-    circles.forEach((circle) => {
-        if (circle.stroke() === 'blue') {
-            selectedShapes.push(circle);
-        }
-    });
-
-    // Controleer welke ovalen zijn geselecteerd
-    ellipses.forEach((ellipse) => {
-        if (ellipse.stroke() === 'blue') {
-            selectedShapes.push(ellipse);
-        }
-    });
 
     // Maak een nieuwe laag
     let layer = new Konva.Layer();
@@ -406,13 +393,12 @@ function createEllipse(text, colors) {
     // Voeg de groep toe aan de laag
     layer.add(group);
 
-    
     // Voeg geselecteerde objecten toe aan de groep
     selectedShapes.forEach((shape) => {
     shape.draggable(false); // Schakel draggable uit voor individuele vormen
     group.add(shape);
 });
-
+console.log(selectedShapes);
 // Maak de groep draggable
 group.draggable(true);
 
@@ -459,7 +445,7 @@ document.querySelector('.createEllipse').addEventListener('click', function () {
         text: colors[1],
     }
 
-    console.log(colorObj);
+    
 
     createEllipse(text, colors);
 });
@@ -470,10 +456,11 @@ document.querySelector('.delete').addEventListener('click', function () {
 
 var json = stage.toJSON();
 
-console.log(json);
+//console.log(json);
 
 let selectionRectangle = null;
 let selectionStarted = false;
+
 
 // Deze code zorgt ervoor dat je meerdere cirkels tegelijk kan selecteren
 stage.on('mousedown', (e) => {
@@ -534,23 +521,43 @@ stage.on('mouseup', (e) => {
         }
     });
 
-    // Vul de selectedShapes array met de geselecteerde vormen
-    let selectedShapes = [];
     circles.forEach((circle) => {
         if (circle.stroke() === 'blue') {
             selectedShapes.push(circle);
         }
     });
+
     ellipses.forEach((ellipse) => {
         if (ellipse.stroke() === 'blue') {
             selectedShapes.push(ellipse);
         }
     });
 
+    
     selectionRectangle.destroy();
     selectionRectangle = null;
     attributeLayer.batchDraw();
 });
+
+
+function updateSelectedShapes() {
+    // Leeg de selectedShapes array
+    selectedShapes = [];
+
+    // Controleer welke cirkels zijn geselecteerd
+    circles.forEach((circle) => {
+        if (circle.stroke() === 'blue') {
+            selectedShapes.push(circle);
+        }
+    });
+
+    // Controleer welke ovalen zijn geselecteerd
+    ellipses.forEach((ellipse) => {
+        if (ellipse.stroke() === 'blue') {
+            selectedShapes.push(ellipse);
+        }
+    });
+}
 </script>
 </body>
 </html>
