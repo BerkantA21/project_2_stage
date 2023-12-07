@@ -26,7 +26,7 @@
         <div>Kies cirkel kleur:<input type="color" id="backgroundColor"></div>
         <div>Kies tekst kleur:<input type="color" id="textColor"></div>
         <div><button class="create">Cirkel knop</button></div>
-        <button id="exportButton">Download JSON</button>
+
 
         <h2>-----------------------------</h2>
 
@@ -43,8 +43,9 @@
 
 
 
-        <input type="file" id="selectFiles" value="Import" /><br />
-        <button id="import">Import</button>
+        <div><input type="file" id="selectFiles" value="Import" /></div>
+        <div><button id="import">Import</button></div>
+        <div><button id="exportButton">Download JSON</button></div>
     </div>
 
     <div id="container"></div>
@@ -100,7 +101,7 @@
    
         
         function createCenterCircle(text, textColor, backgroundColor) {
-            createCircle(text, textColor, backgroundColor, x, y);
+            createCircle(text, textColor, backgroundColor, stage.width() / 2, stage.height() / 2);
         }
 
         //createCircle is een functie die een cirkel maakt
@@ -143,15 +144,15 @@
 
             group.on('dblclick', function () {
            
-           if (isSelected) {
-           isSelected = false;
-           circle.stroke('black');
-           transformer.detach();
-           attributeLayer.draw();
-        }
+            if (isSelected) {
+            isSelected = false;
+            circle.stroke('black');
+            transformer.detach();
+            attributeLayer.draw();
+            }
             group.destroy();
             attributeLayer.draw();
-           });
+            });
 
            const transformer = new Konva.Transformer();
             attributeLayer.add(transformer);
@@ -209,11 +210,7 @@
             const text = document.getElementById('circleText').value;
             const backgroundColor = document.getElementById('backgroundColor').value;
             const textColor = document.getElementById('textColor').value;
-            const x = stage.width() / 2;
-            const y = stage.height() / 2;
-
-
-            createCircle(text, textColor, backgroundColor, x, y);
+            createCenterCircle(text, textColor, backgroundColor);
         });
 
         document.querySelector('.delete').addEventListener('click', function () {
@@ -366,6 +363,7 @@
 
 document.getElementById('import').onclick = function() {
     var files = document.getElementById('selectFiles').files;
+    var reader = new FileReader();
 
     if (files.length <= 0) {
         return false;
@@ -381,7 +379,7 @@ document.getElementById('import').onclick = function() {
         // TODO make json parse function
         createCircle(result[0].text, result[0].textFill, result[0].shapeFill, result[0].x, result[0].y);
         createEllipse(result[1].text, result[1].textFill, result[1].shapeFill, result[1].x, result[1].y, result[1].radiusX, result[1].radiusY);
-        
+
         result.forEach((item) => {
             console.log(item)
         });
