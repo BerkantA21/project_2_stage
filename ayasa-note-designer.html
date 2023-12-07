@@ -56,7 +56,7 @@ const width = window.innerWidth;
 const height = window.innerHeight;
 
 let circles = []; // globale array voor de cirkels
-let ellipses = []; // globale array voor de ellipses
+let ellipses = []; // globale array voor de ovalen
 let selectedShapes = [];// globale array voor de geselecteerde vormen
 
 const stage = new Konva.Stage({
@@ -137,7 +137,6 @@ attributeLayer.draw();
 
 // Add the attributeLayer to the stage
 stage.add(attributeLayer);
-
 
 //createCircle is een functie die een cirkel maakt
 function createCircle(text, colors) {
@@ -378,7 +377,6 @@ function createEllipse(text, colors) {
     });
 }
     
-
     // Maak een nieuwe laag
     let layer = new Konva.Layer();
 
@@ -398,7 +396,7 @@ function createEllipse(text, colors) {
     shape.draggable(false); // Schakel draggable uit voor individuele vormen
     group.add(shape);
 });
-console.log(selectedShapes);
+
 // Maak de groep draggable
 group.draggable(true);
 
@@ -492,11 +490,14 @@ stage.on('mousemove', (e) => {
 });
 
 stage.on('mouseup', (e) => {
+    console.log('mouseup event handler called');
     if (!selectionStarted) {
         return;
     }
     selectionStarted = false;
 
+    selectedShapes = [];
+    
     // check voor alle cirkels of ze in de selectie rechthoek zitten en verander de kleur naar blauw
     circles.forEach((circle) => {
         const circlePos = circle.getAbsolutePosition();
@@ -533,12 +534,12 @@ stage.on('mouseup', (e) => {
         }
     });
 
-    
     selectionRectangle.destroy();
     selectionRectangle = null;
     attributeLayer.batchDraw();
-});
 
+    console.log('selectedShapes:', selectedShapes);  
+});
 
 function updateSelectedShapes() {
     // Leeg de selectedShapes array
@@ -558,6 +559,37 @@ function updateSelectedShapes() {
         }
     });
 }
+
+let lastDragPoint;
+//deze code zorgt ervoor dat je meerdere cirkels tegelijk kan verplaatsen
+stage.on('dragstart', (e) => {
+    lastDragPoint = stage.getPointerPosition();
+});
+
+stage.on('dragmove', (e) => {
+    if (!lastDragPoint) {
+        return;
+    }
+
+    const currentDragPoint = stage.getPointerPosition();
+    const dx = currentDragPoint.x - lastDragPoint.x;
+    const dy = currentDragPoint.y - lastDragPoint.y;
+
+    selectedShapes.forEach((shape) => {
+        const shapePos = shape.getPosition();
+        shape.setPosition({
+            x: shapePos.x + dx,
+            y: shapePos.y + dy
+        });
+    });
+
+    lastDragPoint = currentDragPoint;
+    stage.batchDraw();
+});
+
+stage.on('dragend', (e) => {
+    lastDragPoint = null;
+});
 </script>
 </body>
 </html>
