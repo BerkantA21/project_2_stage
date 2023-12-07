@@ -32,8 +32,8 @@
 
         <h2>Ovaal:</h2>
         <div>Tekst: <input type="text" id="ellipseText"></div>
-        <div>Kies ovaal kleur:<input type="color" role="colorSelectEllipse"></div>
-        <div>Kies tekst kleur:<input type="color" role="colorSelectEllipse"></div>
+        <div>Kies ovaal kleur:<input type="color" id="EllipseBackgroundColor"></div>
+        <div>Kies tekst kleur:<input type="color" id="EllipseTextColor"></div>
         <div><button class="createEllipse">Ovaal knop</button></div>
 
         <h2>-----------------------------</h2>
@@ -238,13 +238,14 @@
       };
 
       saveKnop.addEventListener('click', savePng);
+
+        function createCenterEllipse(text, textColor, backgroundColor) {
+            createEllipse(text, textColor, backgroundColor, x, y, radiusX, radiusY);
+        }
       
         //createEllipse is een functie die een ellipse maakt
-        function createEllipse(text, colors) {
-            const colorObj = {
-                background: colors[0],
-                text: colors[1],
-            }
+        function createEllipse(text, textColor, backgroundColor, x, y, radiusX, radiusY) {
+
             //const group is een groep die de ellipse en de tekst bevat.
             const group = new Konva.Group({
                 draggable: true,
@@ -253,11 +254,11 @@
             
             //const ellipse is de ellipse die in de groep zit.
             const ellipse = new Konva.Ellipse({
-                x: stage.width() / 2,
-                y: stage.height() / 2,
+                x: x,
+                y: y,
                 radiusX: 100,
                 radiusY: 50,
-                fill: colorObj.background,
+                fill: backgroundColor,
                 stroke: 'black',
                 strokeWidth: 4,
             });
@@ -270,7 +271,7 @@
                 text: text,
                 fontSize: 20,
                 fontFamily: 'Calibri',
-                fill: colorObj.text,
+                fill: textColor,
                 align: 'center',
                 offset: {
                     x: text.length * 10 / 2, 
@@ -349,16 +350,14 @@
         //deze eventlistener luistert naar een click event en voert de functie createEllipse uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createEllipse.
         document.querySelector('.createEllipse').addEventListener('click', function () {
             const text = document.getElementById('ellipseText').value;
-            
-            const colors = Array.from(document.querySelectorAll('[role="colorSelectEllipse"]')).map((c) => c.value)
-            const colorObj = {
-                background: colors[0],
-                text: colors[1],
-            }
+            const backgroundColor = document.getElementById('EllipseBackgroundColor').value;
+            const textColor = document.getElementById('EllipseTextColor').value;
+            const x = stage.width() / 2;
+            const y = stage.height() / 2;
+            const radiusX = 100;
+            const radiusY = 50;
 
-            console.log(colorObj);
-
-            createEllipse(text, colors);
+            createEllipse(text, textColor, backgroundColor, x, y, radiusX, radiusY);
         });
 
         document.querySelector('.delete').addEventListener('click', function () {
@@ -380,7 +379,9 @@ document.getElementById('import').onclick = function() {
         var formatted = JSON.stringify(result, null, 2);
 
         // TODO make json parse function
-
+        createCircle(result[0].text, result[0].textFill, result[0].shapeFill, result[0].x, result[0].y);
+        createEllipse(result[1].text, result[1].textFill, result[1].shapeFill, result[1].x, result[1].y, result[1].radiusX, result[1].radiusY);
+        
         result.forEach((item) => {
             console.log(item)
         });
@@ -414,6 +415,8 @@ exportButton.addEventListener('click', function () {
                 shapeFill: shape.getAttr('fill'),   // vorm kleur
                 text: textNode.getAttr('text'), // tekst
                 textFill: textNode.getAttr('fill'),  // tekst kleur
+                radiusX: shape.getAttr('radiusX'), // radius x
+                radiusY: shape.getAttr('radiusY'), // radius y
             };
         });
     const json = JSON.stringify(data, null, 2);
