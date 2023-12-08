@@ -355,24 +355,28 @@ function createEllipse(text, colors) {
     attributeLayer.add(ellipseTransformer);
 
     let isEllipseSelected = false;
-    group.on('mousedown', function (e) {
-        if (e.evt.button === 0) {
-            if (selectedTransformer) {
-                selectedTransformer.detach();
-            }
-
-            isEllipseSelected = !isEllipseSelected;
-            ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
-
-            if (isEllipseSelected) {
-                ellipseTransformer.attachTo(ellipse);
-                selectedTransformer = ellipseTransformer;
-            } else {
-                selectedTransformer = null;
-            }
-            attributeLayer.draw();
+group.on('mousedown', function (e) {
+    if (e.evt.button === 0) {
+        if (selectedTransformer) {
+            selectedTransformer.detach();
         }
-    });
+
+        isEllipseSelected = !isEllipseSelected;
+        ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
+
+        if (isEllipseSelected) {
+            // kijk of de ovaal al een child is van de transformer
+            if (ellipse.getParent().name() === 'Transformer') {
+                return;
+            }
+            ellipseTransformer.attachTo(ellipse);
+            selectedTransformer = ellipseTransformer;
+        } else {
+            selectedTransformer = null;
+        }
+        attributeLayer.draw();
+    }
+});
 
     stage.on('mousedown', function (e) {
         // Check if the target is a ellipse or the parent of the target is a transformer
@@ -380,7 +384,6 @@ function createEllipse(text, colors) {
             // The ellipse is already selected or the transformer is active, so don't deselect it
             return;
         }
-
         // Het doel is niet de ovaal of de parent van het doel is een transformer
         isSelected = false;
         ellipse.stroke('black');
@@ -470,38 +473,29 @@ document.querySelector('.delete').addEventListener('click', function () {
     let selectionRectangle = null;
     let selectionStarted = false;
 
-// Deze code zorgt ervoor dat je meerdere cirkels tegelijk kan selecteren
-stage.on('mousedown', (e) => {
-    if (e.target instanceof Konva.Circle || e.target instanceof Konva.Ellipse) {
-        return;
-    }
-    // De select window
-    const pos = stage.getPointerPosition();
-    selectionStarted = true;
-    selectionRectangle = new Konva.Rect({
-        x: pos.x,
-        y: pos.y,
-        width: 0,
-        height: 0,
-        fill: 'rgba(0,0,255,0.5)'
+
+
+let transformer = new Konva.Transformer({
+    draggable: true
+});
+attributeLayer.add(transformer);
+
+let lastPos = {x:0, y:0};
+transformer.on('dragstart', (e) => {
+    lastPos = transformer.position();
+});
+
+transformer.on('dragmove', (e) => {
+    let pos = transformer.position();
+    let delta ={x: pos.x - lastPos.x, y: pos.y - lastPos.y};
+
+    transformer.nodes().forEach((node) => {
+        node.x(node.x() + delta.x);
+        node.y(node.y() + delta.y);
     });
-    attributeLayer.add(selectionRectangle);
+
+    lastPos = pos;
 });
-
-stage.on('mousemove', (e) => {
-    if (!selectionStarted) {
-        return;
-    }
-
-    const pos = stage.getPointerPosition();
-    selectionRectangle.width(pos.x - selectionRectangle.x());
-    selectionRectangle.height(pos.y - selectionRectangle.y());
-    attributeLayer.batchDraw();
-});
-
-    let transformer = new Konva.Transformer();
-    attributeLayer.add(transformer);
-
 
     stage.on('mouseup', (e) => {
     if (!selectionStarted) {
@@ -537,7 +531,30 @@ stage.on('mousemove', (e) => {
     selectionRectangle.destroy();
     selectionRectangle = null;
     attributeLayer.batchDraw();
+
+    let lastPos = { x: 0, y: 0 };
+
+    transformer.nodes().forEach((node) => {
+    node.draggable(true);
+
+    node.on('dragstart', (e) => {
+        lastPos = node.position();
+    });
+    node.on('dragmove', (e) => {
+        let pos = node.position();
+        let delta = { x: pos.x - lastPos.x, y: pos.y - lastPos.y };
+
+        transformer.nodes().forEach((otherNode) => {
+            if (otherNode !== node) {
+                otherNode.x(otherNode.x() + delta.x);
+                otherNode.y(otherNode.y() + delta.y);
+            }
+        });
+            lastPos = pos;
+    });
+  });
 });
+
 </script>
 </body>
 </html>
