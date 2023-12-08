@@ -227,7 +227,6 @@ function createCircle(text, colors) {
             return;
         }
 
-        // Het doel is niet de cirkel of de parent van het doel is een transformer
         isSelected = false;
         circle.stroke('black');
         if (selectedTransformer) {
@@ -466,8 +465,6 @@ document.querySelector('.createEllipse').addEventListener('click', function () {
         text: colors[1],
     }
 
-    
-
     createEllipse(text, colors);
 });
 
@@ -564,24 +561,7 @@ stage.on('mouseup', (e) => {
     console.log('selectedShapes:', selectedShapes);  
 });
 
-function updateSelectedShapes() {
-    // Leeg de selectedShapes array
-    selectedShapes = [];
 
-    // Controleer welke cirkels zijn geselecteerd
-    circles.forEach((circle) => {
-        if (circle.stroke() === 'blue') {
-            selectedShapes.push(circle);
-        }
-    });
-
-    // Controleer welke ovalen zijn geselecteerd
-    ellipses.forEach((ellipse) => {
-        if (ellipse.stroke() === 'blue') {
-            selectedShapes.push(ellipse);
-        }
-    });
-}
 
 let lastDragPoint;
 //deze code zorgt ervoor dat je meerdere cirkels tegelijk kan verplaatsen
