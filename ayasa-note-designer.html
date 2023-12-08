@@ -178,6 +178,9 @@ function createCircle(text, colors) {
             y: 20 / 2
         }
     });
+         group.on('mouseup', (e) => {
+            console.log('mouseup event handler called');
+    });
 
     group.add(circle);
     group.add(textNode);
@@ -196,6 +199,7 @@ function createCircle(text, colors) {
     const transformer = new Konva.Transformer();
     attributeLayer.add(transformer);
 
+    //euer was hier
     let isSelected = false;
     group.on('mousedown', function (e) {
         //kijk of de linkermuisknop is ingedrukt
@@ -237,8 +241,6 @@ function createCircle(text, colors) {
     });
 }
     
-
-
 //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
 function deleteSelectedCircles() {
     const selectedGroups = attributeLayer.getChildren(node => {
@@ -447,11 +449,9 @@ function deleteSelectedEllipses() {
                 transformer.detach();
             }
         });
-
         // verwijder de ellipse
         group.destroy();
     });
-
     attributeLayer.draw(); // update de layer
 }
 
@@ -472,13 +472,12 @@ document.querySelector('.delete').addEventListener('click', function () {
     deleteSelectedEllipses();
 });
 
-var json = stage.toJSON();
+    var json = stage.toJSON();
 
-//console.log(json);
+    //console.log(json);
 
-let selectionRectangle = null;
-let selectionStarted = false;
-
+    let selectionRectangle = null;
+    let selectionStarted = false;
 
 // Deze code zorgt ervoor dat je meerdere cirkels tegelijk kan selecteren
 stage.on('mousedown', (e) => {
@@ -561,16 +560,16 @@ stage.on('mouseup', (e) => {
     console.log('selectedShapes:', selectedShapes);  
 });
 
+    let isDragging = false;
 
-
-let lastDragPoint;
-//deze code zorgt ervoor dat je meerdere cirkels tegelijk kan verplaatsen
-stage.on('dragstart', (e) => {
+stage.on('mousedown', (e) => {
+    isDragging = true;
     lastDragPoint = stage.getPointerPosition();
 });
 
-stage.on('dragmove', (e) => {
-    if (!lastDragPoint) {
+stage.on('mousemove', (e) => {
+    console.log('selectedShapes:', selectedShapes);
+    if (!isDragging || !lastDragPoint) {
         return;
     }
 
@@ -588,9 +587,15 @@ stage.on('dragmove', (e) => {
 
     lastDragPoint = currentDragPoint;
     stage.batchDraw();
+
+    if (e.evt.buttons === 0) {
+        isDragging = false;
+        lastDragPoint = null;
+    }
 });
 
-stage.on('dragend', (e) => {
+stage.on('mouseup', (e) => {
+    isDragging = false;
     lastDragPoint = null;
 });
 </script>
