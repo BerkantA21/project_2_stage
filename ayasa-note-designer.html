@@ -128,17 +128,17 @@ const circle2 = new Konva.Circle({
     listening: false,
 });
 
-// voeg de vormen toe aan de aatributelayer
-attributeLayer.add(square);
-attributeLayer.add(circle);
-attributeLayer.add(circle2);
-attributeLayer.add(text1);
-attributeLayer.add(text2);
-// Draw the layer
-attributeLayer.draw();
+    // voeg de vormen toe aan de aatributelayer
+    attributeLayer.add(square);
+    attributeLayer.add(circle);
+    attributeLayer.add(circle2);
+    attributeLayer.add(text1);
+    attributeLayer.add(text2);
+    // Draw the layer
+    attributeLayer.draw();
 
-// Add the attributeLayer to the stage
-stage.add(attributeLayer);
+    // Add the attributeLayer to the stage
+    stage.add(attributeLayer);
 
 let selectedTransformer = null;
 
@@ -182,11 +182,11 @@ function createCircle(text, colors) {
             console.log('mouseup event handler called');
     });
 
-    group.add(circle);
-    group.add(textNode);
-    attributeLayer.add(group);
-    attributeLayer.draw();
-    circles.push(circle);
+        group.add(circle);
+        group.add(textNode);
+        attributeLayer.add(group);
+        attributeLayer.draw();
+        circles.push(circle);
     
     circle.on('transformend', () => {
         // Update de positie van de tekst wannneer de cirkel wordt getransformeerd
@@ -196,30 +196,25 @@ function createCircle(text, colors) {
         });
     });
 
-    const transformer = new Konva.Transformer();
-    attributeLayer.add(transformer);
+    const circleTransformer = new Konva.Transformer();
+    attributeLayer.add(circleTransformer);
 
-    //euer was hier
-    let isSelected = false;
+    let isCircleSelected = false;
     group.on('mousedown', function (e) {
-        //kijk of de linkermuisknop is ingedrukt
         if (e.evt.button === 0) {
             if (selectedTransformer) {
-                // Verwijder de transformer van de huidige geselecteerde vorm
                 selectedTransformer.detach();
             }
 
-            isSelected = !isSelected;
-            circle.stroke(isSelected ? 'blue' : 'black');
+            isCircleSelected = !isCircleSelected;
+            circle.stroke(isCircleSelected ? 'blue' : 'black');
 
-            if (isSelected) {
-                // Voeg de transformer toe aan de cirkel
-                transformer.attachTo(circle);
-                selectedTransformer = transformer;
+            if (isCircleSelected) {
+                circleTransformer.attachTo(circle);
+                selectedTransformer = circleTransformer;
             } else {
                 selectedTransformer = null;
             }
-            // update de layer.
             attributeLayer.draw();
         }
     });
@@ -279,7 +274,6 @@ document.querySelector('.create').addEventListener('click', function () {
         background: colors[0],
         text: colors[1],
     }
-
     createCircle(text, colors);
 });
 
@@ -342,11 +336,11 @@ function createEllipse(text, colors) {
         }
     });
 
-    group.add(ellipse);
-    group.add(textNode);
-    attributeLayer.add(group);
-    attributeLayer.draw();
-    ellipses.push(ellipse);
+        group.add(ellipse);
+        group.add(textNode);
+        attributeLayer.add(group);
+        attributeLayer.draw();
+        ellipses.push(ellipse);
 
     ellipse.on('transformend', () => {
         // Update de positie van de tekst wannneer de ovaal wordt getransformeerd
@@ -356,29 +350,26 @@ function createEllipse(text, colors) {
         });
     });
 
-    const transformer = new Konva.Transformer();
-    attributeLayer.add(transformer);
+    
+    const ellipseTransformer = new Konva.Transformer();
+    attributeLayer.add(ellipseTransformer);
 
-    let isSelected = false;
+    let isEllipseSelected = false;
     group.on('mousedown', function (e) {
-        //kijk of de linkermuisknop is ingedrukt
         if (e.evt.button === 0) {
             if (selectedTransformer) {
-                // Verwijder de transformer van de huidige geselecteerde vorm
                 selectedTransformer.detach();
             }
 
-            isSelected = !isSelected;
-            ellipse.stroke(isSelected ? 'blue' : 'black');
+            isEllipseSelected = !isEllipseSelected;
+            ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
 
-            if (isSelected) {
-                // Voeg de transformer toe aan de ovaal
-                transformer.attachTo(ellipse);
-                selectedTransformer = transformer;
+            if (isEllipseSelected) {
+                ellipseTransformer.attachTo(ellipse);
+                selectedTransformer = ellipseTransformer;
             } else {
                 selectedTransformer = null;
             }
-            // update de layer.
             attributeLayer.draw();
         }
     });
@@ -421,8 +412,8 @@ function createEllipse(text, colors) {
     group.add(shape);
 });
 
-// Maak de groep draggable
-group.draggable(true);
+    // Maak de groep draggable
+    group.draggable(true);
 
     // Teken de laag opnieuw om de wijzigingen te laten zien
     layer.draw();
@@ -508,95 +499,44 @@ stage.on('mousemove', (e) => {
     attributeLayer.batchDraw();
 });
 
-stage.on('mouseup', (e) => {
-    console.log('mouseup event handler called');
+    let transformer = new Konva.Transformer();
+    attributeLayer.add(transformer);
+
+
+    stage.on('mouseup', (e) => {
     if (!selectionStarted) {
         return;
     }
     selectionStarted = false;
 
-    selectedShapes = [];
-    
-    // check voor alle cirkels of ze in de selectie rechthoek zitten en verander de kleur naar blauw
+    let selectedShapes = [];
+    // zoek alle cirkels in de rectangle
     circles.forEach((circle) => {
-        const circlePos = circle.getAbsolutePosition();
-        if (circlePos.x >= selectionRectangle.x() &&
-            circlePos.y >= selectionRectangle.y() &&
-            circlePos.x <= selectionRectangle.x() + selectionRectangle.width() &&
-            circlePos.y <= selectionRectangle.y() + selectionRectangle.height()) {
-            // de cirkel zit in de selectie rechthoek
-            circle.stroke('blue');
-        }
-    });
-
-    // check voor alle ellipses of ze in de selectie rechthoek zitten en verander de kleur naar blauw
-    ellipses.forEach((ellipse) => {
-        const ellipsePos = ellipse.getAbsolutePosition();
-        if (ellipsePos.x >= selectionRectangle.x() &&
-            ellipsePos.y >= selectionRectangle.y() &&
-            ellipsePos.x <= selectionRectangle.x() + selectionRectangle.width() &&
-            ellipsePos.y <= selectionRectangle.y() + selectionRectangle.height()) {
-            // de ellipse zit in de selectie rechthoek
-            ellipse.stroke('blue');
-        }
-    });
-
-    circles.forEach((circle) => {
-        if (circle.stroke() === 'blue') {
+        const pos = circle.getAbsolutePosition();
+        if (pos.x >= selectionRectangle.x() &&
+            pos.y >= selectionRectangle.y() &&
+            pos.x <= selectionRectangle.x() + selectionRectangle.width() &&
+            pos.y <= selectionRectangle.y() + selectionRectangle.height()) {
             selectedShapes.push(circle);
         }
     });
-
+    // zoek alle ovalen in de rectangle
     ellipses.forEach((ellipse) => {
-        if (ellipse.stroke() === 'blue') {
+        const pos = ellipse.getAbsolutePosition();
+        if (pos.x >= selectionRectangle.x() &&
+            pos.y >= selectionRectangle.y() &&
+            pos.x <= selectionRectangle.x() + selectionRectangle.width() &&
+            pos.y <= selectionRectangle.y() + selectionRectangle.height()) {
             selectedShapes.push(ellipse);
         }
     });
 
+    transformer.nodes(selectedShapes);
+    transformer.getLayer().batchDraw();
+
     selectionRectangle.destroy();
     selectionRectangle = null;
     attributeLayer.batchDraw();
-
-    console.log('selectedShapes:', selectedShapes);  
-});
-
-    let isDragging = false;
-
-stage.on('mousedown', (e) => {
-    isDragging = true;
-    lastDragPoint = stage.getPointerPosition();
-});
-
-stage.on('mousemove', (e) => {
-    console.log('selectedShapes:', selectedShapes);
-    if (!isDragging || !lastDragPoint) {
-        return;
-    }
-
-    const currentDragPoint = stage.getPointerPosition();
-    const dx = currentDragPoint.x - lastDragPoint.x;
-    const dy = currentDragPoint.y - lastDragPoint.y;
-
-    selectedShapes.forEach((shape) => {
-        const shapePos = shape.getPosition();
-        shape.setPosition({
-            x: shapePos.x + dx,
-            y: shapePos.y + dy
-        });
-    });
-
-    lastDragPoint = currentDragPoint;
-    stage.batchDraw();
-
-    if (e.evt.buttons === 0) {
-        isDragging = false;
-        lastDragPoint = null;
-    }
-});
-
-stage.on('mouseup', (e) => {
-    isDragging = false;
-    lastDragPoint = null;
 });
 </script>
 </body>
