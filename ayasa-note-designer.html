@@ -21,7 +21,7 @@
 
 <body>
     <div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: -20px; width: 260px; bottom: 0px;">
-        <h2>Circle:</h2>
+        <h2>Cirkel:</h2>
         <div>Tekst: <input type="text" id="circleText"></div>
         <div>Kies cirkel kleur:<input type="color" id="backgroundColor"></div>
         <div>Kies tekst kleur:<input type="color" id="textColor"></div>
@@ -121,6 +121,7 @@
                 fill: backgroundColor,
                 stroke: 'black',
                 strokeWidth: 4,
+                type: 'circle'
             });
             //deze code maakt de text aan met de gegeven waardes in de cirkel
             const textNode = new Konva.Text({
@@ -258,6 +259,7 @@
                 fill: backgroundColor,
                 stroke: 'black',
                 strokeWidth: 4,
+                type: 'ellipse'
             });
             
 
@@ -373,50 +375,75 @@ document.getElementById('import').onclick = function() {
 
     fr.onload = function(e) {
         console.log(e);
-        var result = JSON.parse(e.target.result);
-        var formatted = JSON.stringify(result, null, 2);
+        var json = JSON.parse(e.target.result);
+        console.log(json);
 
         // TODO make json parse function
-        createCircle(result[0].text, result[0].textFill, result[0].shapeFill, result[0].x, result[0].y);
-        createEllipse(result[1].text, result[1].textFill, result[1].shapeFill, result[1].x, result[1].y, result[1].radiusX, result[1].radiusY);
+        //createCircle(result[0].text, result[0].textFill, result[0].shapeFill, result[0].x, result[0].y);
+        //createEllipse(result[1].text, result[1].textFill, result[1].shapeFill, result[1].x, result[1].y, result[1].radiusX, result[1].radiusY);
 
-        result.forEach((item) => {
+        json.forEach((item) => {
             console.log(item)
+            switch (item.type) {
+                case 'shapeFill':
+                break;
+                case 'textFill':
+                break;
+                case 'text':
+                break;
+                case 'x':
+                break;
+                case 'y':
+                break;
+                case 'radiusX':
+                break;
+                case 'radiusY':
+                break;
+                case 'circle':
+                    console.log('item is circle');
+                break;
+                case 'ellipse':
+                    console.log('item is ellipse');
+                break;
+                default:
+                    console.log('unknown type');	
+                break;
+            }
         });
-
     }
 
     fr.readAsText(files.item(0));
 };
 
-
 const exportButton = document.getElementById('exportButton');
 
 exportButton.addEventListener('click', function () {
-        const data = attributeLayer.getChildren((node) => {
-            return node.getClassName() === 'Group';
-        }).map(child => {
-            const shape = child.getChildren((node) => {
-                return (
-                    node.getClassName() === 'Circle' ||
-                    node.getClassName() === 'Ellipse'
-                );
-            })[0];
+    const data = attributeLayer.getChildren((node) => {
+        return node.getClassName() === 'Group';
+    }).map(child => {
+        const shape = child.getChildren((node) => {
+            return (
+                node.getClassName() === 'Circle' ||
+                node.getClassName() === 'Ellipse'
+            );
+        })[0];
 
-            const textNode = child.getChildren((node) => {
-                return node.getClassName() === 'Text';
-            })[0];
+        const textNode = child.getChildren((node) => {
+            return node.getClassName() === 'Text';
+        })[0];
 
-            return {
-                x: child.getAttr('x'), // positie
-                y: child.getAttr('y'), // positie
-                shapeFill: shape.getAttr('fill'),   // vorm kleur
-                text: textNode.getAttr('text'), // tekst
-                textFill: textNode.getAttr('fill'),  // tekst kleur
-                radiusX: shape.getAttr('radiusX'), // radius x
-                radiusY: shape.getAttr('radiusY'), // radius y
-            };
-        });
+        return {
+            x: child.getAttr('x'), // positie
+            y: child.getAttr('y'), // positie
+            shapeFill: shape.getAttr('fill'),   // vorm kleur
+            text: textNode.getAttr('text'), // tekst
+            textFill: textNode.getAttr('fill'),  // tekst kleur
+            radiusX: shape.getAttr('radiusX'), // radius x
+            radiusY: shape.getAttr('radiusY'), // radius y
+            type: shape.attrs.type,
+        };
+    });
+
     const json = JSON.stringify(data, null, 2);
     const blob = new Blob([json], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
