@@ -25,7 +25,7 @@
         <div>Tekst: <input type="text" id="circleText"></div>
         <div>Kies cirkel kleur:<input type="color" id="backgroundColor"></div>
         <div>Kies tekst kleur:<input type="color" id="textColor"></div>
-        <div><button class="create">Cirkel knop</button></div>
+        <div><button class="createCircle">Cirkel knop</button></div>
 
 
         <h2>-----------------------------</h2>
@@ -49,57 +49,94 @@
     </div>
 
     <div id="container"></div>
-
     <script>
         
         const width = window.innerWidth;
         const height = window.innerHeight;
 
-        const stage = new Konva.Stage({
+        var stage = new Konva.Stage({
             container: 'container',
             width: width,
             height: height,
         });
 
-        const boundaryLayer = new Konva.Layer();
-        stage.add(boundaryLayer);
-       
-        // Define the attributeLayer first
-        const attributeLayer = new Konva.Layer();   
+        var layer = new Konva.Layer();
+        stage.add(layer); 
         
-     // Create the square (euer)
-    const square = new Konva.Rect({
-        x: stage.width() / 2 - 450, 
-        y: stage.height() / 2 - 450, 
-        width: 900,
-        height: 900,
-        draggable: false,
-        fill: 'white',
-        stroke: 'black',
-        strokeWidth: 4,
-    });
+            // Create the square (euer)
+        var square = new Konva.Rect({
+            x: stage.width() / 2 - 650,
+            y: stage.height() / 2 - 450,
+            width: 1400,
+            height: 900,
+            draggable: false,
+            fill: 'white',
+            stroke: 'black',
+            strokeWidth: 4,
+        });
 
-    const circle = new Konva.Circle({
-        x: stage.width() / 2,
-        y: stage.height() / 2,
-        radius: 300,
-        draggable: false,
-        fill: 'white',
-        stroke: 'black',
-        strokeWidth: 4,
-    });
+        //text van cirkel 1
+        var text1 = new Konva.Text({
+            x: stage.width() / 2 - 350,
+            y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
+            text: 'Voorkant',
+            fontSize: 30,
+            fontFamily: 'Calibri',
+            fill: 'black',
+            align: 'center',
+        });
+        // Create the first circle
+        var circle = new Konva.Circle({
+            x: stage.width() / 2 - 290, // move de cirkel naar links
+            y: stage.height() / 2,
+            radius: 230,
+            draggable: false,
+            fill: 'white',
+            stroke: 'black',
+            strokeWidth: 4,
+            listening: false,
+        });
 
-    // Add the shapes to the attributeLayer
-    attributeLayer.add(square);
-    attributeLayer.add(circle);
+        //text van cirkel 2
+        var text2 = new Konva.Text({
+            x: stage.width() / 2 + 330,
+            y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
+            text: 'Achterkant',
+            fontSize: 30,
+            fontFamily: 'Calibri',
+            fill: 'black',
+            align: 'center',
+        });
 
-    // Draw the layer
-    attributeLayer.draw();
+        // Create the second circle
+        var circle2 = new Konva.Circle({
+            x: stage.width() / 2 + 400, // move de cirkel naar rechts
+            y: stage.height() / 2,
+            radius: 230,
+            draggable: false,
+            fill: 'white',
+            stroke: 'black',
+            strokeWidth: 4,
+            listening: false,
+        });
 
-        // Add the attributeLayer to the stage
-        stage.add(attributeLayer);
+        // voeg de vormen toe aan de aatributelayer
+        layer.add(square);
+        layer.add(circle);
+        layer.add(circle2);
+        layer.add(text1);
+        layer.add(text2);
+        // Draw the layer
+        layer.draw();
+
+        var tr = new Konva.Transformer();
+        layer.add(tr);
+
+        tr.nodes([]);
+
+        // Add the layer to the stage
+        stage.add(layer);
    
-        
         function createCenterCircle(text, textColor, backgroundColor) {
             createCircle(text, textColor, backgroundColor, stage.width() / 2, stage.height() / 2);
         }
@@ -140,23 +177,12 @@
 
             group.add(circle);
             group.add(textNode);
-            attributeLayer.add(group);
-            attributeLayer.draw();
-
-            group.on('dblclick', function () {
-           
-            if (isSelected) {
-            isSelected = false;
-            circle.stroke('black');
-            transformer.detach();
-            attributeLayer.draw();
-            }
-            group.destroy();
-            attributeLayer.draw();
-            });
+            layer.add(group);
+            tr.nodes([group]);
+            layer.draw();
 
            const transformer = new Konva.Transformer();
-            attributeLayer.add(transformer);
+            layer.add(transformer);
 
             let isSelected = false;
 
@@ -172,70 +198,182 @@
                    transformer.detach();
                }
                // update de layer.
-               attributeLayer.draw();
+               layer.draw();
            });
        }
 
+        //  feature,selection rectangle
+        var selectionRectangle = new Konva.Rect({
+            fill: 'rgba(0,0,255,0.5)',
+            visible: false,
+        });
+        layer.add(selectionRectangle);
+
+        var x1, y1, x2, y2;
+        stage.on('mousedown tochstart', (e) => {
+            if (e.target !== stage) {
+                return;
+            }
+            e.evt.preventDefault();
+            x1 = stage.getPointerPosition().x;
+            y1 = stage.getPointerPosition().y;
+            x2 = stage.getPointerPosition().x;
+            y2 = stage.getPointerPosition().y;
+
+            selectionRectangle.visible(true);
+            selectionRectangle.width(0);
+            selectionRectangle.height(0);
+        });
+
+        stage.on('mousemove touchmove', (e) => {
+            if (!selectionRectangle.visible()) {
+                return;
+            }
+            e.evt.preventDefault();
+            x2 = stage.getPointerPosition().x;
+            y2 = stage.getPointerPosition().y;
+
+            selectionRectangle.setAttrs({
+                x:Math.min(x1, x2),
+                y:Math.min(y1, y2),
+                width: Math.abs(x2 - x1),
+                height: Math.abs(y2- y1),
+            });
+        });
+
+
+        stage.on('mouseup tochend', (e) => {
+            if (!selectionRectangle.visible()) {
+                return;
+            }
+            e.evt.preventDefault();
+        // update visibility in timeout, so we can check it in click event
+            setTimeout(() => {
+            selectionRectangle.visible(false);
+            });
+
+            var shapes = stage.find('.rect');
+            var box = selectionRectangle.getClientRect();
+            var selected = shapes.filter((shape) =>
+            Konva.Util.haveIntersection(box, shape.getClientRect())
+            );
+            tr.nodes(selected);
+        });
+
+        stage.on('click tap', function (e) {
+            if (selectionRectangle.visible()) {
+                return;
+            }
+            if (e.target === stage) {
+                tr.nodes([]);
+                layer.draw();
+                return;
+            }
+            // do nothing if clicked NOT on our rectangles
+        if (!e.target.hasName('rect')) {
+          return;
+        }
+
+        // do we pressed shift or ctrl?
+        const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.   metaKey;
+        const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+        if (!metaPressed && !isSelected) {
+            // if no key pressed and the node is not selected
+            // select just one
+            tr.nodes([e.target]);
+            } else if (metaPressed && isSelected) {
+            // if we pressed keys and node was selected
+            // we need to remove it from selection:
+            const nodes = tr.nodes().slice(); // use slice to have new copy of array
+            // remove node from array
+            nodes.splice(nodes.indexOf(e.target), 1);
+            tr.nodes(nodes);
+            } else if (metaPressed && !isSelected) {
+            // add the node into selection
+            const nodes = tr.nodes().concat([e.target]);
+            tr.nodes(nodes);
+        }
+      });
+      //test code einde
+
                //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
         function deleteSelectedCircles() {
-            const selectedGroups = attributeLayer.getChildren(node => {
+            const selectedGroups = layer.getChildren(node => {
                 if (node instanceof Konva.Group) {
-            const circle = node.getChildren(c => c instanceof Konva.Circle)[0];
-                return circle && circle.stroke() === 'blue';
-            }
+                    const circle = node.getChildren(c => c instanceof Konva.Circle)[0];
+                    return circle && circle.stroke() === 'blue';
+                }
+
                 return false;
             });
-    // Loop door alle geselecteerde groepen heen
-        selectedGroups.forEach(group => {
-    //Deselcteer de cirkel
-        const circle = group.getChildren(c => c instanceof Konva.Circle)[0];
-        circle.stroke('black');
+            
+            // Loop door alle geselecteerde groepen heen
+            selectedGroups.forEach(group => {
+                //Deselcteer de cirkel
+                const circle = group.getChildren(c => c instanceof Konva.Circle)[0];
+                circle.stroke('black');
 
-        // Verwijder de transformer van de cirkel
-        const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
-        transformers.forEach(transformer => {
-            if (transformer.node() === circle) {
-                transformer.detach();
-            }
-        });
+                // Verwijder de transformer van de cirkel
+                layer
+                    .find(node => node instanceof Konva.Transformer)
+                    .forEach(transformer => {
+                        if (transformer.node() === circle) {
+                            transformer.detach();
+                        }
+                    });
 
-            // verwijder de cirkel
-            group.destroy();
-        });
+                // verwijder de cirkel
+                group.destroy();
+            });
 
-            attributeLayer.draw();
+            layer.draw();
         }
 
-        //deze eventlistener luistert naar een click event en voert de functie createCircle uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createCircle.
-        document.querySelector('.create').addEventListener('click', function () {
-            const text = document.getElementById('circleText').value;
-            const backgroundColor = document.getElementById('backgroundColor').value;
-            const textColor = document.getElementById('textColor').value;
-            createCenterCircle(text, textColor, backgroundColor);
-        });
 
-        document.querySelector('.delete').addEventListener('click', function () {
-            deleteSelectedCircles();
-        });
+
+        /* ========== */
+        // Circles
+        /* ========== */
+
+        const circleTextInput = document.getElementById('circleText');
+        const circleBackgroundColorInput = document.getElementById('backgroundColor');
+        const circleTextColorInput = document.getElementById('textColor');
+        const createCircleButton = document.querySelector('.createCircle');
+
+        const addCircleToField = () => {
+            const text = circleTextInput.value;
+            const backgroundColor = circleBackgroundColorInput.value;
+            const textColor = circleTextColorInput.value;
+            createCenterCircle(text, textColor, backgroundColor);
+        };
+
+        createCircleButton.addEventListener('click', addCircleToField);
+
+        /* ========== */
+        // Export knop
+        /* ========== */
+
+        const saveButton = document.getElementById('save');
+
+        const savePng = () => {
+            var dataURL = stage.toDataURL({ pixelRatio: 3 });
+            downloadURI(dataURL, 'stage.png');
+        };
+
+        saveButton.addEventListener('click', savePng);
+
+        document.querySelector('.delete').addEventListener('click', deleteSelectedCircles);
 
         function downloadURI(uri, filename) {
-        var link = document.createElement('a');
-        link.href = uri;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        delete link;
+            var link = document.createElement('a');
+            link.href = uri;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            delete link;
         }
-
-      const saveKnop = document.getElementById('save');
-
-      const savePng = () => {
-          var dataURL = stage.toDataURL({ pixelRatio: 3 });
-          downloadURI(dataURL, 'stage.png');
-      };
-
-      saveKnop.addEventListener('click', savePng);
 
         function createCenterEllipse(text, textColor, backgroundColor) {
             createEllipse(text, textColor, backgroundColor, x, y, radiusX, radiusY);
@@ -279,8 +417,8 @@
 
             group.add(ellipse);
             group.add(textNode);
-            attributeLayer.add(group);
-            attributeLayer.draw();
+            layer.add(group);
+            layer.draw();
 
             group.on('dblclick', function () {
            
@@ -288,14 +426,14 @@
            isSelected = false;
            ellipse.stroke('black');
            transformer.detach();
-           attributeLayer.draw();
+           layer.draw();
         }
             group.destroy();
-            attributeLayer.draw();
+            layer.draw();
            });
 
            const transformer = new Konva.Transformer();
-            attributeLayer.add(transformer);
+            layer.add(transformer);
 
             let isSelected = false;
 
@@ -311,13 +449,14 @@
                    transformer.detach();
                }
                // update de layer.
-               attributeLayer.draw();
+               layer.draw();
            });
        }
-
+       
+      
         //deze functie zorgt ervoor dat je meerdere ellipses tegelijk kan verwijderen
         function deleteSelectedEllipses() {
-            const selectedGroups = attributeLayer.getChildren(node => {
+            const selectedGroups = layer.getChildren(node => {
                 if (node instanceof Konva.Group) {
             const ellipse = node.getChildren(c => c instanceof Konva.Ellipse)[0];
                 return ellipse && ellipse.stroke() === 'blue';
@@ -331,7 +470,7 @@
         ellipse.stroke('black');
 
         // Verwijder de transformer van de ellipse
-        const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
+        const transformers = layer.find(node => node instanceof Konva.Transformer);
             transformers.forEach(transformer => {
                 if (transformer.node() === ellipse) {                 
                     transformer.detach();
@@ -342,7 +481,7 @@
             group.destroy();
             });
 
-            attributeLayer.draw();
+            layer.draw();
         }
 
         //deze eventlistener luistert naar een click event en voert de functie createEllipse uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createEllipse.
@@ -417,7 +556,7 @@ document.getElementById('import').onclick = function() {
 const exportButton = document.getElementById('exportButton');
 
 exportButton.addEventListener('click', function () {
-    const data = attributeLayer.getChildren((node) => {
+    const data = layer.getChildren((node) => {
         return node.getClassName() === 'Group';
     }).map(child => {
         const shape = child.getChildren((node) => {
