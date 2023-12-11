@@ -149,6 +149,7 @@ function createCircle(text, colors) {
     //const group is een groep die de cirkel en de tekst bevat.
     const group = new Konva.Group({
         draggable: true,
+        name: 'objectGroup',
     });
 
     //const circle is de cirkel die in de groep zit.
@@ -193,26 +194,27 @@ function createCircle(text, colors) {
          });
      });
 
+     // ricardo
      // zorgt ervoor dat je de cirkel kan selecteren voor een multi select
-     let isCircleSelected = false;
-     group.on('mousedown', function (e) {
-         if (e.evt.button === 0) {
-             if (selectedTransformer) {
-                 selectedTransformer.detach();
-             }
+    //  let isCircleSelected = false;
+    //  group.on('mousedown', function (e) {
+    //      if (e.evt.button === 0) {
+    //          if (selectedTransformer) {
+    //              selectedTransformer.detach();
+    //          }
 
-            isCircleSelected = !isCircleSelected;
-             circle.stroke(isCircleSelected ? 'blue' : 'black');
+    //         isCircleSelected = !isCircleSelected;
+    //          circle.stroke(isCircleSelected ? 'blue' : 'black');
 
-             if (isCircleSelected) {
-                 circleTransformer.attachTo(circle);
-                 selectedTransformer = circleTransformer;
-             } else {
-                 selectedTransformer = null;
-             }
-             attributeLayer.draw();
-         }
-     });
+    //          if (isCircleSelected) {
+    //              circleTransformer.attachTo(circle);
+    //              selectedTransformer = circleTransformer;
+    //          } else {
+    //              selectedTransformer = null;
+    //          }
+    //          attributeLayer.draw();
+    //      }
+    //  });
 
 }
     
@@ -289,6 +291,7 @@ function createEllipse(text, colors) {
     //const group is een groep die de ellipse en de tekst bevat.
     const group = new Konva.Group({
         draggable: true,
+        name: 'objectGroup',
     });
     //const ellipse is de ellipse die in de groep zit.
     const ellipse = new Konva.Ellipse({
@@ -331,26 +334,25 @@ function createEllipse(text, colors) {
      });
 
     // ricardo
+    //  let isEllipseSelected = false;
+    //  group.on('mousedown', function (e) {
+    //      if (e.evt.button === 0) {
+    //          if (selectedTransformer) {
+    //              selectedTransformer.detach();
+    //          }
 
-     let isEllipseSelected = false;
-     group.on('mousedown', function (e) {
-         if (e.evt.button === 0) {
-             if (selectedTransformer) {
-                 selectedTransformer.detach();
-             }
+    //          isEllipseSelected = !isEllipseSelected;
+    //          ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
 
-             isEllipseSelected = !isEllipseSelected;
-             ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
-
-             if (isEllipseSelected) {
-                 ellipseTransformer.attachTo(ellipse);
-                 selectedTransformer = ellipseTransformer;
-             } else {
-                selectedTransformer = null;
-             }
-             attributeLayer.draw();
-         }
-     });
+    //          if (isEllipseSelected) {
+    //              ellipseTransformer.attachTo(ellipse);
+    //              selectedTransformer = ellipseTransformer;
+    //          } else {
+    //             selectedTransformer = null;
+    //          }
+    //          attributeLayer.draw();
+    //      }
+    //  });
 
 }
     
@@ -423,126 +425,116 @@ var json = stage.toJSON();
 
 //console.log(json);
 
-let selectionRectangle = null;
-let selectionStarted = false;
 
-// Deze code zorgt ervoor dat je meerdere cirkels tegelijk kan selecteren
+
+
+
+
+
+
+
+
+
+
+var transformer = new Konva.Transformer();
+layer.add(transformer);
+
+let selectionRectangle = new Konva.Rect({
+    fill: 'rgba(0,0,255,0.5)',
+    visible: false,
+});
+attributeLayer.add(selectionRectangle);
+
+let x1, y1, x2, y2;
 stage.on('mousedown', (e) => {
-    if (e.target instanceof Konva.Circle || e.target instanceof Konva.Ellipse) {
+    if (e.target !== stage && e.target !== square) {
         return;
     }
-    // De select window
-    const pos = stage.getPointerPosition();
-    selectionStarted = true;
-    selectionRectangle = new Konva.Rect({
-        x: pos.x,
-        y: pos.y,
-        width: 0,
-        height: 0,
-        fill: 'rgba(0,0,255,0.5)'
-    });
-    attributeLayer.add(selectionRectangle);
-});
-
-stage.on('mousemove', (e) => {
-    if (!selectionStarted) {
-        return;
-    }
-
-    const pos = stage.getPointerPosition();
-    selectionRectangle.width(pos.x - selectionRectangle.x());
-    selectionRectangle.height(pos.y - selectionRectangle.y());
-    attributeLayer.batchDraw();
-});
-
-let transformer = new Konva.Transformer();
-attributeLayer.add(transformer);
-
-transformer.on('transformend', () => {
-    let transformedNode = transformer.getNode();
-    if (transformedNode instanceof Konva.Circle) {
-        let index = selectedShapes.indexOf(transformedNode);
-        if (index !== -1) {
-            selectedShapes.splice(index, 1);
-            console.log('Circle removed from selectedShapes array');
-        } else {
-            console.log('Circle not found in selectedShapes array');
-        }
-    } else {
-        console.log('transformedNode is not a circle');
-    }
-});
-
-stage.on('mouseup', (e) => {
-    if (!selectionStarted) {
-        return;
-    }
-    selectionStarted = false;
-
-    let selectedShapes = [];    
-    // zoek alle cirkels in de rectangle
-    circles.forEach((circle) => {
-        const pos = circle.getAbsolutePosition();
-        if (pos.x >= selectionRectangle.x() &&
-            pos.y >= selectionRectangle.y() &&
-            pos.x <= selectionRectangle.x() + selectionRectangle.width() &&
-            pos.y <= selectionRectangle.y() + selectionRectangle.height()) {
-            selectedShapes.push(circle);
-            transformer.attachTo(circle);
-        }
-    });
-
-    // ricardo
-     selectedShapes.forEach((circle) => {
-         circle.on('dragend', () => {
-             let index = selectedShapes.indexOf(circle);
-             if (index !== -1) {
-                 selectedShapes.splice(index, 1);
-                 transformer.detach();
-                 console.log('Circle removed from selectedShapes array');
-                 //euer hier
-             }
-         });
-     });
-
-    // // zoek alle ovalen in de rectangle
-    ellipses.forEach((ellipse) => {
-        const pos = ellipse.getAbsolutePosition();
-        if (pos.x >= selectionRectangle.x() &&
-            pos.y >= selectionRectangle.y() &&
-            pos.x <= selectionRectangle.x() + selectionRectangle.width() &&
-            pos.y <= selectionRectangle.y() + selectionRectangle.height()) {
-            selectedShapes.push(ellipse);
-        }
-    });
-
-    transformer.nodes(selectedShapes);
-
-    // ricardo
-    //Wanneer een vorm wordt geselecteerd, voeg je een 'selected' eigenschap toe
-    selectedShapes.forEach((shape) => {
-        shape.selected = true;
-        shape.draggable(true);
-
-        shape.on('dragmove', (e) => {
-            let delta = {x: e.evt.movementX, y: e.evt.movementY};
-
-            selectedShapes.forEach((otherShape) => {
-                if (otherShape !== shape) {
-                    otherShape.x(otherShape.x() + delta.x);
-                    otherShape.y(otherShape.y() + delta.y);
-                }
-            });
-            
-            transformer.x(transformer.x() + delta.x);
-            transformer.y(transformer.y() + delta.y);
-            transformer.getLayer().batchDraw();
-        });
-    });
-
-    selectionRectangle.destroy();
-    attributeLayer.batchDraw();
     
+    e.evt.preventDefault();
+
+    x1 = stage.getPointerPosition().x;
+    y1 = stage.getPointerPosition().y;
+    x2 = stage.getPointerPosition().x;
+    y2 = stage.getPointerPosition().y;
+
+    selectionRectangle.visible(true);
+    selectionRectangle.width(0);
+    selectionRectangle.height(0);
+});
+
+stage.on('mousemove touchmove', (e) => {
+    // do nothing if we didn't start selection
+    if (!selectionRectangle.visible()) {
+        return;
+    }
+
+    e.evt.preventDefault();
+
+    x2 = stage.getPointerPosition().x;
+    y2 = stage.getPointerPosition().y;
+
+    selectionRectangle.setAttrs({
+        x: Math.min(x1, x2),
+        y: Math.min(y1, y2),
+        width: Math.abs(x2 - x1),
+        height: Math.abs(y2 - y1),
+    });
+});
+
+stage.on('mouseup touchend', (e) => {
+    if (! selectionRectangle.visible()) {
+        return;
+    }
+
+    e.evt.preventDefault();
+    
+    setTimeout(() => selectionRectangle.visible(false));
+
+    const shapes = stage.find('.objectGroup');
+    const box = selectionRectangle.getClientRect();
+    const selected = shapes.filter((shape) => Konva.Util.haveIntersection(box, shape.getClientRect()));
+
+    transformer.nodes(selected);
+});
+// clicks should select/deselect shapes
+stage.on('click tap', function (e) {
+    // if we are selecting with rect, do nothing
+    if (selectionRectangle.visible()) {
+        return;
+    }
+
+    // if click on empty area - remove all selections
+    if (e.target === stage) {
+        tr.nodes([]);
+        return;
+    }
+
+    // do nothing if clicked NOT on our rectangles
+    if (!e.target.hasName('objectGroup')) {
+        return;
+    }
+
+    // do we pressed shift or ctrl?
+    const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
+    const isSelected = transformer.nodes().indexOf(e.target) >= 0;
+
+    if (!metaPressed && !isSelected) {
+        // if no key pressed and the node is not selected
+        // select just one
+        transformer.nodes([e.target]);
+    } else if (metaPressed && isSelected) {
+        // if we pressed keys and node was selected
+        // we need to remove it from selection:
+        const nodes = transformer.nodes().slice(); // use slice to have new copy of array
+        // remove node from array
+        nodes.splice(nodes.indexOf(e.target), 1);
+        transformer.nodes(nodes);
+    } else if (metaPressed && !isSelected) {
+        // add the node into selection
+        const nodes = transformer.nodes().concat([e.target]);
+        transformer.nodes(nodes);
+    }
 });
 </script>
 </body>
