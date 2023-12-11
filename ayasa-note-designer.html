@@ -65,9 +65,6 @@ const stage = new Konva.Stage({
     height: height,
 });
 
-const boundaryLayer = new Konva.Layer();
-stage.add(boundaryLayer);
-
 //maak de layer aan
 const attributeLayer = new Konva.Layer();
 
@@ -128,17 +125,17 @@ const circle2 = new Konva.Circle({
     listening: false,
 });
 
-    // voeg de vormen toe aan de aatributelayer
-    attributeLayer.add(square);
-    attributeLayer.add(circle);
-    attributeLayer.add(circle2);
-    attributeLayer.add(text1);
-    attributeLayer.add(text2);
-    // Draw the layer
-    attributeLayer.draw();
+// voeg de vormen toe aan de aatributelayer
+attributeLayer.add(square);
+attributeLayer.add(circle);
+attributeLayer.add(circle2);
+attributeLayer.add(text1);
+attributeLayer.add(text2);
+// Draw the layer
+attributeLayer.draw();
 
-    // Add the attributeLayer to the stage
-    stage.add(attributeLayer);
+// Add the attributeLayer to the stage
+stage.add(attributeLayer);
 
 let selectedTransformer = null;
 
@@ -178,62 +175,45 @@ function createCircle(text, colors) {
             y: 20 / 2
         }
     });
-         group.on('mouseup', (e) => {
-            console.log('mouseup event handler called');
-    });
-
-        group.add(circle);
-        group.add(textNode);
-        attributeLayer.add(group);
-        attributeLayer.draw();
-        circles.push(circle);
     
-    circle.on('transformend', () => {
-        // Update de positie van de tekst wannneer de cirkel wordt getransformeerd
-        textNode.position({
-            x: circle.x(),
-            y: circle.y()
-        });
-    });
+    group.on('mouseup', (e) => console.log('mouseup event handler called'));
 
-    const circleTransformer = new Konva.Transformer();
-    attributeLayer.add(circleTransformer);
+    group.add(circle);
+    group.add(textNode);
+    attributeLayer.add(group);
+    attributeLayer.draw();
+    circles.push(circle);
 
-    let isCircleSelected = false;
-    group.on('mousedown', function (e) {
-        if (e.evt.button === 0) {
-            if (selectedTransformer) {
-                selectedTransformer.detach();
-            }
+    // ricardo
+     circle.on('transformend', () => {
+         // Update de positie van de tekst wannneer de cirkel wordt getransformeerd
+         textNode.position({
+             x: circle.x(),
+             y: circle.y()
+         });
+     });
+
+     // zorgt ervoor dat je de cirkel kan selecteren voor een multi select
+     let isCircleSelected = false;
+     group.on('mousedown', function (e) {
+         if (e.evt.button === 0) {
+             if (selectedTransformer) {
+                 selectedTransformer.detach();
+             }
 
             isCircleSelected = !isCircleSelected;
-            circle.stroke(isCircleSelected ? 'blue' : 'black');
+             circle.stroke(isCircleSelected ? 'blue' : 'black');
 
-            if (isCircleSelected) {
-                circleTransformer.attachTo(circle);
-                selectedTransformer = circleTransformer;
-            } else {
-                selectedTransformer = null;
-            }
-            attributeLayer.draw();
-        }
-    });
+             if (isCircleSelected) {
+                 circleTransformer.attachTo(circle);
+                 selectedTransformer = circleTransformer;
+             } else {
+                 selectedTransformer = null;
+             }
+             attributeLayer.draw();
+         }
+     });
 
-    stage.on('mousedown', function (e) {
-        // Check if the target is a circle or the parent of the target is a transformer
-        if (e.target instanceof Konva.Circle || e.target.getParent() instanceof Konva.Transformer) {
-            // The circle is already selected or the transformer is active, so don't deselect it
-            return;
-        }
-
-        isSelected = false;
-        circle.stroke('black');
-        if (selectedTransformer) {
-            selectedTransformer.detach();
-            selectedTransformer = null;
-        }
-        attributeLayer.draw();
-    });
 }
     
 //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
@@ -336,91 +316,66 @@ function createEllipse(text, colors) {
         }
     });
 
-        group.add(ellipse);
-        group.add(textNode);
-        attributeLayer.add(group);
-        attributeLayer.draw();
-        ellipses.push(ellipse);
+    group.add(ellipse);
+    group.add(textNode);
+    attributeLayer.add(group);
+    attributeLayer.draw();
+    ellipses.push(ellipse);
 
-    ellipse.on('transformend', () => {
-        // Update de positie van de tekst wannneer de ovaal wordt getransformeerd
-        textNode.position({
-            x: ellipse.x(),
-            y: ellipse.y()
-        });
-    });
+     ellipse.on('transformend', () => {
+         // Update de positie van de tekst wannneer de ovaal wordt getransformeerd
+         textNode.position({
+             x: ellipse.x(),
+             y: ellipse.y()
+         });
+     });
 
-    
-    const ellipseTransformer = new Konva.Transformer();
-    attributeLayer.add(ellipseTransformer);
+    // ricardo
 
-    let isEllipseSelected = false;
-    group.on('mousedown', function (e) {
-        if (e.evt.button === 0) {
-            if (selectedTransformer) {
-                selectedTransformer.detach();
-            }
+     let isEllipseSelected = false;
+     group.on('mousedown', function (e) {
+         if (e.evt.button === 0) {
+             if (selectedTransformer) {
+                 selectedTransformer.detach();
+             }
 
-            isEllipseSelected = !isEllipseSelected;
-            ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
+             isEllipseSelected = !isEllipseSelected;
+             ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
 
-            if (isEllipseSelected) {
-                ellipseTransformer.attachTo(ellipse);
-                selectedTransformer = ellipseTransformer;
-            } else {
+             if (isEllipseSelected) {
+                 ellipseTransformer.attachTo(ellipse);
+                 selectedTransformer = ellipseTransformer;
+             } else {
                 selectedTransformer = null;
-            }
-            attributeLayer.draw();
-        }
-    });
+             }
+             attributeLayer.draw();
+         }
+     });
 
-    stage.on('mousedown', function (e) {
-        // Check if the target is a ellipse or the parent of the target is a transformer
-        if (e.target instanceof Konva.Ellipse || e.target.getParent() instanceof Konva.Transformer) {
-            // The ellipse is already selected or the transformer is active, so don't deselect it
-            return;
-        }
-
-        // Het doel is niet de ovaal of de parent van het doel is een transformer
-        isSelected = false;
-        ellipse.stroke('black');
-        if (selectedTransformer) {
-            selectedTransformer.detach();
-            selectedTransformer = null;
-        }
-        attributeLayer.draw();
-    });
 }
     
-    // Maak een nieuwe laag
-    let layer = new Konva.Layer();
+// ricardo
 
-    // Voeg de laag toe aan de stage
-    stage.add(layer);
+// Maak een nieuwe laag
+let layer = new Konva.Layer();
 
-    // Maak een nieuwe groep
-    let group = new Konva.Group({
-        draggable: true
-    });
+// Voeg de laag toe aan de stage
+stage.add(layer);
 
-    // Voeg de groep toe aan de laag
-    layer.add(group);
-
-    // Voeg geselecteerde objecten toe aan de groep
-    selectedShapes.forEach((shape) => {
-    shape.on('dragmove', (e) => {
-        // Update the position of the transformer to match the shape
-        transformer.x(shape.x());
-        transformer.y(shape.y());
-        transformer.getLayer().batchDraw();
-    });
+// Maak een nieuwe groep
+let group = new Konva.Group({
+    draggable: true
 });
-    // Maak de groep draggable
-    group.draggable(true);
 
-    // Teken de laag opnieuw om de wijzigingen te laten zien
-    layer.draw();
-    
+// Voeg de groep toe aan de laag
+layer.add(group);
+
+// Maak de groep draggable
+group.draggable(true);
+
+// Teken de laag opnieuw om de wijzigingen te laten zien
+layer.draw();
+
 //deze functie zorgt ervoor dat je meerdere ellipses tegelijk kan verwijderen
 function deleteSelectedEllipses() {
     const selectedGroups = attributeLayer.getChildren(node => {
@@ -462,16 +417,14 @@ document.querySelector('.createEllipse').addEventListener('click', function () {
     createEllipse(text, colors);
 });
 
-document.querySelector('.delete').addEventListener('click', function () {
-    deleteSelectedEllipses();
-});
+document.querySelector('.delete').addEventListener('click', deleteSelectedEllipses);
 
-    var json = stage.toJSON();
+var json = stage.toJSON();
 
-    //console.log(json);
+//console.log(json);
 
-    let selectionRectangle = null;
-    let selectionStarted = false;
+let selectionRectangle = null;
+let selectionStarted = false;
 
 // Deze code zorgt ervoor dat je meerdere cirkels tegelijk kan selecteren
 stage.on('mousedown', (e) => {
@@ -505,13 +458,28 @@ stage.on('mousemove', (e) => {
 let transformer = new Konva.Transformer();
 attributeLayer.add(transformer);
 
+transformer.on('transformend', () => {
+    let transformedNode = transformer.getNode();
+    if (transformedNode instanceof Konva.Circle) {
+        let index = selectedShapes.indexOf(transformedNode);
+        if (index !== -1) {
+            selectedShapes.splice(index, 1);
+            console.log('Circle removed from selectedShapes array');
+        } else {
+            console.log('Circle not found in selectedShapes array');
+        }
+    } else {
+        console.log('transformedNode is not a circle');
+    }
+});
+
 stage.on('mouseup', (e) => {
     if (!selectionStarted) {
         return;
     }
     selectionStarted = false;
 
-    let selectedShapes = [];
+    let selectedShapes = [];    
     // zoek alle cirkels in de rectangle
     circles.forEach((circle) => {
         const pos = circle.getAbsolutePosition();
@@ -520,9 +488,24 @@ stage.on('mouseup', (e) => {
             pos.x <= selectionRectangle.x() + selectionRectangle.width() &&
             pos.y <= selectionRectangle.y() + selectionRectangle.height()) {
             selectedShapes.push(circle);
+            transformer.attachTo(circle);
         }
     });
-    // zoek alle ovalen in de rectangle
+
+    // ricardo
+     selectedShapes.forEach((circle) => {
+         circle.on('dragend', () => {
+             let index = selectedShapes.indexOf(circle);
+             if (index !== -1) {
+                 selectedShapes.splice(index, 1);
+                 transformer.detach();
+                 console.log('Circle removed from selectedShapes array');
+                 //euer hier
+             }
+         });
+     });
+
+    // // zoek alle ovalen in de rectangle
     ellipses.forEach((ellipse) => {
         const pos = ellipse.getAbsolutePosition();
         if (pos.x >= selectionRectangle.x() &&
@@ -535,27 +518,31 @@ stage.on('mouseup', (e) => {
 
     transformer.nodes(selectedShapes);
 
-    // Wanneer een vorm wordt geselecteerd, voeg je een 'selected' eigenschap toe
+    // ricardo
+    //Wanneer een vorm wordt geselecteerd, voeg je een 'selected' eigenschap toe
     selectedShapes.forEach((shape) => {
-    shape.selected = true;
-    shape.draggable(true);
-    shape.on('dragmove', (e) => {
-        let delta = {x: e.evt.movementX, y: e.evt.movementY};
+        shape.selected = true;
+        shape.draggable(true);
 
-        selectedShapes.forEach((otherShape) => {
-            if (otherShape !== shape) {
-                otherShape.x(otherShape.x() + delta.x);
-                otherShape.y(otherShape.y() + delta.y);
-            }
+        shape.on('dragmove', (e) => {
+            let delta = {x: e.evt.movementX, y: e.evt.movementY};
+
+            selectedShapes.forEach((otherShape) => {
+                if (otherShape !== shape) {
+                    otherShape.x(otherShape.x() + delta.x);
+                    otherShape.y(otherShape.y() + delta.y);
+                }
+            });
+            
+            transformer.x(transformer.x() + delta.x);
+            transformer.y(transformer.y() + delta.y);
+            transformer.getLayer().batchDraw();
         });
-        
-        transformer.x(transformer.x() + delta.x);
-        transformer.y(transformer.y() + delta.y);
-        transformer.getLayer().batchDraw();
-     });
     });
-        selectionRectangle.destroy();
-        attributeLayer.batchDraw();
+
+    selectionRectangle.destroy();
+    attributeLayer.batchDraw();
+    
 });
 </script>
 </body>
