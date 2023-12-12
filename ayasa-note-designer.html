@@ -185,6 +185,8 @@ function createCircle(text, colors) {
     attributeLayer.draw();
     circles.push(circle);
 
+   
+
     // ricardo
      circle.on('transformend', () => {
          // Update de positie van de tekst wannneer de cirkel wordt getransformeerd
@@ -195,26 +197,20 @@ function createCircle(text, colors) {
      });
 
      // ricardo
-     // zorgt ervoor dat je de cirkel kan selecteren voor een multi select
-    //  let isCircleSelected = false;
-    //  group.on('mousedown', function (e) {
-    //      if (e.evt.button === 0) {
-    //          if (selectedTransformer) {
-    //              selectedTransformer.detach();
-    //          }
+    // zorgt ervoor dat je de cirkel kan selecteren voor een multi select
+     let isCircleSelected = false;
+     group.on('mousedown', function (e) {
+         if (e.evt.button === 0) {
+             if (selectedTransformer) {
+                 selectedTransformer.detach();
+             }
 
-    //         isCircleSelected = !isCircleSelected;
-    //          circle.stroke(isCircleSelected ? 'blue' : 'black');
+            isCircleSelected = !isCircleSelected;
+             circle.stroke(isCircleSelected ? 'blue' : 'black');
 
-    //          if (isCircleSelected) {
-    //              circleTransformer.attachTo(circle);
-    //              selectedTransformer = circleTransformer;
-    //          } else {
-    //              selectedTransformer = null;
-    //          }
-    //          attributeLayer.draw();
-    //      }
-    //  });
+             attributeLayer.draw();
+         }
+     });
 
 }
     
@@ -334,26 +330,19 @@ function createEllipse(text, colors) {
      });
 
     // ricardo
-    //  let isEllipseSelected = false;
-    //  group.on('mousedown', function (e) {
-    //      if (e.evt.button === 0) {
-    //          if (selectedTransformer) {
-    //              selectedTransformer.detach();
-    //          }
+     let isEllipseSelected = false;
+     group.on('mousedown', function (e) {
+         if (e.evt.button === 0) {
+             if (selectedTransformer) {
+                 selectedTransformer.detach();
+             }
 
-    //          isEllipseSelected = !isEllipseSelected;
-    //          ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
+             isEllipseSelected = !isEllipseSelected;
+             ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
 
-    //          if (isEllipseSelected) {
-    //              ellipseTransformer.attachTo(ellipse);
-    //              selectedTransformer = ellipseTransformer;
-    //          } else {
-    //             selectedTransformer = null;
-    //          }
-    //          attributeLayer.draw();
-    //      }
-    //  });
-
+             attributeLayer.draw();
+         }
+     });
 }
     
 // ricardo
@@ -424,16 +413,6 @@ document.querySelector('.delete').addEventListener('click', deleteSelectedEllips
 var json = stage.toJSON();
 
 //console.log(json);
-
-
-
-
-
-
-
-
-
-
 
 
 var transformer = new Konva.Transformer();
@@ -511,30 +490,31 @@ stage.on('click tap', function (e) {
     }
 
     // do nothing if clicked NOT on our rectangles
-    if (!e.target.hasName('objectGroup')) {
+    if (!e.target.hasName('objectGroup') && !(e.target.getParent() && e.target.getParent().hasName('objectGroup'))) {
         return;
     }
 
-    // do we pressed shift or ctrl?
+    // do we press shift or ctrl?
     const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-    const isSelected = transformer.nodes().indexOf(e.target) >= 0;
+    const node = e.target.getParent() && e.target.getParent().hasName('objectGroup') ? e.target.getParent() : e.target;
+    const isSelected = transformer.nodes().indexOf(node) >= 0;
 
     if (!metaPressed && !isSelected) {
-        // if no key pressed and the node is not selected
-        // select just one
-        transformer.nodes([e.target]);
-    } else if (metaPressed && isSelected) {
-        // if we pressed keys and node was selected
-        // we need to remove it from selection:
-        const nodes = transformer.nodes().slice(); // use slice to have new copy of array
-        // remove node from array
-        nodes.splice(nodes.indexOf(e.target), 1);
-        transformer.nodes(nodes);
-    } else if (metaPressed && !isSelected) {
-        // add the node into selection
-        const nodes = transformer.nodes().concat([e.target]);
-        transformer.nodes(nodes);
-    }
+    // if no key pressed and the node is not selected
+    // select just one
+    transformer.nodes([node]);
+} else if (metaPressed && isSelected) {
+    // if we pressed keys and node was selected
+    // we need to remove it from selection:
+    const nodes = transformer.nodes().slice(); // use slice to have new copy of array
+    // remove node from array
+    nodes.splice(nodes.indexOf(node), 1);
+    transformer.nodes(nodes);
+} else if (metaPressed && !isSelected) {
+    // add the node into selection
+    const nodes = transformer.nodes().concat([node]);
+    transformer.nodes(nodes);
+}
 });
 </script>
 </body>
