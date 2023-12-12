@@ -70,7 +70,7 @@ const stage = new Konva.Stage({
 //maak de layer aan
 const attributeLayer = new Konva.Layer();
 
-// Create the square (euer)
+// de vierkant die de achtergrond van de cirkels en ovalen is
 const square = new Konva.Rect({
     x: stage.width() / 2 - 650,
     y: stage.height() / 2 - 450,
@@ -92,7 +92,7 @@ const text1 = new Konva.Text({
     fill: 'black',
     align: 'center',
 });
-// Create the first circle
+// maak cirkel 1
 const circle = new Konva.Circle({
     x: stage.width() / 2 - 290, // move de cirkel naar links
     y: stage.height() / 2,
@@ -115,7 +115,7 @@ const text2 = new Konva.Text({
     align: 'center',
 });
 
-// Create the second circle
+// maak cirkel 2
 const circle2 = new Konva.Circle({
     x: stage.width() / 2 + 400, // move de cirkel naar rechts
     y: stage.height() / 2,
@@ -186,14 +186,6 @@ function createCircle(text, colors) {
         attributeLayer.add(group);
         attributeLayer.draw();
         circles.push(circle);
-
-    circle.on('transformend', () => {
-     // Update de positie van de tekst wannneer de cirkel wordt getransformeerd
-        textNode.position({
-             x: circle.x(),
-             y: circle.y()
-         });
-    });
 
     // zorgt ervoor dat je de cirkel kan selecteren voor een multi select
      let isCircleSelected = false;
@@ -284,17 +276,17 @@ document.getElementById('save').addEventListener(
 
 //createEllipse is een functie die een ellipse maakt
 function createEllipse(text, colors) {
-    const colorObj = {
+    var colorObj = {
         background: colors[0],
         text: colors[1],
     }
     //const group is een groep die de ellipse en de tekst bevat.
-    const group = new Konva.Group({
+    var group = new Konva.Group({
         draggable: true,
         name: 'objectGroup',
     });
     //const ellipse is de ellipse die in de groep zit.
-    const ellipse = new Konva.Ellipse({
+    var ellipse = new Konva.Ellipse({
         x: stage.width() / 2 + 50,
         y: stage.height() / 2,
         radiusX: 80,
@@ -305,7 +297,7 @@ function createEllipse(text, colors) {
     });
 
     //deze code maakt de text aan met de gegeven waardes in de ellipse
-    const textNode = new Konva.Text({
+    var textNode = new Konva.Text({
         x: ellipse.x(),
         y: ellipse.y(),
         text: text,
@@ -325,15 +317,6 @@ function createEllipse(text, colors) {
     attributeLayer.draw();
     ellipses.push(ellipse);
 
-     ellipse.on('transformend', () => {
-         // Update de positie van de tekst wannneer de ovaal wordt getransformeerd
-         textNode.position({
-             x: ellipse.x(),
-             y: ellipse.y()
-         });
-     });
-
-    // ricardo
      let isEllipseSelected = false;
      group.on('mousedown', function (e) {
          if (e.evt.button === 0) {
@@ -348,8 +331,6 @@ function createEllipse(text, colors) {
          }
      });
 }
-    
-// ricardo
 
 // Maak een nieuwe laag
 let layer = new Konva.Layer();

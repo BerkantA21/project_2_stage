@@ -14,6 +14,12 @@
     - hij ziet de 2 grote cirkels ook als cirkel dus de select window werkt niet goed DONE
 
 3. importeren van json
-    - het inladen van een json bestand die de stage herbouwd
+    - het inladen van een json bestand die de stage herbouwd//done
     - de json slaat niet de locatie op van de vormen//Done
-    - misschien zorgen dat je alleen text kan toevoegen
+
+   
+4. nieuwe dingen die gefixt moeten worden.
+- text wit wat nu de hover is waar de button in staat dat moet nu de button worden //done
+- na importeren json text aanpassen
+- alles werkt niet meer na het importeren van json
+- de vormen worden niet opgeslagen in de png

@@ -6,7 +6,7 @@
     top: 0;
     padding-top: 10px;
     background-color: rgb(68, 96, 137);
-   box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
     transition: all 0.3s ease;
     overflow: scroll; 
 }
@@ -19,7 +19,7 @@
     color: white; 
 }
 
-.sidebar div:hover {
+.sidebar div:hover, button:hover {
     background-color: rgba(0,0,0,0.1);
     color: rgb(255, 255, 255); 
 }
@@ -32,17 +32,17 @@
 }
 
 button {
-    background-color: rgb(255, 255, 255);
-    border-radius: 4px;
-    height: 30px;
-    width: 120px;
+    font-size: large;
+    background-color: transparent;
+    height: 40px;
+    width: 110%;
     border: none; 
     cursor: pointer;
     transition: all 0.3s ease; 
 }
 
 button:hover {
-    background-color: rgb(68, 96, 137); 
+    background-color: transparent;
     color: rgb(255, 255, 255); 
 }
 
@@ -66,11 +66,11 @@ input[type="file"] {
 }
 
 label[for="jsonFile"] {
-    padding: 10px;
-    background-color: rgb(255, 255, 255);
-    color: rgb(68, 96, 137);
+    padding: 10px 0;
+    background-color: transparent;
+    color: black;
     display: inline-block;
-   
+    width: 100%;
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.3s ease;
@@ -78,6 +78,6 @@ label[for="jsonFile"] {
 
 label[for="jsonFile"]:hover {
     background-color: rgb(68, 96, 137);
-    color: rgb(255, 255, 255);
+    color: black;
 }
 
