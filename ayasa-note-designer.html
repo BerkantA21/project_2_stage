@@ -510,6 +510,26 @@ document.getElementById('jsonFile').addEventListener('change', function () {
         var json = JSON.parse(contents);
         stage = Konva.Node.create(json, 'container');
         stage.draw(); // Teken de stage opnieuw om de geïmporteerde vormen te tonen
+
+        // Leeg de arrays
+        circles = [];
+        ellipses = [];
+        selectedShapes = [];
+
+        //doorloop alle children van de stage
+        stage.find(node => {
+            // Controleer of de node een cirkel of ovaal is
+            if (node.className === 'Circle') {
+                circles.push(node);
+            } else if (node.className === 'Ellipse') {
+                ellipses.push(node);
+            }
+
+            // Controleer of de node geselecteerd is
+            if (node.isSelected) {
+                selectedShapes.push(node);
+            }
+        });
     };
     reader.readAsText(file);
 });
