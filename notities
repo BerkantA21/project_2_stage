@@ -20,7 +20,9 @@
    
 4. nieuwe dingen die gefixt moeten worden.
     - text wit wat nu de hover is waar de button in staat dat moet nu de button worden //done
-    - scrollbar toevoegen
+    - alles werkt niet meer na het importeren van json BV de create cirkel/ovaal Done
     - na importeren json text aanpassen
-    - alles werkt niet meer na het importeren van json BV de create cirkel/ovaal
     - de vormen worden niet opgeslagen in de png na het importeren van de json
+    - ik moet de click functie on stage dingen opnieuw toevoegen na het importere
+    - alert wanneer je f5 drukt zodat je moet confirmen dat je de pagina wilt verversen
+    - bij de alert een download json knop toevoegen

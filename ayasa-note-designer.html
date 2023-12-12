@@ -68,7 +68,7 @@ let stage = new Konva.Stage({
 });
 
 //maak de layer aan
-const attributeLayer = new Konva.Layer();
+let attributeLayer = new Konva.Layer();
 
 // de vierkant die de achtergrond van de cirkels en ovalen is
 const square = new Konva.Rect({
@@ -178,8 +178,7 @@ function createCircle(text, colors) {
             y: 20 / 2
         }
     });
-    
-        group.on('mouseup', (e) => console.log('mouseup event handler called'));
+
 
         group.add(circle);
         group.add(textNode);
@@ -485,20 +484,24 @@ stage.on('click tap', function (e) {
     const isSelected = transformer.nodes().indexOf(node) >= 0;
 
     if (!metaPressed && !isSelected) {
-    
-    transformer.nodes([node]);
-} else if (metaPressed && isSelected) {
-    
-    const nodes = transformer.nodes().slice(); 
-    
-    nodes.splice(nodes.indexOf(node), 1);
-    transformer.nodes(nodes);
-} else if (metaPressed && !isSelected) {
-    
-    const nodes = transformer.nodes().concat([node]);
-    transformer.nodes(nodes);
-}
+        
+        transformer.nodes([node]);
+    } else if (metaPressed && isSelected) {
+        
+        const nodes = transformer.nodes().slice(); 
+        
+        nodes.splice(nodes.indexOf(node), 1);
+        transformer.nodes(nodes);
+    } else if (metaPressed && !isSelected) {
+        
+        const nodes = transformer.nodes().concat([node]);
+        transformer.nodes(nodes);
+    }
 });
+
+window.onbeforeunload = function() {
+    return "Weet je zeker dat je de pagina wilt verversen? Alle niet opgeslagen data gaat verloren.";
+}
 
 //begin json import en export
 //importeer json
@@ -508,37 +511,17 @@ document.getElementById('jsonFile').addEventListener('change', function () {
     reader.onload = function (e) {
         var contents = e.target.result;
         var json = JSON.parse(contents);
-        stage = Konva.Node.create(json, 'container');
-        stage.draw(); // Teken de stage opnieuw om de geïmporteerde vormen te tonen
+        console.log(json);
+        json.forEach(group => attributeLayer.add(Konva.Node.create(group)));
 
-        // Leeg de arrays
-        circles = [];
-        ellipses = [];
-        selectedShapes = [];
-
-        //doorloop alle children van de stage
-        stage.find(node => {
-            // Controleer of de node een cirkel of ovaal is
-            if (node.className === 'Circle') {
-                circles.push(node);
-            } else if (node.className === 'Ellipse') {
-                ellipses.push(node);
-            }
-
-            // Controleer of de node geselecteerd is
-            if (node.isSelected) {
-                selectedShapes.push(node);
-            }
-        });
     };
     reader.readAsText(file);
 });
 //exporteer json
 document.getElementById('jsonButton').addEventListener('click', function () {
-    var json = stage.toJSON();
-    console.log(json);
+    const shapes = stage.find('.objectGroup').map(x => x.toObject());
 
-    var blob = new Blob([json], {type: "application/json"});
+    var blob = new Blob([JSON.stringify(shapes)], {type: "application/json"});
     var url  = URL.createObjectURL(blob);
 
     var a = document.createElement('a');
@@ -546,6 +529,9 @@ document.getElementById('jsonButton').addEventListener('click', function () {
     a.href = url;
     a.click();
 });
+
+// window.addEventListener('beforeunload', (event) => event.preventDefault())
+
 //einde json import en export
 </script>
 </body>
