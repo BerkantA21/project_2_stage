@@ -21,7 +21,7 @@
 <body>
 
 <div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: -20px; width: 260px; bottom: 0px;">
-    <h2>Circle:</h2>
+    <h2>Cirkel:</h2>
     <div>Tekst: <input type="text" id="circleText"></div>
     <div>Kies cirkel kleur:<input type="color" role="colorSelect"></div>
     <div>Kies tekst kleur:<input type="color" role="colorSelect"></div>
@@ -35,8 +35,7 @@
     <div>Kies tekst kleur:<input type="color" role="colorSelectEllipse"></div>
     <div>
         <button class="createEllipse">Ovaal knop</button>
-    </div>
-
+    </div><br>
     <div>
         <button class="delete">Verwijder</button>
     </div>
@@ -525,6 +524,20 @@ stage.on('click tap', function (e) {
 });
 
 //begin json import en export
+
+//importeer json
+document.getElementById('jsonFile').addEventListener('change', function () {
+    var file = this.files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        var contents = e.target.result;
+        var json = JSON.parse(contents);
+        stage = Konva.Node.create(json, 'container');
+        stage.draw(); // Teken de stage opnieuw om de geïmporteerde vormen te tonen
+    };
+    reader.readAsText(file);
+});
+//exporteer json
 document.getElementById('jsonButton').addEventListener('click', function () {
     var json = stage.toJSON();
     console.log(json);
@@ -536,18 +549,6 @@ document.getElementById('jsonButton').addEventListener('click', function () {
     a.download = 'backup.json';
     a.href = url;
     a.click();
-});
-
-document.getElementById('jsonFile').addEventListener('change', function () {
-    var file = this.files[0];
-    var reader = new FileReader();
-    reader.onload = function (e) {
-        var contents = e.target.result;
-        var json = JSON.parse(contents);
-        stage = Konva.Node.create(json, 'container');
-        stage.draw(); // Teken de stage opnieuw om de geïmporteerde vormen te tonen
-    };
-    reader.readAsText(file);
 });
 //einde json import en export
 </script>
