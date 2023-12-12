@@ -259,6 +259,12 @@ document.querySelector('.delete').addEventListener('click', function () {
     deleteSelectedCircles();
 });
 
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Delete') {
+        deleteSelectedCircles();
+    }
+})
+
 function downloadURI(uri, filename) {
     var link = document.createElement('a');
     link.href = uri;
@@ -409,6 +415,12 @@ document.querySelector('.createEllipse').addEventListener('click', function () {
 });
 
 document.querySelector('.delete').addEventListener('click', deleteSelectedEllipses);
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Delete') {
+        deleteSelectedEllipses();
+    }
+});
 
 var json = stage.toJSON();
 
