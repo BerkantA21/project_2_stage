@@ -1,14 +1,14 @@
 .sidebar {
-    height: 100%;
+    height: 100vh;
     width: 230px;
     position: fixed; 
     left: 0;
     top: 0;
-    padding-top: 20px;
+    padding-top: 10px;
     background-color: rgb(68, 96, 137);
    box-shadow: 0 0 10px rgba(0,0,0,0.3);
     transition: all 0.3s ease;
-    overflow: auto; 
+    overflow: scroll; 
 }
 
 .sidebar div {
@@ -80,3 +80,4 @@ label[for="jsonFile"]:hover {
     background-color: rgb(68, 96, 137);
     color: rgb(255, 255, 255);
 }
+

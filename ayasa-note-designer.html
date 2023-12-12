@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: -20px; width: 260px; bottom: 0px;">
+<div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: 0px; width: 260px; bottom: 0px;">
     <h2>Cirkel:</h2>
     <div>Tekst: <input type="text" id="circleText"></div>
     <div>Kies cirkel kleur:<input type="color" role="colorSelect"></div>
@@ -35,7 +35,7 @@
     <div>Kies tekst kleur:<input type="color" role="colorSelectEllipse"></div>
     <div>
         <button class="createEllipse">Ovaal knop</button>
-    </div><br>
+    </div>
     <div>
         <button class="delete">Verwijder</button>
     </div>
@@ -179,26 +179,22 @@ function createCircle(text, colors) {
         }
     });
     
-    group.on('mouseup', (e) => console.log('mouseup event handler called'));
+        group.on('mouseup', (e) => console.log('mouseup event handler called'));
 
-    group.add(circle);
-    group.add(textNode);
-    attributeLayer.add(group);
-    attributeLayer.draw();
-    circles.push(circle);
+        group.add(circle);
+        group.add(textNode);
+        attributeLayer.add(group);
+        attributeLayer.draw();
+        circles.push(circle);
 
-   
-
-    // ricardo
-     circle.on('transformend', () => {
-         // Update de positie van de tekst wannneer de cirkel wordt getransformeerd
-         textNode.position({
+    circle.on('transformend', () => {
+     // Update de positie van de tekst wannneer de cirkel wordt getransformeerd
+        textNode.position({
              x: circle.x(),
              y: circle.y()
          });
-     });
+    });
 
-     // ricardo
     // zorgt ervoor dat je de cirkel kan selecteren voor een multi select
      let isCircleSelected = false;
      group.on('mousedown', function (e) {
@@ -524,7 +520,6 @@ stage.on('click tap', function (e) {
 });
 
 //begin json import en export
-
 //importeer json
 document.getElementById('jsonFile').addEventListener('change', function () {
     var file = this.files[0];
