@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <script src="https://unpkg.com/konva@9.2.0/konva.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
     <link rel="stylesheet" href="./style.css">
     <meta charset="utf-8"/>
     <title>
-        KONVA SVG EDIT DEMO
+        Ayasa Note Designer
     </title>
     <style>
         body {
@@ -22,11 +21,12 @@
 
 <div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: 0px; width: 260px; bottom: 0px;">
     <h2>Cirkel:</h2>
+
     <div>Tekst: <input type="text" id="circleText"></div>
     <div>Kies cirkel kleur:<input type="color" role="colorSelect"></div>
     <div>Kies tekst kleur:<input type="color" role="colorSelect"></div>
     <div>
-        <button class="create">Cirkel knop</button>
+        <button class="create">Cirkel toevoegen</button>
     </div>
 
     <h2>Ovaal:</h2>
@@ -34,7 +34,7 @@
     <div>Kies ovaal kleur:<input type="color" role="colorSelectEllipse"></div>
     <div>Kies tekst kleur:<input type="color" role="colorSelectEllipse"></div>
     <div>
-        <button class="createEllipse">Ovaal knop</button>
+        <button class="createEllipse">Ovaal toevoegen</button>
     </div>
     <div>
         <button class="delete">Verwijder</button>
@@ -53,7 +53,7 @@
 
 <div id="container"></div>
 <script>//begin van de script
-
+console.log('Welkom bij de Ayasa Note Designer!');
 const width = window.innerWidth;
 const height = window.innerHeight;
 

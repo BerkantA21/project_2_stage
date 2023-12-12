@@ -19,7 +19,8 @@
 
    
 4. nieuwe dingen die gefixt moeten worden.
-- text wit wat nu de hover is waar de button in staat dat moet nu de button worden //done
-- na importeren json text aanpassen
-- alles werkt niet meer na het importeren van json
-- de vormen worden niet opgeslagen in de png
+    - text wit wat nu de hover is waar de button in staat dat moet nu de button worden //done
+    - scrollbar toevoegen
+    - na importeren json text aanpassen
+    - alles werkt niet meer na het importeren van json BV de create cirkel/ovaal
+    - de vormen worden niet opgeslagen in de png na het importeren van de json

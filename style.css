@@ -27,14 +27,13 @@
 .body-text {
     margin-left: 210px;
     font-size: 18px;
-    padding: 20px;
     line-height: 1.6; 
 }
 
 button {
     font-size: large;
     background-color: transparent;
-    height: 40px;
+    height: 30px;
     width: 110%;
     border: none; 
     cursor: pointer;
@@ -68,16 +67,18 @@ input[type="file"] {
 label[for="jsonFile"] {
     padding: 10px 0;
     background-color: transparent;
-    color: black;
     display: inline-block;
     width: 100%;
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.3s ease;
+    text-align: center;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: black;
 }
 
 label[for="jsonFile"]:hover {
-    background-color: rgb(68, 96, 137);
-    color: black;
+    background-color: transparent;
+    color: rgb(255, 255, 255);
 }
 
