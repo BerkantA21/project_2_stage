@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <script src="https://unpkg.com/konva@9.2.0/konva.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./style.css">
     <meta charset="utf-8"/>
     <title>
@@ -39,9 +40,8 @@
     <div>
         <button class="delete">Verwijder</button>
     </div>
-    <div>
         <button id="save">Opslaan als png</button>
-    </div>
+        <button id="resetButton">Reset Konva Stage</button>
     <div>
         <button id="jsonButton">Opslaan als JSON</button>
     </div>
@@ -54,6 +54,29 @@
 <div id="container"></div>
 <script>//begin van de script
 console.log('Welkom bij de Ayasa Note Designer!');
+
+function resetKonvaStage() {
+    // Clear existing shapes
+    // circles.forEach(circle => circle.destroy());
+    // ellipses.forEach(ellipse => ellipse.destroy());
+    attributeLayer.destro
+
+    // Clear selected shapes
+    selectedShapes = [];
+    
+
+    // Clear any existing transformers
+    const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
+    transformers.forEach(transformer => transformer.detach());
+
+
+
+    // Redraw the layer
+    attributeLayer.draw();
+}
+
+document.getElementById('resetButton').addEventListener('click', resetKonvaStage);
+
 const width = window.innerWidth;
 const height = window.innerHeight;
 
@@ -518,5 +541,6 @@ document.getElementById('jsonButton').addEventListener('click', function () {
 
 //einde json import en export
 </script>
+<script type="module" src="./js/main.js"></script>
 </body>
 </html>
