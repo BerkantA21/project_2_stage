@@ -21,30 +21,31 @@
 <body>
 
 <div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: 0px; width: 260px; bottom: 0px;">
-        <h2>Vorm:</h2>
+    <h2>Cirkel:</h2>
 
-    <div>Kies vorm: 
-        <select id="shapeSelect">
-            <option value="circle">Cirkel</option>
-            <option value="ellipse">Ovaal</option>
-        </select>
-    </div>
-    <div>Tekst: <input type="text" id="shapeText"></div>
-    <div>Kies vorm kleur:<input type="color" id="shapeColor"></div>
+    <div>Tekst: <input type="text" id="circleText"></div>
+    <div>Kies cirkel kleur:<input type="color" id="backgroundColor"></div>
     <div>Kies tekst kleur:<input type="color" id="textColor"></div>
     <div>
-        <button class="createShape">Vorm toevoegen</button>
+        <button class="create">Cirkel toevoegen</button>
     </div>
-    <dialog>
-        <p class="dialog-text">Voer een nieuwe tekst in</p>
+        <dialog>
+            <p class="dialog-text">Voer een nieuwe tekst in</p>
         <input id ="inputdialog" type="text" >
         <button id="ok-button">OK</button>
-    </dialog>
+        </dialog>
+    <h2>Ovaal:</h2>
+    <div>Tekst: <input type="text" id="ellipseText"></div>
+    <div>Kies ovaal kleur:<input type="color" id="EllipseBackgroundColor"></div>
+    <div>Kies tekst kleur:<input type="color" id="EllipseTextColor"></div>
+    <div>
+        <button class="createEllipse">Ovaal toevoegen</button>
+    </div>
     <div>
         <button class="delete">Verwijder</button>
     </div>
-    <button id="save">Opslaan als png</button>
-    <button id="resetButton">Reset Konva Stage</button>
+        <button id="save">Opslaan als png</button>
+        <button id="resetButton">Reset Konva Stage</button>
     <div>
         <button id="jsonButton">Opslaan als JSON</button>
     </div>
@@ -71,6 +72,8 @@ function resetKonvaStage() {
     // Clear any existing transformers
     const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
     transformers.forEach(transformer => transformer.detach());
+
+
 
     // Redraw the layer
     attributeLayer.draw();
@@ -165,19 +168,6 @@ stage.add(attributeLayer);
 
 let selectedTransformer = null;
 
-document.querySelector('.createShape').addEventListener('click', function () {
-    const shape = document.getElementById('shapeSelect').value;
-    const text = document.getElementById('shapeText').value;
-    const backgroundColor = document.getElementById('shapeColor').value;
-    const textColor = document.getElementById('textColor').value;
-    
-    if (shape === 'circle') {
-        createCircle(text, textColor, backgroundColor);
-    } else if (shape === 'ellipse') {
-        createEllipse(text, textColor, backgroundColor);
-    }
-});
-
 //createCircle is een functie die een cirkel maakt
 function createCircle(text, textColor, backgroundColor) {
 
@@ -259,6 +249,7 @@ function createCircle(text, textColor, backgroundColor) {
              attributeLayer.draw();
          }
      });
+
 }
     
 //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
@@ -289,6 +280,14 @@ function deleteSelectedCircles() {
 
     attributeLayer.draw();
 }
+
+//deze eventlistener luistert naar een click event en voert de functie createCircle uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createCircle.
+document.querySelector('.create').addEventListener('click', function () {
+    const text = document.getElementById('circleText').value;
+    const backgroundColor = document.getElementById('backgroundColor').value;
+    const textColor = document.getElementById('textColor').value;
+    createCircle(text, textColor, backgroundColor);
+});
 
 document.querySelector('.delete').addEventListener('click', function () {
     deleteSelectedCircles();
@@ -448,6 +447,14 @@ function deleteSelectedEllipses() {
     attributeLayer.draw(); // update de layer
 }
 
+    //deze eventlistener luistert naar een click event en voert de functie createEllipse uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createEllipse.
+    document.querySelector('.createEllipse').addEventListener('click', function () {
+        const text = document.getElementById('ellipseText').value;
+        const backgroundColor = document.getElementById('EllipseBackgroundColor').value;
+        const textColor = document.getElementById('EllipseTextColor').value;
+        createEllipse(text, textColor, backgroundColor);
+    });
+
     document.querySelector('.delete').addEventListener('click', deleteSelectedEllipses);
 
     document.addEventListener('keydown', function(event) {
@@ -465,11 +472,11 @@ function deleteSelectedEllipses() {
     });
     attributeLayer.add(selectionRectangle);
         
-let x1, y1, x2, y2;
-stage.on('mousedown', (e) => {
-    if (e.target !== stage && e.target !== square) {
-        return;
-    }
+    let x1, y1, x2, y2;
+    stage.on('mousedown', (e) => {
+        if (e.target !== stage && e.target !== square) {
+            return;
+        }
     
     e.evt.preventDefault();
 
@@ -589,7 +596,6 @@ document.getElementById('jsonButton').addEventListener('click', function () {
 // window.addEventListener('beforeunload', (event) => event.preventDefault())
 
 //einde json import en export
-
 </script>
 <script type="module" src="./js/main.js"></script>
 </body>
