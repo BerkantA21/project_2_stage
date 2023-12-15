@@ -47,14 +47,15 @@
         <button id="save">Opslaan als png</button>
     </div>
     <div>
-        <button id="resetButton">Reset Konva Stage</button>
-    </div>
-    <div>
         <button id="jsonButton">Opslaan als JSON</button>
     </div>
     <div>
         <label for="jsonFile">Importeer JSON</label>
         <input type="file" id="jsonFile"/>
+    </div>
+    <br><br>
+    <div>
+        <button id="resetButton">Reset Konva Stage</button>
     </div>
 </div>
 
@@ -94,8 +95,8 @@ function resetKonvaStage() {
     transformers.forEach(transformer => transformer.destroy());
 
     // Clear the arrays
-    circles = [];
-    ellipses = [];
+    // circles = [];
+    // ellipses = [];
 
     // Redraw the layer
     attributeLayer.draw();
@@ -118,6 +119,7 @@ let stage = new Konva.Stage({
 
 //maak de layer aan
 let attributeLayer = new Konva.Layer();
+let backgroundLayer = new Konva.Layer();
 
 // de vierkant die de achtergrond van de cirkels en ovalen is
 const square = new Konva.Rect({
@@ -141,6 +143,7 @@ const text1 = new Konva.Text({
     fill: 'black',
     align: 'center',
 });
+
 // maak cirkel 1
 const circle = new Konva.Circle({
     x: stage.width() / 2 - 290, // move de cirkel naar links
@@ -177,16 +180,16 @@ const circle2 = new Konva.Circle({
 });
 
 // voeg de vormen toe aan de aatributelayer
-attributeLayer.add(square);
-attributeLayer.add(circle);
-attributeLayer.add(circle2);
-attributeLayer.add(text1);
-attributeLayer.add(text2);
+backgroundLayer.add(square);
+backgroundLayer.add(circle);
+backgroundLayer.add(circle2);
+backgroundLayer.add(text1);
+backgroundLayer.add(text2);
 // Draw the layer
-attributeLayer.draw();
+backgroundLayer.draw();
 
-// Add the attributeLayer to the stage
-stage.add(attributeLayer);
+// Add the backgroundLayer to the stage
+stage.add(backgroundLayer);
 
 let selectedTransformer = null;
 
@@ -269,6 +272,8 @@ function createCircle(text, textColor, backgroundColor) {
         attributeLayer.add(group);
         attributeLayer.draw();
         circles.push(circle);
+
+        stage.add(attributeLayer);
 
     // zorgt ervoor dat je de cirkel kan selecteren voor een multi select
      let isCircleSelected = false;
@@ -410,8 +415,10 @@ function createEllipse(text, textColor, backgroundColor) {
     attributeLayer.draw();
     ellipses.push(ellipse);
 
+    stage.add(attributeLayer);
+
      let isEllipseSelected = false;
-     group.on('mousedown', function (e) {
+     group.on('click', function (e) {
          if (e.evt.button === 0) {
              if (selectedTransformer) {
                  selectedTransformer.detach();
