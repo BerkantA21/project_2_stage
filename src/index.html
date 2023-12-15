@@ -68,7 +68,7 @@ function resetKonvaStage() {
     circles.forEach(circle => {
         circle.destroy();
         // Destroy associated text
-        const textNode = circle.getParent().findOne(node => node instanceof Konva.Text);
+        const textNode = circle.getChildren().findOne(node => node instanceof Konva.Text);
         if (textNode) {
             textNode.destroy();
         }
@@ -77,18 +77,22 @@ function resetKonvaStage() {
     ellipses.forEach(ellipse => {
         ellipse.destroy();
         // Destroy associated text
-        const textNode = ellipse.getParent().findOne(node => node instanceof Konva.Text);
+        const textNode = ellipse.getChildren().findOne(node => node instanceof Konva.Text);
         if (textNode) {
             textNode.destroy();
         }
     });
     
     // Clear selected shapes
-    selectedShapes = [];
+    // selectedShapes = [];
     
     // Clear any existing transformers
     const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
     transformers.forEach(transformer => transformer.destroy());
+
+    // Clear the arrays
+    circles = [];
+    ellipses = [];
 
     // Redraw the layer
     attributeLayer.draw();
