@@ -198,6 +198,12 @@ function createCircle(text, textColor, backgroundColor) {
         }
     });
 
+    //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
+    circle.on('dblclick', () => {
+        let newText = window.prompt('Voer een nieuwe tekst in');
+        textNode.text(newText);
+        textNode.offsetX(newText.length * 10 / 2);
+    });
 
         group.add(circle);
         group.add(textNode);
@@ -320,6 +326,13 @@ function createEllipse(text, textColor, backgroundColor) {
             x: text.length * 10 / 2,
             y: 20 / 2
         }
+    });
+
+    //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
+    ellipse.on('dblclick', () => {
+        let newText = window.prompt('Voer een nieuwe tekst in');
+        textNode.text(newText);
+        textNode.offsetX(newText.length );
     });
 
     group.add(ellipse);
