@@ -356,25 +356,25 @@ function createEllipse(text, textColor, backgroundColor) {
      });
 }
 
-// Maak een nieuwe laag
-let layer = new Konva.Layer();
+    // Maak een nieuwe laag
+    let layer = new Konva.Layer();
 
-// Voeg de laag toe aan de stage
-stage.add(layer);
+    // Voeg de laag toe aan de stage
+    stage.add(layer);
 
-// Maak een nieuwe groep
-let group = new Konva.Group({
-    draggable: true
-});
+    // Maak een nieuwe groep
+    let group = new Konva.Group({
+        draggable: true
+    });
 
-// Voeg de groep toe aan de laag
-layer.add(group);
+    // Voeg de groep toe aan de laag
+    layer.add(group);
 
-// Maak de groep draggable
-group.draggable(true);
+    // Maak de groep draggable
+    group.draggable(true);
 
-// Teken de laag opnieuw om de wijzigingen te laten zien
-layer.draw();
+    // Teken de laag opnieuw om de wijzigingen te laten zien
+    layer.draw();
 
 //deze functie zorgt ervoor dat je meerdere ellipses tegelijk kan verwijderen
 function deleteSelectedEllipses() {
@@ -404,36 +404,36 @@ function deleteSelectedEllipses() {
     attributeLayer.draw(); // update de layer
 }
 
-//deze eventlistener luistert naar een click event en voert de functie createEllipse uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createEllipse.
-document.querySelector('.createEllipse').addEventListener('click', function () {
-    const text = document.getElementById('ellipseText').value;
-    const backgroundColor = document.getElementById('EllipseBackgroundColor').value;
-    const textColor = document.getElementById('EllipseTextColor').value;
-    createEllipse(text, textColor, backgroundColor);
-});
+    //deze eventlistener luistert naar een click event en voert de functie createEllipse uit. colors is een array die de kleuren bevat en wordt verwezen naar de functie createEllipse.
+    document.querySelector('.createEllipse').addEventListener('click', function () {
+        const text = document.getElementById('ellipseText').value;
+        const backgroundColor = document.getElementById('EllipseBackgroundColor').value;
+        const textColor = document.getElementById('EllipseTextColor').value;
+        createEllipse(text, textColor, backgroundColor);
+    });
 
-document.querySelector('.delete').addEventListener('click', deleteSelectedEllipses);
+    document.querySelector('.delete').addEventListener('click', deleteSelectedEllipses);
 
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Delete') {
-        deleteSelectedEllipses();
-    }
-});
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Delete') {
+            deleteSelectedEllipses();
+        }
+    });
 
-var transformer = new Konva.Transformer();
-layer.add(transformer);
+    var transformer = new Konva.Transformer();
+    layer.add(transformer);
 
-let selectionRectangle = new Konva.Rect({
-    fill: 'rgba(0,0,255,0.5)',
-    visible: false,
-});
-attributeLayer.add(selectionRectangle);
-
-let x1, y1, x2, y2;
-stage.on('mousedown', (e) => {
-    if (e.target !== stage && e.target !== square) {
-        return;
-    }
+    let selectionRectangle = new Konva.Rect({
+        fill: 'rgba(0,0,255,0.5)',
+        visible: false,
+    });
+    attributeLayer.add(selectionRectangle);
+        
+    let x1, y1, x2, y2;
+    stage.on('mousedown', (e) => {
+        if (e.target !== stage && e.target !== square) {
+            return;
+        }
     
     e.evt.preventDefault();
 
