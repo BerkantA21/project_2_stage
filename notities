@@ -7,22 +7,25 @@
     - opslaan als json knop
 
 2. canvas opties fixen
-    - dingen achter de orginele cirkel kunnen zetten DONE
+    - dingen achter de orginele cirkel kunnen zetten //DONE
     - text in cirkel gecentreerd houden DONE
-    - multi element select als een sleep window en ze kunnen bewegen 
-    - select en deselect buiten de cirkel DONE
-    - hij ziet de 2 grote cirkels ook als cirkel dus de select window werkt niet goed DONE
+    - multi element select als een sleep window en ze kunnen bewegen //done
+    - select en deselect buiten de cirkel //DONE
+    - hij ziet de 2 grote cirkels ook als cirkel dus de select window werkt niet goed //DONE
 
 3. importeren van json
-    - het inladen van een json bestand die de stage herbouwd//done
-    - de json slaat niet de locatie op van de vormen//Done
+    - het inladen van een json bestand die de stage herbouwd //done
+    - de json slaat niet de locatie op van de vormen //Done
 
    
 4. nieuwe dingen die gefixt moeten worden.
     - text wit wat nu de hover is waar de button in staat dat moet nu de button worden //done
-    - alles werkt niet meer na het importeren van json BV de create cirkel/ovaal Done
-    - na importeren json text aanpassen
-    - de vormen worden niet opgeslagen in de png na het importeren van de json
-    - ik moet de click functie on stage dingen opnieuw toevoegen na het importere
-    - alert wanneer je f5 drukt zodat je moet confirmen dat je de pagina wilt verversen
-    - bij de alert een download json knop toevoegen
+    - alles werkt niet meer na het importeren van json BV de create cirkel/ovaal //Done
+    - na importeren json text aanpassen //done
+    - de vormen worden niet opgeslagen in de png na het importeren van de json //Done
+    - alert wanneer je f5 drukt zodat je moet confirmen dat je de pagina wilt verversen//done
+    - bij de alert een download json knop toevoegen //not possible
+    - ik moet de click functie on stage dingen opnieuw toevoegen na het importeren
+    - stage reset button.
+
+    html 

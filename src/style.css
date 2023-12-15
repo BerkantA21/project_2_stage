@@ -84,3 +84,26 @@ label[for="jsonFile"]:hover {
     color: rgb(255, 255, 255);
 }
 
+::backdrop {
+    backdrop-filter: blur(8px);
+    overflow: hidden;
+    
+}
+dialog, #dialog-text{
+    font-size: 24px;
+
+}
+::backdrop, .ok-button {
+color: black;
+
+}
+
+::backdrop, .ok-button:hover {
+color: white;
+background-color: rgba(0,0,0,0.1);
+}
+
+dialog{
+color: black;
+background-color: rgb(68, 96, 137);
+}
