@@ -21,31 +21,30 @@
 <body>
 
 <div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: 0px; width: 260px; bottom: 0px;">
-    <h2>Cirkel:</h2>
+        <h2>Vorm:</h2>
 
-    <div>Tekst: <input type="text" id="circleText"></div>
-    <div>Kies cirkel kleur:<input type="color" id="backgroundColor"></div>
+    <div>Kies vorm: 
+        <select id="shapeSelect">
+            <option value="circle">Cirkel</option>
+            <option value="ellipse">Ovaal</option>
+        </select>
+    </div>
+    <div>Tekst: <input type="text" id="shapeText"></div>
+    <div>Kies vorm kleur:<input type="color" id="shapeColor"></div>
     <div>Kies tekst kleur:<input type="color" id="textColor"></div>
     <div>
-        <button class="create">Cirkel toevoegen</button>
+        <button class="createShape">Vorm toevoegen</button>
     </div>
-        <dialog>
-            <p class="dialog-text">Voer een nieuwe tekst in</p>
+    <dialog>
+        <p class="dialog-text">Voer een nieuwe tekst in</p>
         <input id ="inputdialog" type="text" >
         <button id="ok-button">OK</button>
-        </dialog>
-    <h2>Ovaal:</h2>
-    <div>Tekst: <input type="text" id="ellipseText"></div>
-    <div>Kies ovaal kleur:<input type="color" id="EllipseBackgroundColor"></div>
-    <div>Kies tekst kleur:<input type="color" id="EllipseTextColor"></div>
-    <div>
-        <button class="createEllipse">Ovaal toevoegen</button>
-    </div>
+    </dialog>
     <div>
         <button class="delete">Verwijder</button>
     </div>
-        <button id="save">Opslaan als png</button>
-        <button id="resetButton">Reset Konva Stage</button>
+    <button id="save">Opslaan als png</button>
+    <button id="resetButton">Reset Konva Stage</button>
     <div>
         <button id="jsonButton">Opslaan als JSON</button>
     </div>
@@ -72,8 +71,6 @@ function resetKonvaStage() {
     // Clear any existing transformers
     const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
     transformers.forEach(transformer => transformer.detach());
-
-
 
     // Redraw the layer
     attributeLayer.draw();
@@ -168,6 +165,20 @@ stage.add(attributeLayer);
 
 let selectedTransformer = null;
 
+// de select in de sidebar opties
+document.querySelector('.createShape').addEventListener('click', function() {
+    var shape = document.getElementById('shapeSelect').value;
+    var text = document.getElementById('shapeText').value;
+    var shapeColor = document.getElementById('shapeColor').value;
+    var textColor = document.getElementById('textColor').value;
+
+    if(shape === 'circle') {
+        createCircle(text, textColor, shapeColor);
+    } else if(shape === 'ellipse') {
+        createEllipse(text, textColor, shapeColor);
+    }
+});
+
 //createCircle is een functie die een cirkel maakt
 function createCircle(text, textColor, backgroundColor) {
 
@@ -249,7 +260,6 @@ function createCircle(text, textColor, backgroundColor) {
              attributeLayer.draw();
          }
      });
-
 }
     
 //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
