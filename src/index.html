@@ -213,7 +213,7 @@ function createCircle(text, textColor, backgroundColor) {
 
     // zorgt ervoor dat je de cirkel kan selecteren voor een multi select
      let isCircleSelected = false;
-     group.on('mousedown', function (e) {
+     group.on('click', function (e) {
          if (e.evt.button === 0) {
              if (selectedTransformer) {
                  selectedTransformer.detach();
