@@ -29,7 +29,11 @@
     <div>
         <button class="create">Cirkel toevoegen</button>
     </div>
-
+        <dialog>
+            <p class="dialog-text">Voer een nieuwe tekst in</p>
+        <input id ="inputdialog" type="text" >
+        <button id="ok-button">OK</button>
+        </dialog>
     <h2>Ovaal:</h2>
     <div>Tekst: <input type="text" id="ellipseText"></div>
     <div>Kies ovaal kleur:<input type="color" id="EllipseBackgroundColor"></div>
@@ -197,12 +201,32 @@ function createCircle(text, textColor, backgroundColor) {
             y: 20 / 2
         }
     });
+    
+    const dialog = document.querySelector('dialog');
 
     //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
     circle.on('dblclick', () => {
-        let newText = window.prompt('Voer een nieuwe tekst in');
+
+       dialog.showModal();
+
+       const inputdialog = document.querySelector('#inputdialog');
+
+       const input = dialog.querySelector('input');
+
+       input.value = textNode.text();
+
+       // Voeg een event listener toe aan de OK knop in het dialog
+        dialog.querySelector('#ok-button').addEventListener('click', () => {
+        // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
+        // en de x-offset, en teken het stage opnieuw
+        let newText = input.value;
         textNode.text(newText);
         textNode.offsetX(newText.length * 10 / 2);
+        stage.draw();
+
+        // Sluit het dialog
+        dialog.close();
+        });
     });
 
         group.add(circle);
@@ -328,13 +352,32 @@ function createEllipse(text, textColor, backgroundColor) {
         }
     });
 
+    const dialog = document.querySelector('dialog');
+
     //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
     ellipse.on('dblclick', () => {
-        let newText = window.prompt('Voer een nieuwe tekst in');
-        textNode.text(newText);
-        textNode.offsetX(newText.length );
-    });
+        
+       dialog.showModal();
 
+       const inputdialog = document.querySelector('#inputdialog');
+
+       const input = dialog.querySelector('input');
+
+       input.value = textNode.text();
+
+       // Voeg een event listener toe aan de OK knop in het dialog
+        dialog.querySelector('#ok-button').addEventListener('click', () => {
+        // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
+        // en de x-offset, en teken het stage opnieuw
+        let newText = input.value;
+        textNode.text(newText);
+        textNode.offsetX(newText.length * 10 / 2);
+        stage.draw();
+
+        // Sluit de dialog
+        dialog.close();
+        });
+    });
     group.add(ellipse);
     group.add(textNode);
     attributeLayer.add(group);
