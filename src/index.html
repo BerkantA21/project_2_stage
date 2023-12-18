@@ -41,7 +41,7 @@
         <button id="ok-button">OK</button>
     </dialog>
     <div>
-        <button class="delete">Verwijder</button>
+        <button class="delete">Vorm verwijder</button>
     </div>
     <div>
         <button id="save">Opslaan als png</button>
@@ -55,7 +55,7 @@
     </div>
     <br><br>
     <div>
-        <button id="resetButton">Reset Konva Stage</button>
+        <button id="resetButton">Reset</button>
     </div>
 </div>
 
@@ -594,6 +594,7 @@ document.getElementById('jsonFile').addEventListener('change', function () {
     };
     reader.readAsText(file);
 });
+
 //exporteer json
 document.getElementById('jsonButton').addEventListener('click', function () {
     const shapes = stage.find('.objectGroup').map(x => x.toObject());
@@ -605,8 +606,6 @@ document.getElementById('jsonButton').addEventListener('click', function () {
     a.download = 'backup.json';
     a.href = url;
     a.click();
-
-    
 });
 
 // window.addEventListener('beforeunload', (event) => event.preventDefault())
