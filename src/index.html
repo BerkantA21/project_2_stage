@@ -63,7 +63,7 @@
 console.log('Welkom bij de Ayasa Note Designer!');
 
 function resetKonvaStage() {
-    // Clear existing shapes
+    
     circles.forEach(circle => {
         const group = circle.getParent();
         if (group) {
@@ -78,14 +78,11 @@ function resetKonvaStage() {
         }
     });
 
-    // Clear any existing transformers
     const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
     transformers.forEach(transformer => transformer.destroy());
 
-    // Create a new attribute layer
     attributeLayer = new Konva.Layer();
 
-    // Redraw the layer
     attributeLayer.draw();
 }
 
@@ -262,6 +259,7 @@ function createCircle(text, textColor, backgroundColor) {
         attributeLayer.add(group);
         attributeLayer.draw();
         circles.push(circle);
+        attachEventListeners(group);
 
         stage.add(attributeLayer);
 
@@ -406,6 +404,7 @@ function createEllipse(text, textColor, backgroundColor) {
     attributeLayer.add(group);
     attributeLayer.draw();
     ellipses.push(ellipse);
+    attachEventListeners(group);
 
     stage.add(attributeLayer);
 
@@ -610,6 +609,11 @@ document.getElementById('jsonButton').addEventListener('click', function () {
     a.href = url;
     a.click();
 });
+
+function attachEventListeners(shape) {
+    // Voeg hier event listeners toe voor de vormen. Dubbelklik, klik, etc...
+    
+}
 
 // window.addEventListener('beforeunload', (event) => event.preventDefault())
 
