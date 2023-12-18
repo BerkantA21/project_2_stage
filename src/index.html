@@ -21,17 +21,16 @@
 <body>
 
 <div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: 0px; width: 260px; bottom: 0px;">
-        <h2>Vorm:</h2>
-
-    <div>Kies vorm: 
+    <h2>Ayasa Note Designer</h2>
+    <div>Vorm:
         <select id="shapeSelect">
             <option value="circle">Cirkel</option>
             <option value="ellipse">Ovaal</option>
         </select>
     </div>
     <div>Tekst: <input type="text" id="shapeText"></div>
-    <div>Kies vorm kleur:<input type="color" id="shapeColor"></div>
-    <div>Kies tekst kleur:<input type="color" id="textColor"></div>
+    <div>Kies vorm kleur: <br><br><input type="color" id="shapeColor"></div>
+    <div>Kies tekst kleur: <br><br><input type="color" id="textColor"></div>
     <div>
         <button class="createShape">Vorm toevoegen</button>
     </div>
@@ -228,6 +227,8 @@ function createCircle(text, textColor, backgroundColor) {
             y: 20 / 2
         }
     });
+
+    // attachEventListeners(circle);
     
     const dialog = document.querySelector('dialog');
 
@@ -372,6 +373,8 @@ function createEllipse(text, textColor, backgroundColor) {
         }
     });
 
+    // attachEventListeners(ellipse);
+
     const dialog = document.querySelector('dialog');
 
     //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
@@ -484,7 +487,7 @@ function deleteSelectedEllipses() {
         fill: 'rgba(0,0,255,0.5)',
         visible: false,
     });
-    attributeLayer.add(selectionRectangle);
+    backgroundLayer.add(selectionRectangle);
         
 let x1, y1, x2, y2;
 stage.on('mousedown', (e) => {
@@ -589,7 +592,7 @@ document.getElementById('jsonFile').addEventListener('change', function () {
         var contents = e.target.result;
         var json = JSON.parse(contents);
         console.log(json);
-        json.forEach(group => attributeLayer.add(Konva.Node.create(group)));
+        json.forEach(group => backgroundLayer.add(Konva.Node.create(group)));
 
     };
     reader.readAsText(file);
