@@ -65,42 +65,31 @@ console.log('Welkom bij de Ayasa Note Designer!');
 
 function resetKonvaStage() {
     // Clear existing shapes
-    // circles.forEach(circle => circle.destroy());
-    // ellipses.forEach(ellipse => ellipse.destroy());
-
-    // Clear existing shapes
     circles.forEach(circle => {
-        circle.destroy();
-        // Destroy associated text
-        const textNode = circle.getChildren().findOne(node => node instanceof Konva.Text);
-        if (textNode) {
-            textNode.destroy();
+        const group = circle.getParent();
+        if (group) {
+            group.destroy();
         }
     });
 
     ellipses.forEach(ellipse => {
-        ellipse.destroy();
-        // Destroy associated text
-        const textNode = ellipse.getChildren().findOne(node => node instanceof Konva.Text);
-        if (textNode) {
-            textNode.destroy();
+        const group = ellipse.getParent();
+        if (group) {
+            group.destroy();
         }
     });
-    
-    // Clear selected shapes
-    // selectedShapes = [];
-    
+
     // Clear any existing transformers
     const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
     transformers.forEach(transformer => transformer.destroy());
 
-    // Clear the arrays
-    // circles = [];
-    // ellipses = [];
+    // Create a new attribute layer
+    attributeLayer = new Konva.Layer();
 
     // Redraw the layer
     attributeLayer.draw();
 }
+
 
 document.getElementById('resetButton').addEventListener('click', resetKonvaStage);
 
