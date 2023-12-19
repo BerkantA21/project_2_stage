@@ -621,9 +621,12 @@ const handleGroupSelect = (e, shape) => {
     if (selectedShape) {
         selectedShape.stroke('blue');
         attributeLayer.draw();
+    } else {
+        selectedShape.stroke('black');
     }
 };
 
+const shape =  stage.find('.objectGroup').map(x => x.findOne('Circle'));
 
 const importJson = (e) => {
     var contents = e.target.result;
