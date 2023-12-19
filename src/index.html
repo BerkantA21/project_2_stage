@@ -270,18 +270,8 @@ function createCircle(text, textColor, backgroundColor) {
 
     // zorgt ervoor dat je de cirkel kan selecteren voor een multi select
      let isCircleSelected = false;
-     group.on('click', function (e) {
-         if (e.evt.button === 0) {
-             if (selectedTransformer) {
-                 selectedTransformer.detach();
-             }
-
-            isCircleSelected = !isCircleSelected;
-             circle.stroke(isCircleSelected ? 'blue' : 'black');
-
-             attributeLayer.draw();
-         }
-     });
+     group.on('click', (e) => handleGroupSelect(e, group)); 
+     
 }
     
 //deze functie zorgt ervoor dat je meerdere cirkels tegelijk kan verwijderen
@@ -589,11 +579,12 @@ window.onbeforeunload = function() {
     return "Weet je zeker dat je de pagina wilt verversen? Alle niet opgeslagen data gaat verloren.";
 }
 
-//begin json import en export
 //importeer json 
 const dialog = document.querySelector('dialog');
 const inputdialog = document.querySelector('#inputdialog');
 let selectedNode = null;
+let selectedShape = null;
+
 
 const saveName = () => {
     // wanneer de OK knop wordt geklikt, update de tekst van de textNode
@@ -616,6 +607,24 @@ const handleGroupDoubleClick = (e, node) => {
     inputdialog.value = selectedNode.text();
 };
 
+const clickShape = () => {
+    let shape = selectedShape;
+    selectedShape = shape;
+    attributeLayer.draw();
+}
+
+document.addEventListener('click' , clickShape);
+
+const handleGroupSelect = (e, shape) => {
+    selectedShape = shape.findOne('Circle');
+
+    if (selectedShape) {
+        selectedShape.stroke('blue');
+        attributeLayer.draw();
+    }
+};
+
+
 const importJson = (e) => {
     var contents = e.target.result;
     var json = JSON.parse(contents);
@@ -625,8 +634,9 @@ const importJson = (e) => {
         attributeLayer.add(node);
 
         node.on('dblclick', (e) => handleGroupDoubleClick(e, node));
+        node.on('click', (e) => handleGroupSelect(e, shape));
     });
-};
+}; 
 
 document.getElementById('jsonFile').addEventListener('change', function () {
     var file = this.files[0];
@@ -635,7 +645,6 @@ document.getElementById('jsonFile').addEventListener('change', function () {
     reader.onload = importJson;
     reader.readAsText(file);
 });
-
 
 //exporteer json
 document.getElementById('jsonButton').addEventListener('click', function () {
@@ -650,63 +659,7 @@ document.getElementById('jsonButton').addEventListener('click', function () {
     a.click();
 });
 
-/*
-function attachEventListeners(group) {
-    return;
-    
-    // Voeg hier event listeners toe voor de vormen, dubbelklik, klik, etc...
-    json.forEach(group => {
-            let node = Konva.Node.create(group);
-            attributeLayer.add(node);
-            
-            const dialog = document.querySelector('dialog');
-
-            // voeg dubbleclick event toe aan de cirkel
-            node.on('dblclick', () => {
-                const dialog = document.querySelector('dialog');
-                
-                let textNode = node.findOne('Text');
-                dialog.showModal();
-
-                const inputdialog = document.querySelector('#inputdialog');
-                const input = dialog.querySelector('input');
-                input.value = textNode.text();
-
-                // Add event listener to the OK button in the dialog
-                dialog.querySelector('#ok-button').addEventListener('click', () => {
-                    // wanneer de OK knop wordt geklikt, update de tekst van de textNode
-                    // en de x-offset, en teken de stage opnieuw
-                    let newText = input.value;
-                    textNode.text(newText);
-                    textNode.offsetX(newText.length * 10 / 2);
-                    stage.draw();
-
-                    // Close the dialog
-                    dialog.close();
-                });
-            });
-
-            // let isCircleSelected = false;
-            // node.on('click', function (e) {
-            //     if (e.evt.button === 0) {
-            //         if (selectedTransformer) {
-            //             selectedTransformer.detach();
-            //         }
-
-            //         isCircleSelected = !isCircleSelected;
-            //         node.stroke(isCircleSelected ? 'blue' : 'black');
-
-            //         attributeLayer.draw();
-            //     }
-            // });
-        });
-}
-*/
-
-// window.addEventListener('beforeunload', (event) => event.preventDefault())
-
 //einde json import en export
-
 </script>
 <script type="module" src="./js/main.js"></script>
 </body>
