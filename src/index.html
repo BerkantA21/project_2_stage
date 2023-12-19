@@ -230,39 +230,41 @@ function createCircle(text, textColor, backgroundColor) {
 
     // attachEventListeners(circle);
     
-    const dialog = document.querySelector('dialog');
+    // const dialog = document.querySelector('dialog');
 
-    //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
-    circle.on('dblclick', () => {
+    // //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
+    // circle.on('dblclick', () => {
 
-       dialog.showModal();
+    //    dialog.showModal();
 
-       const inputdialog = document.querySelector('#inputdialog');
+    //    const inputdialog = document.querySelector('#inputdialog');
 
-       const input = dialog.querySelector('input');
+    //    const input = dialog.querySelector('input');
 
-       input.value = textNode.text();
+    //    input.value = textNode.text();
 
-       // Voeg een event listener toe aan de OK knop in het dialog
-        dialog.querySelector('#ok-button').addEventListener('click', () => {
-            // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
-            // en de x-offset, en teken het stage opnieuw
-            let newText = input.value;
-            textNode.text(newText);
-            textNode.offsetX(newText.length * 10 / 2);
-            stage.draw();
+    //    // Voeg een event listener toe aan de OK knop in het dialog
+    //     dialog.querySelector('#ok-button').addEventListener('click', () => {
+    //         // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
+    //         // en de x-offset, en teken het stage opnieuw
+    //         let newText = input.value;
+    //         textNode.text(newText);
+    //         textNode.offsetX(newText.length * 10 / 2);
+    //         stage.draw();
 
-            // Sluit het dialog
-            dialog.close();
-        });
-    });
+    //         // Sluit het dialog
+    //         dialog.close();
+    //     });
+    // });
+
+    group.on('dblclick', (e) => handleGroupDoubleClick(e, group));
 
         group.add(circle);
         group.add(textNode);
         attributeLayer.add(group);
         attributeLayer.draw();
         circles.push(circle);
-        attachEventListeners(group);
+        // attachEventListeners(group);
 
         // stage.add(attributeLayer);
 
@@ -376,38 +378,40 @@ function createEllipse(text, textColor, backgroundColor) {
 
     // attachEventListeners(ellipse);
 
-    const dialog = document.querySelector('dialog');
+    // const dialog = document.querySelector('dialog');
 
     //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
-    ellipse.on('dblclick', () => {
+    // ellipse.on('dblclick', () => {
         
-       dialog.showModal();
+    //    dialog.showModal();
 
-       const inputdialog = document.querySelector('#inputdialog');
+    //    const inputdialog = document.querySelector('#inputdialog');
 
-       const input = dialog.querySelector('input');
+    //    const input = dialog.querySelector('input');
 
-       input.value = textNode.text();
+    //    input.value = textNode.text();
 
-       // Voeg een event listener toe aan de OK knop in het dialog
-        dialog.querySelector('#ok-button').addEventListener('click', () => {
-        // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
-        // en de x-offset, en teken het stage opnieuw
-        let newText = input.value;
-        textNode.text(newText);
-        textNode.offsetX(newText.length * 10 / 2);
-        stage.draw();
+    //    // Voeg een event listener toe aan de OK knop in het dialog
+    //     dialog.querySelector('#ok-button').addEventListener('click', () => {
+    //     // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
+    //     // en de x-offset, en teken het stage opnieuw
+    //     let newText = input.value;
+    //     textNode.text(newText);
+    //     textNode.offsetX(newText.length * 10 / 2);
+    //     stage.draw();
 
-        // Sluit de dialog
-        dialog.close();
-        });
-    });
+    //     // Sluit de dialog
+    //     dialog.close();
+    //     });
+    // });
     group.add(ellipse);
     group.add(textNode);
     attributeLayer.add(group);
     attributeLayer.draw();
     ellipses.push(ellipse);
-    attachEventListeners(group);
+    // attachEventListeners(group);
+
+    group.on('dblclick', (e) => handleGroupDoubleClick(e, group));
 
     stage.add(attributeLayer);
 
@@ -587,16 +591,71 @@ window.onbeforeunload = function() {
 
 //begin json import en export
 //importeer json 
+const dialog = document.querySelector('dialog');
+const inputdialog = document.querySelector('#inputdialog');
+let selectedNode = null;
+
+const saveName = () => {
+    // wanneer de OK knop wordt geklikt, update de tekst van de textNode
+    // en de x-offset, en teken de stage opnieuw
+    let newText = inputdialog.value;
+    selectedNode.text(newText);
+    selectedNode.offsetX(newText.length * 10 / 2);
+    stage.draw();
+
+    // Close the dialog
+    dialog.close();
+};
+
+dialog.querySelector('#ok-button').addEventListener('click', saveName);
+
+const handleGroupDoubleClick = (e, node) => {  
+    dialog.showModal();
+
+    selectedNode = node.findOne('Text');
+    inputdialog.value = selectedNode.text();
+};
+
+const importJson = (e) => {
+    var contents = e.target.result;
+    var json = JSON.parse(contents);
+
+    json.forEach(group => {
+        const node = Konva.Node.create(group);
+        attributeLayer.add(node);
+
+        node.on('dblclick', (e) => handleGroupDoubleClick(e, node));
+    });
+};
+
 document.getElementById('jsonFile').addEventListener('change', function () {
     var file = this.files[0];
     var reader = new FileReader();
-    reader.onload = function (e) {
-        var contents = e.target.result;
-        var json = JSON.parse(contents);
 
-        console.log(json);
-        
-        json.forEach(group => {
+    reader.onload = importJson;
+    reader.readAsText(file);
+});
+
+
+//exporteer json
+document.getElementById('jsonButton').addEventListener('click', function () {
+    const shapes = stage.find('.objectGroup').map(x => x.toObject());
+
+    var blob = new Blob([JSON.stringify(shapes)], {type: "application/json"});
+    var url  = URL.createObjectURL(blob);
+
+    var a = document.createElement('a');
+    a.download = 'backup.json';
+    a.href = url;
+    a.click();
+});
+
+/*
+function attachEventListeners(group) {
+    return;
+    
+    // Voeg hier event listeners toe voor de vormen, dubbelklik, klik, etc...
+    json.forEach(group => {
             let node = Konva.Node.create(group);
             attributeLayer.add(node);
             
@@ -604,6 +663,7 @@ document.getElementById('jsonFile').addEventListener('change', function () {
 
             // voeg dubbleclick event toe aan de cirkel
             node.on('dblclick', () => {
+                const dialog = document.querySelector('dialog');
                 
                 let textNode = node.findOne('Text');
                 dialog.showModal();
@@ -640,28 +700,8 @@ document.getElementById('jsonFile').addEventListener('change', function () {
             //     }
             // });
         });
-    }; 
-    reader.readAsText(file);
-});
-
-//exporteer json
-document.getElementById('jsonButton').addEventListener('click', function () {
-    const shapes = stage.find('.objectGroup').map(x => x.toObject());
-
-    var blob = new Blob([JSON.stringify(shapes)], {type: "application/json"});
-    var url  = URL.createObjectURL(blob);
-
-    var a = document.createElement('a');
-    a.download = 'backup.json';
-    a.href = url;
-    a.click();
-});
-
-function attachEventListeners(group) {
-    // Voeg hier event listeners toe voor de vormen, dubbelklik, klik, etc...
-
-    
 }
+*/
 
 // window.addEventListener('beforeunload', (event) => event.preventDefault())
 
