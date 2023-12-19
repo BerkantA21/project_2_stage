@@ -581,7 +581,7 @@ window.onbeforeunload = function() {
 }
 
 //begin json import en export
-//importeer json test
+//importeer json 
 document.getElementById('jsonFile').addEventListener('change', function () {
     var file = this.files[0];
     var reader = new FileReader();
@@ -589,9 +589,36 @@ document.getElementById('jsonFile').addEventListener('change', function () {
         var contents = e.target.result;
         var json = JSON.parse(contents);
         console.log(json);
-        json.forEach(group => attributeLayer.add(Konva.Node.create(group)));
+        json.forEach(group => {
+            let node = Konva.Node.create(group);   
+            attributeLayer.add(node); 
+            
+            
+            const dialog = document.querySelector('dialog');
 
-    };
+             // voeg dubbleclick event toe aan de cirkel
+             node.on('dblclick', () => {
+                dialog.showModal();
+
+                const inputdialog = document.querySelector('#inputdialog');
+                const input = dialog.querySelector('input');
+                input.value = textNode.text();
+
+                // Add event listener to the OK button in the dialog
+                dialog.querySelector('#ok-button').addEventListener('click', () => {
+                    // wanneer de OK knop wordt geklikt, update de tekst van de textNode
+                    // en de x-offset, en teken de stage opnieuw
+                    let newText = input.value;
+                    textNode.text(newText);
+                    textNode.offsetX(newText.length * 10 / 2);
+                    stage.draw();
+
+                    // Close the dialog
+                    dialog.close();
+                });
+            });
+        });
+    }; 
     reader.readAsText(file);
 });
 //exporteer json
