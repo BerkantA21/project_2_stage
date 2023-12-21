@@ -13,7 +13,7 @@
     - select en deselect buiten de cirkel //DONE
     - hij ziet de 2 grote cirkels ook als cirkel dus de select window werkt niet goed //DONE
 
-3. importeren van json
+3. importeren van json``
     - het inladen van een json bestand die de stage herbouwd //done
     - de json slaat niet de locatie op van de vormen //Done
 
@@ -25,8 +25,13 @@
     - de vormen worden niet opgeslagen in de png na het importeren van de json //Done
     - alert wanneer je f5 drukt zodat je moet confirmen dat je de pagina wilt verversen//done
     - bij de alert een download json knop toevoegen //not possible
-    - ik moet de click functie on stage dingen opnieuw toevoegen na het importeren
-    - stage reset button.
-    - exporteren werkt maar importeren niet meer. Datum sinds: 18-12-2023.
+    - ik moet de click functie on stage dingen opnieuw toevoegen na het importeren DONE
+    - stage reset button. DONE
+    - exporteren werkt maar importeren niet meer. Datum sinds: 18-12-2023. DONE
 
-    html 
+5. last fixes .
+    -select box doet het niet meer na reset canvas
+    -maak de layout een grid
+    -logo toevoegen inplaats van de h2 titel
+    -scrollbar toevoegen
+    -de sidebar mag geen position fixed
