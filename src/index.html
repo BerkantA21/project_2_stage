@@ -55,28 +55,6 @@
 console.log('Welkom bij de Ayasa Note Designer!');
 
 function resetKonvaStage() {
-    // ricardo zegt dat dit niet helemaal klopt want de cirkels worden niet verwijderd uit de array
-
-    // circles.forEach(circle => {
-    //     const group = circle.getParent();
-    //     if (group) {
-    //         group.destroy();
-    //     }
-    // });
-
-    // ellipses.forEach(ellipse => {
-    //     const group = ellipse.getParent();
-    //     if (group) {
-    //         group.destroy();
-    //     }
-    // });
-
-    // const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
-    // transformers.forEach(transformer => transformer.destroy());
-
-    // attributeLayer = new Konva.Layer();
-
-    // attributeLayer.draw();
     attributeLayer.destroyChildren();
 }
 
@@ -484,7 +462,7 @@ function deleteSelectedEllipses() {
         fill: 'rgba(0,0,255,0.5)',
         visible: false,
     });
-    attributeLayer.add(selectionRectangle);
+    backgroundLayer.add(selectionRectangle);
         
 let x1, y1, x2, y2;
 stage.on('mousedown', (e) => {
@@ -641,7 +619,6 @@ document.getElementById('jsonButton').addEventListener('click', function () {
     a.click();
 });
 
-/*
 function attachEventListeners(group) {
     return;
     
@@ -677,22 +654,22 @@ function attachEventListeners(group) {
                 });
             });
 
-            // let isCircleSelected = false;
-            // node.on('click', function (e) {
-            //     if (e.evt.button === 0) {
-            //         if (selectedTransformer) {
-            //             selectedTransformer.detach();
-            //         }
+             let isCircleSelected = false;
+             node.on('click', function (e) {
+                 if (e.evt.button === 0) {
+                     if (selectedTransformer) {
+                         selectedTransformer.detach();
+                     }
 
-            //         isCircleSelected = !isCircleSelected;
-            //         node.stroke(isCircleSelected ? 'blue' : 'black');
+                    isCircleSelected = !isCircleSelected;
+                    node.stroke(isCircleSelected ? 'blue' : 'black');
 
-            //         attributeLayer.draw();
-            //     }
-            // });
+                     attributeLayer.draw();
+                 }
+             });
         });
 }
-*/
+
 
 // window.addEventListener('beforeunload', (event) => event.preventDefault())
 
