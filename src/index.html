@@ -9,19 +9,11 @@
     <title>
         Ayasa Note Designer
     </title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #f0f0f0;
-        }
-    </style>
 </head>
 <body>
-
-<div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: 0px; width: 260px; bottom: 0px;">
-    <h2>Ayasa Note Designer</h2>
+<div class="sidebar" style="left: 0px; z-index: 1; overflow: scroll; top: 0px; width: 260px; bottom: 0px;">
+    <img src="img/logo.png" alt="" width="120" height="120" class="d-block-my-1" id="logo"><br>
+    <hr>
     <div>Vorm:
         <select id="shapeSelect">
             <option value="circle">Cirkel</option>
@@ -100,10 +92,9 @@ let selectedShapes = [];// globale array voor de geselecteerde vormen
 
 let stage = new Konva.Stage({
     container: 'container',
-    width: width,
-    height: height,
+    width: window.innerWidth,
+    height: window.innerHeight,
 });
-
 //maak de layer aan
 let attributeLayer = new Konva.Layer();
 let backgroundLayer = new Konva.Layer();
@@ -116,7 +107,7 @@ const square = new Konva.Rect({
     height: 900,
     draggable: false,
     fill: 'white',
-    stroke: 'black',
+    stroke: 'white',
     strokeWidth: 4,
 });
 
