@@ -11,46 +11,50 @@
     </title>
 </head>
 <body>
-<div class="sidebar" style="left: 0px; z-index: 1; top: 0px; width: 260px; bottom: 0px;">
-    <img src="img/logo.png" alt="" width="120" height="120" class="d-block-my-1" id="logo"><br>
-    <hr>
-    <div>Vorm:
-        <select id="shapeSelect">
-            <option value="circle">Cirkel</option>
-            <option value="ellipse">Ovaal</option>
-        </select>
+<div style="display: flex; flex-direction: row;">
+    <div class="sidebar" style="left: 0px; z-index: 1; top: 0px; width: 260px; bottom: 0px;">
+        <img src="img/logo.png" alt="" width="120" height="120" class="d-block-my-1" id="logo"><br>
+        <hr>
+        <div>Vorm:
+            <select id="shapeSelect">
+                <option value="circle">Cirkel</option>
+                <option value="ellipse">Ovaal</option>
+            </select>
+        </div>
+        <div>Tekst: <input type="text" id="shapeText"></div>
+        <div>Kies vorm kleur: <br><br><input type="color" id="shapeColor"></div>
+        <div>Kies tekst kleur: <br><br><input type="color" id="textColor"></div>
+        <div>
+            <button class="createShape">Vorm toevoegen</button>
+        </div>
+        <dialog>
+            <p class="dialog-text">Voer een nieuwe tekst in</p>
+            <input id ="inputdialog" type="text" >
+            <button id="ok-button">OK</button>
+        </dialog>
+        <div>
+            <button class="delete">Vorm verwijder</button>
+        </div>
+        <div>
+            <button id="save">Opslaan als png</button>
+        </div>
+        <div>
+            <button id="jsonButton">Opslaan als JSON</button>
+        </div>
+        <div>
+            <label for="jsonFile">Importeer JSON</label>
+            <input type="file" id="jsonFile"/>
+        </div>
+        <br><br>
+        <div>
+            <button id="resetButton">Reset canvas</button>
+        </div>
     </div>
-    <div>Tekst: <input type="text" id="shapeText"></div>
-    <div>Kies vorm kleur: <br><br><input type="color" id="shapeColor"></div>
-    <div>Kies tekst kleur: <br><br><input type="color" id="textColor"></div>
-    <div>
-        <button class="createShape">Vorm toevoegen</button>
-    </div>
-    <dialog>
-        <p class="dialog-text">Voer een nieuwe tekst in</p>
-        <input id ="inputdialog" type="text" >
-        <button id="ok-button">OK</button>
-    </dialog>
-    <div>
-        <button class="delete">Vorm verwijder</button>
-    </div>
-    <div>
-        <button id="save">Opslaan als png</button>
-    </div>
-    <div>
-        <button id="jsonButton">Opslaan als JSON</button>
-    </div>
-    <div>
-        <label for="jsonFile">Importeer JSON</label>
-        <input type="file" id="jsonFile"/>
-    </div>
-    <br><br>
-    <div>
-        <button id="resetButton">Reset canvas</button>
+    
+    <div id="container">
+        <div id="canvas" style="border: 2px solid black"></div>
     </div>
 </div>
-
-<div id="container" class="col-md-8 col-8"></div>
 <script>//begin van de script
 console.log('Welkom bij de Ayasa Note Designer!');
 
@@ -68,15 +72,15 @@ let ellipses = []; // globale array voor de ovalen
 let selectedShapes = [];// globale array voor de geselecteerde vormen
 
 let stage = new Konva.Stage({
-    width: window.innerWidth + 170, // 170 verplaatst de stage naar rechts
-    height: window.innerHeight,
-    container: 'container',
+    width: 1200, // 170 verplaatst de stage naar rechts
+    height: 800,
+    container: '#canvas',
 });
 
-window.addEventListener('resize', function() {
-    stage.width(window.innerWidth + 170);
-    stage.height(window.innerHeight);
-});
+// window.addEventListener('resize', function() {
+//     stage.width(window.innerWidth + 170);
+//     stage.height(window.innerHeight);
+// });
 //maak de layer aan
 let attributeLayer = new Konva.Layer();
 let backgroundLayer = new Konva.Layer();
