@@ -29,8 +29,8 @@
         </select>
     </div>
     <div>Tekst: <input type="text" id="shapeText"></div>
-    <div>Kies vorm kleur: <input type="color" id="shapeColor"></div>
-    <div>Kies tekst kleur: <input type="color" id="textColor"></div>
+    <div>Kies vorm kleur: <br><br><input type="color" id="shapeColor"></div>
+    <div>Kies tekst kleur: <br><br><input type="color" id="textColor"></div>
     <div>
         <button class="createShape">Vorm toevoegen</button>
     </div>
@@ -52,7 +52,8 @@
         <label for="jsonFile">Importeer JSON</label>
         <input type="file" id="jsonFile"/>
     </div>
-    <div id="reset">
+    <br><br>
+    <div>
         <button id="resetButton">Reset canvas</button>
     </div>
 </div>
@@ -62,7 +63,29 @@
 console.log('Welkom bij de Ayasa Note Designer!');
 
 function resetKonvaStage() {
-  attributeLayer.destroyChildren();
+    // ricardo zegt dat dit niet helemaal klopt want de cirkels worden niet verwijderd uit de array
+
+    // circles.forEach(circle => {
+    //     const group = circle.getParent();
+    //     if (group) {
+    //         group.destroy();
+    //     }
+    // });
+
+    // ellipses.forEach(ellipse => {
+    //     const group = ellipse.getParent();
+    //     if (group) {
+    //         group.destroy();
+    //     }
+    // });
+
+    // const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
+    // transformers.forEach(transformer => transformer.destroy());
+
+    // attributeLayer = new Konva.Layer();
+
+    // attributeLayer.draw();
+    attributeLayer.destroyChildren();
 }
 
 
@@ -353,6 +376,34 @@ function createEllipse(text, textColor, backgroundColor) {
         }
     });
 
+    // attachEventListeners(ellipse);
+
+    // const dialog = document.querySelector('dialog');
+
+    //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
+    // ellipse.on('dblclick', () => {
+        
+    //    dialog.showModal();
+
+    //    const inputdialog = document.querySelector('#inputdialog');
+
+    //    const input = dialog.querySelector('input');
+
+    //    input.value = textNode.text();
+
+    //    // Voeg een event listener toe aan de OK knop in het dialog
+    //     dialog.querySelector('#ok-button').addEventListener('click', () => {
+    //     // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
+    //     // en de x-offset, en teken het stage opnieuw
+    //     let newText = input.value;
+    //     textNode.text(newText);
+    //     textNode.offsetX(newText.length * 10 / 2);
+    //     stage.draw();
+
+    //     // Sluit de dialog
+    //     dialog.close();
+    //     });
+    // });
     group.add(ellipse);
     group.add(textNode);
     attributeLayer.add(group);
@@ -364,7 +415,6 @@ function createEllipse(text, textColor, backgroundColor) {
 
     stage.add(attributeLayer);
 
-    // zorgt ervoor dat je de ellipse kan selecteren voor een multi select
      let isEllipseSelected = false;
      group.on('click', function (e) {
          if (e.evt.button === 0) {
@@ -539,6 +589,7 @@ window.onbeforeunload = function() {
     return "Weet je zeker dat je de pagina wilt verversen? Alle niet opgeslagen data gaat verloren.";
 }
 
+//begin json import en export
 //importeer json 
 const dialog = document.querySelector('dialog');
 const inputdialog = document.querySelector('#inputdialog');
@@ -556,10 +607,7 @@ const saveName = () => {
     dialog.close();
 };
 
-    dialog.querySelector('#ok-button').addEventListener('click', saveName);
-    //defenier is circle selected opnieuw
-    let isEllipseSelected = false;
-    let isCircleSelected = false;
+dialog.querySelector('#ok-button').addEventListener('click', saveName);
 
 const handleGroupDoubleClick = (e, node) => {  
     dialog.showModal();
@@ -577,30 +625,6 @@ const importJson = (e) => {
         attributeLayer.add(node);
 
         node.on('dblclick', (e) => handleGroupDoubleClick(e, node));
-
-        // dit is de code die ervoor zorgt dat je de cirkel kan selecteren voor een multi select
-            node.on('click', function (e) {
-        if (e.evt.button === 0) {
-            if (selectedTransformer) {
-                selectedTransformer.detach();
-            }
-
-            let ellipse = node.findOne('Ellipse');
-            if (ellipse) {
-                isEllipseSelected = !isEllipseSelected;
-                ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
-            }
-
-            let circle = node.findOne('Circle');
-            if (circle) {
-                isCircleSelected = !isCircleSelected;
-                circle.stroke(isCircleSelected ? 'blue' : 'black');
-            }
-          }
-});
-        //einde code die ervoor zorgt dat je de cirkel kan selecteren voor een multi select
-         
-        
     });
 };
 
@@ -611,6 +635,7 @@ document.getElementById('jsonFile').addEventListener('change', function () {
     reader.onload = importJson;
     reader.readAsText(file);
 });
+
 
 //exporteer json
 document.getElementById('jsonButton').addEventListener('click', function () {
@@ -624,6 +649,62 @@ document.getElementById('jsonButton').addEventListener('click', function () {
     a.href = url;
     a.click();
 });
+
+/*
+function attachEventListeners(group) {
+    return;
+    
+    // Voeg hier event listeners toe voor de vormen, dubbelklik, klik, etc...
+    json.forEach(group => {
+            let node = Konva.Node.create(group);
+            attributeLayer.add(node);
+            
+            const dialog = document.querySelector('dialog');
+
+            // voeg dubbleclick event toe aan de cirkel
+            node.on('dblclick', () => {
+                const dialog = document.querySelector('dialog');
+                
+                let textNode = node.findOne('Text');
+                dialog.showModal();
+
+                const inputdialog = document.querySelector('#inputdialog');
+                const input = dialog.querySelector('input');
+                input.value = textNode.text();
+
+                // Add event listener to the OK button in the dialog
+                dialog.querySelector('#ok-button').addEventListener('click', () => {
+                    // wanneer de OK knop wordt geklikt, update de tekst van de textNode
+                    // en de x-offset, en teken de stage opnieuw
+                    let newText = input.value;
+                    textNode.text(newText);
+                    textNode.offsetX(newText.length * 10 / 2);
+                    stage.draw();
+
+                    // Close the dialog
+                    dialog.close();
+                });
+            });
+
+            // let isCircleSelected = false;
+            // node.on('click', function (e) {
+            //     if (e.evt.button === 0) {
+            //         if (selectedTransformer) {
+            //             selectedTransformer.detach();
+            //         }
+
+            //         isCircleSelected = !isCircleSelected;
+            //         node.stroke(isCircleSelected ? 'blue' : 'black');
+
+            //         attributeLayer.draw();
+            //     }
+            // });
+        });
+}
+*/
+
+// window.addEventListener('beforeunload', (event) => event.preventDefault())
+
 //einde json import en export
 
 </script>
