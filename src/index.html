@@ -51,8 +51,8 @@
         </div>
     </div>
     
-    <div id="container">
-        <div id="canvas" style="border: 2px solid black"></div>
+    <div id="container" style="background-color: red;">
+        <div id="canvas" style="background-color: blue; border: 2px solid black"></div>
     </div>
 </div>
 <script>//begin van de script
@@ -87,9 +87,9 @@ let backgroundLayer = new Konva.Layer();
 
 // de vierkant die de achtergrond van de cirkels en ovalen is
 const square = new Konva.Rect({
-    x: 230, // 
+    x: 0, // 
     y: 0,
-    width: stage.width() - 230,
+    width: stage.width(),
     height: stage.height(),
     draggable: false,
     fill: 'white',
@@ -97,10 +97,10 @@ const square = new Konva.Rect({
     strokeWidth: 4,
 });
 
-window.addEventListener('resize', function() {
-    square.width(stage.width() - 230);
-    square.height(stage.height());
-});
+// window.addEventListener('resize', function() {
+//     square.width(stage.width() - 230);
+//     square.height(stage.height());
+// });
 
 //text van cirkel 1
 const text1 = new Konva.Text({
