@@ -1,12 +1,12 @@
 // Import all of Bootstrap's CSS
-@import "~bootstrap/scss/bootstrap";
+@import "~/bootstrap/scss/bootstrap";
 
 .sidebar {
     height: 100vh;
-    width: 230px;
-    position: fixed; 
-    left: 0;
-    top: 0;
+    // width: 230px;
+    // position: fixed; 
+    // left: 0;
+    // top: 0;
     padding-top: 10px;
     background-color: rgb(68, 96, 137);
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
@@ -86,3 +86,4 @@ label[for="jsonFile"]:hover {
     background-color: transparent;
     color: rgb(255, 255, 255);
 }
+

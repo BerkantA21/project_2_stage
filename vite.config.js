@@ -1,14 +1,16 @@
-const path = require('path')
-
-export default {
-  root: path.resolve(__dirname, 'src'),
-  resolve: {
-    alias: {
-      '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
-    }
-  },
-  server: {
-    port: 8080,
-    hot: true
-  }
-}
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+ 
+export default defineConfig({
+    plugins: [
+        laravel({
+          input: 'src/scss/styles.scss',
+          publicDirectory: '/src',
+        }),
+    ],
+    resolve: {
+        alias: {
+            '~': '/node_modules',
+        },
+    },
+});
