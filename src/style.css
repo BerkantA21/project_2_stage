@@ -129,3 +129,27 @@ select {
     border: 1px solid #ccc; 
     resize: none;
 }
+
+#shapeColor {
+    margin-top: 3px;    
+}
+
+#textColor {
+    margin-top: 3px;
+}
+
+input[type="color"] {
+    width: 30%;
+    height: 30px;
+}
+
+#shapeColor {
+    margin-left: 6.5px;
+}
+
+#textColor {
+    margin-left: 10px;
+}
+#reset {
+ margin-top: 113.5px;
+}

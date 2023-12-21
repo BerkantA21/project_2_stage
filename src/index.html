@@ -29,8 +29,8 @@
         </select>
     </div>
     <div>Tekst: <input type="text" id="shapeText"></div>
-    <div>Kies vorm kleur: <br><br><input type="color" id="shapeColor"></div>
-    <div>Kies tekst kleur: <br><br><input type="color" id="textColor"></div>
+    <div>Kies vorm kleur: <input type="color" id="shapeColor"></div>
+    <div>Kies tekst kleur: <input type="color" id="textColor"></div>
     <div>
         <button class="createShape">Vorm toevoegen</button>
     </div>
@@ -52,8 +52,7 @@
         <label for="jsonFile">Importeer JSON</label>
         <input type="file" id="jsonFile"/>
     </div>
-    <br><br>
-    <div>
+    <div id="reset">
         <button id="resetButton">Reset canvas</button>
     </div>
 </div>
@@ -580,30 +579,29 @@ const importJson = (e) => {
         node.on('dblclick', (e) => handleGroupDoubleClick(e, node));
 
         // dit is de code die ervoor zorgt dat je de cirkel kan selecteren voor een multi select
-        node.on('click', function (e) {
-    if (e.evt.button === 0) {
-        if (selectedTransformer) {
-            selectedTransformer.detach();
-        }
+            node.on('click', function (e) {
+        if (e.evt.button === 0) {
+            if (selectedTransformer) {
+                selectedTransformer.detach();
+            }
 
-        let ellipse = node.findOne('Ellipse');
-        if (ellipse) {
-            isEllipseSelected = !isEllipseSelected;
-            ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
-        }
+            let ellipse = node.findOne('Ellipse');
+            if (ellipse) {
+                isEllipseSelected = !isEllipseSelected;
+                ellipse.stroke(isEllipseSelected ? 'blue' : 'black');
+            }
 
-        let circle = node.findOne('Circle');
-        if (circle) {
-            isCircleSelected = !isCircleSelected;
-            circle.stroke(isCircleSelected ? 'blue' : 'black');
-        }
-    }
+            let circle = node.findOne('Circle');
+            if (circle) {
+                isCircleSelected = !isCircleSelected;
+                circle.stroke(isCircleSelected ? 'blue' : 'black');
+            }
+          }
 });
         //einde code die ervoor zorgt dat je de cirkel kan selecteren voor een multi select
          
         
     });
-
 };
 
 document.getElementById('jsonFile').addEventListener('change', function () {
