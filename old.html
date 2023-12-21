@@ -9,11 +9,19 @@
     <title>
         Ayasa Note Designer
     </title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 <body>
-<div class="sidebar" style="left: 0px; z-index: 1; top: 0px; width: 260px; bottom: 0px;">
-    <img src="img/logo.png" alt="" width="120" height="120" class="d-block-my-1" id="logo"><br>
-    <hr>
+
+<div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: 0px; width: 260px; bottom: 0px;">
+    <h2>Ayasa Note Designer</h2>
     <div>Vorm:
         <select id="shapeSelect">
             <option value="circle">Cirkel</option>
@@ -50,13 +58,34 @@
     </div>
 </div>
 
-<div id="container" class="col-md-8 col-8"></div>
+<div id="container"></div>
 <script>//begin van de script
 console.log('Welkom bij de Ayasa Note Designer!');
 
 function resetKonvaStage() {
-    attributeLayer.destroyChildren();
+    
+    circles.forEach(circle => {
+        const group = circle.getParent();
+        if (group) {
+            group.destroy();
+        }
+    });
+
+    ellipses.forEach(ellipse => {
+        const group = ellipse.getParent();
+        if (group) {
+            group.destroy();
+        }
+    });
+
+    const transformers = attributeLayer.find(node => node instanceof Konva.Transformer);
+    transformers.forEach(transformer => transformer.destroy());
+
+    attributeLayer = new Konva.Layer();
+
+    attributeLayer.draw();
 }
+
 
 document.getElementById('resetButton').addEventListener('click', resetKonvaStage);
 
@@ -68,34 +97,25 @@ let ellipses = []; // globale array voor de ovalen
 let selectedShapes = [];// globale array voor de geselecteerde vormen
 
 let stage = new Konva.Stage({
-    width: window.innerWidth + 170, // 170 verplaatst de stage naar rechts
-    height: window.innerHeight,
     container: 'container',
+    width: width,
+    height: height,
 });
 
-window.addEventListener('resize', function() {
-    stage.width(window.innerWidth + 170);
-    stage.height(window.innerHeight);
-});
 //maak de layer aan
 let attributeLayer = new Konva.Layer();
 let backgroundLayer = new Konva.Layer();
 
 // de vierkant die de achtergrond van de cirkels en ovalen is
 const square = new Konva.Rect({
-    x: 230, // 
-    y: 0,
-    width: stage.width() - 230,
-    height: stage.height(),
+    x: stage.width() / 2 - 650,
+    y: stage.height() / 2 - 450,
+    width: 1400,
+    height: 900,
     draggable: false,
     fill: 'white',
-    stroke: 'white',
+    stroke: 'black',
     strokeWidth: 4,
-});
-
-window.addEventListener('resize', function() {
-    square.width(stage.width() - 230);
-    square.height(stage.height());
 });
 
 //text van cirkel 1
@@ -155,7 +175,6 @@ backgroundLayer.draw();
 
 // Add the backgroundLayer to the stage
 stage.add(backgroundLayer);
-stage.add(attributeLayer);
 
 let selectedTransformer = null;
 
@@ -206,7 +225,7 @@ function createCircle(text, textColor, backgroundColor) {
         }
     });
 
-    attachEventListeners(circle);
+    // attachEventListeners(circle);
     
     const dialog = document.querySelector('dialog');
 
@@ -223,28 +242,26 @@ function createCircle(text, textColor, backgroundColor) {
 
        // Voeg een event listener toe aan de OK knop in het dialog
         dialog.querySelector('#ok-button').addEventListener('click', () => {
-            // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
-            // en de x-offset, en teken het stage opnieuw
-            let newText = input.value;
-            textNode.text(newText);
-            textNode.offsetX(newText.length * 10 / 2);
-            stage.draw();
+        // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
+        // en de x-offset, en teken het stage opnieuw
+        let newText = input.value;
+        textNode.text(newText);
+        textNode.offsetX(newText.length * 10 / 2);
+        stage.draw();
 
-            // Sluit het dialog
-            dialog.close();
+        // Sluit het dialog
+        dialog.close();
         });
     });
-
-    group.on('dblclick', (e) => handleGroupDoubleClick(e, group));
 
         group.add(circle);
         group.add(textNode);
         attributeLayer.add(group);
         attributeLayer.draw();
         circles.push(circle);
-        // attachEventListeners(group);
+        attachEventListeners(group);
 
-        // stage.add(attributeLayer);
+        stage.add(attributeLayer);
 
     // zorgt ervoor dat je de cirkel kan selecteren voor een multi select
      let isCircleSelected = false;
@@ -356,40 +373,38 @@ function createEllipse(text, textColor, backgroundColor) {
 
     // attachEventListeners(ellipse);
 
-    // const dialog = document.querySelector('dialog');
+    const dialog = document.querySelector('dialog');
 
     //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
-    // ellipse.on('dblclick', () => {
+    ellipse.on('dblclick', () => {
         
-    //    dialog.showModal();
+       dialog.showModal();
 
-    //    const inputdialog = document.querySelector('#inputdialog');
+       const inputdialog = document.querySelector('#inputdialog');
 
-    //    const input = dialog.querySelector('input');
+       const input = dialog.querySelector('input');
 
-    //    input.value = textNode.text();
+       input.value = textNode.text();
 
-    //    // Voeg een event listener toe aan de OK knop in het dialog
-    //     dialog.querySelector('#ok-button').addEventListener('click', () => {
-    //     // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
-    //     // en de x-offset, en teken het stage opnieuw
-    //     let newText = input.value;
-    //     textNode.text(newText);
-    //     textNode.offsetX(newText.length * 10 / 2);
-    //     stage.draw();
+       // Voeg een event listener toe aan de OK knop in het dialog
+        dialog.querySelector('#ok-button').addEventListener('click', () => {
+        // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
+        // en de x-offset, en teken het stage opnieuw
+        let newText = input.value;
+        textNode.text(newText);
+        textNode.offsetX(newText.length * 10 / 2);
+        stage.draw();
 
-    //     // Sluit de dialog
-    //     dialog.close();
-    //     });
-    // });
+        // Sluit de dialog
+        dialog.close();
+        });
+    });
     group.add(ellipse);
     group.add(textNode);
     attributeLayer.add(group);
     attributeLayer.draw();
     ellipses.push(ellipse);
-    // attachEventListeners(group);
-
-    group.on('dblclick', (e) => handleGroupDoubleClick(e, group));
+    attachEventListeners(group);
 
     stage.add(attributeLayer);
 
@@ -471,7 +486,7 @@ function deleteSelectedEllipses() {
         fill: 'rgba(0,0,255,0.5)',
         visible: false,
     });
-    backgroundLayer.add(selectionRectangle);
+    attributeLayer.add(selectionRectangle);
         
 let x1, y1, x2, y2;
 stage.on('mousedown', (e) => {
@@ -568,52 +583,19 @@ window.onbeforeunload = function() {
 }
 
 //begin json import en export
-//importeer json 
-const dialog = document.querySelector('dialog');
-const inputdialog = document.querySelector('#inputdialog');
-let selectedNode = null;
-
-const saveName = () => {
-    // wanneer de OK knop wordt geklikt, update de tekst van de textNode
-    // en de x-offset, en teken de stage opnieuw
-    let newText = inputdialog.value;
-    selectedNode.text(newText);
-    selectedNode.offsetX(newText.length * 10 / 2);
-    stage.draw();
-
-    // Close the dialog
-    dialog.close();
-};
-
-dialog.querySelector('#ok-button').addEventListener('click', saveName);
-
-const handleGroupDoubleClick = (e, node) => {  
-    dialog.showModal();
-
-    selectedNode = node.findOne('Text');
-    inputdialog.value = selectedNode.text();
-};
-
-const importJson = (e) => {
-    var contents = e.target.result;
-    var json = JSON.parse(contents);
-
-    json.forEach(group => {
-        const node = Konva.Node.create(group);
-        attributeLayer.add(node);
-
-        node.on('dblclick', (e) => handleGroupDoubleClick(e, node));
-    });
-};
-
+//importeer json
 document.getElementById('jsonFile').addEventListener('change', function () {
     var file = this.files[0];
     var reader = new FileReader();
+    reader.onload = function (e) {
+        var contents = e.target.result;
+        var json = JSON.parse(contents);
+        console.log(json);
+        json.forEach(group => backgroundLayer.add(Konva.Node.create(group)));
 
-    reader.onload = importJson;
+    };
     reader.readAsText(file);
 });
-
 
 //exporteer json
 document.getElementById('jsonButton').addEventListener('click', function () {
@@ -628,58 +610,11 @@ document.getElementById('jsonButton').addEventListener('click', function () {
     a.click();
 });
 
-function attachEventListeners(group) {
-    return;
-    
+function attachEventListeners(shape) {
     // Voeg hier event listeners toe voor de vormen, dubbelklik, klik, etc...
-    json.forEach(group => {
-            let node = Konva.Node.create(group);
-            attributeLayer.add(node);
-            
-            const dialog = document.querySelector('dialog');
 
-            // voeg dubbleclick event toe aan de cirkel
-            node.on('dblclick', () => {
-                const dialog = document.querySelector('dialog');
-                
-                let textNode = node.findOne('Text');
-                dialog.showModal();
-
-                const inputdialog = document.querySelector('#inputdialog');
-                const input = dialog.querySelector('input');
-                input.value = textNode.text();
-
-                // Add event listener to the OK button in the dialog
-                dialog.querySelector('#ok-button').addEventListener('click', () => {
-                    // wanneer de OK knop wordt geklikt, update de tekst van de textNode
-                    // en de x-offset, en teken de stage opnieuw
-                    let newText = input.value;
-                    textNode.text(newText);
-                    textNode.offsetX(newText.length * 10 / 2);
-                    stage.draw();
-
-                    // Close the dialog
-                    dialog.close();
-                });
-            });
-
-             let isCircleSelected = false;
-             node.on('click', function (e) {
-                 if (e.evt.button === 0) {
-                     if (selectedTransformer) {
-                         selectedTransformer.detach();
-                     }
-
-                    isCircleSelected = !isCircleSelected;
-                    node.stroke(isCircleSelected ? 'blue' : 'black');
-
-                     attributeLayer.draw();
-                 }
-             });
-        });
+    
 }
-
-window.onload.addEventListener('resize', fitStageIntoParentContainer);
 
 // window.addEventListener('beforeunload', (event) => event.preventDefault())
 

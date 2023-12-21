@@ -35,3 +35,4 @@
     -logo toevoegen inplaats van de h2 titel
     -scrollbar toevoegen
     -de sidebar mag geen position fixed
+    - de positie van x en y assen zijn anders per scherm maar mischien kunnen we dit fixen met een 2json functie
