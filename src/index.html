@@ -4,16 +4,16 @@
     <script src="https://unpkg.com/konva@9.2.0/konva.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./build/assets/styles.css">
     <meta charset="utf-8"/>
     <title>
         Ayasa Note Designer
     </title>
 </head>
 <body>
-<div style="display: flex; flex-direction: row;">
-    <div class="sidebar" style="left: 0px; z-index: 1; top: 0px; width: 260px; bottom: 0px;">
-        <img src="img/logo.png" alt="" width="120" height="120" class="d-block-my-1" id="logo"><br>
+<div class="container-fluid" style="display: flex; flex-direction: row;">
+    <div class="sidebar">
+        <img src="img/logo.png" alt="" width="120" height="120" id="logo"><br>
         <hr>
         <div>Vorm:
             <select id="shapeSelect">
@@ -104,7 +104,7 @@ window.addEventListener('resize', function() {
 
 //text van cirkel 1
 const text1 = new Konva.Text({
-    x: stage.width() / 2 - 350,
+    x: stage.width() / 2 - 360,
     y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
     text: 'Voorkant',
     fontSize: 30,
@@ -115,9 +115,9 @@ const text1 = new Konva.Text({
 
 // maak cirkel 1
 const circle = new Konva.Circle({
-    x: stage.width() / 2 - 290, // move de cirkel naar links
+    x: stage.width() / 2 - 300, // move de cirkel naar links
     y: stage.height() / 2,
-    radius: 230,
+    radius: 210,
     draggable: false,
     fill: 'white',
     stroke: 'black',
@@ -127,7 +127,7 @@ const circle = new Konva.Circle({
 
 //text van cirkel 2
 const text2 = new Konva.Text({
-    x: stage.width() / 2 + 330,
+    x: stage.width() / 2 + 235,
     y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
     text: 'Achterkant',
     fontSize: 30,
@@ -138,9 +138,9 @@ const text2 = new Konva.Text({
 
 // maak cirkel 2
 const circle2 = new Konva.Circle({
-    x: stage.width() / 2 + 400, // move de cirkel naar rechts
+    x: stage.width() / 2 + 300, // move de cirkel naar rechts
     y: stage.height() / 2,
-    radius: 230,
+    radius: 210,
     draggable: false,
     fill: 'white',
     stroke: 'black',
@@ -683,7 +683,6 @@ function attachEventListeners(group) {
         });
 }
 
-window.onload.addEventListener('resize', fitStageIntoParentContainer);
 
 // window.addEventListener('beforeunload', (event) => event.preventDefault())
 
