@@ -201,34 +201,34 @@ function createCircle(text, textColor, backgroundColor) {
         }
     });
 
-    // attachEventListeners(circle);
+    attachEventListeners(circle);
     
-    // const dialog = document.querySelector('dialog');
+    const dialog = document.querySelector('dialog');
 
-    // //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
-    // circle.on('dblclick', () => {
+    //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
+    circle.on('dblclick', () => {
 
-    //    dialog.showModal();
+       dialog.showModal();
 
-    //    const inputdialog = document.querySelector('#inputdialog');
+       const inputdialog = document.querySelector('#inputdialog');
 
-    //    const input = dialog.querySelector('input');
+       const input = dialog.querySelector('input');
 
-    //    input.value = textNode.text();
+       input.value = textNode.text();
 
-    //    // Voeg een event listener toe aan de OK knop in het dialog
-    //     dialog.querySelector('#ok-button').addEventListener('click', () => {
-    //         // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
-    //         // en de x-offset, en teken het stage opnieuw
-    //         let newText = input.value;
-    //         textNode.text(newText);
-    //         textNode.offsetX(newText.length * 10 / 2);
-    //         stage.draw();
+       // Voeg een event listener toe aan de OK knop in het dialog
+        dialog.querySelector('#ok-button').addEventListener('click', () => {
+            // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
+            // en de x-offset, en teken het stage opnieuw
+            let newText = input.value;
+            textNode.text(newText);
+            textNode.offsetX(newText.length * 10 / 2);
+            stage.draw();
 
-    //         // Sluit het dialog
-    //         dialog.close();
-    //     });
-    // });
+            // Sluit het dialog
+            dialog.close();
+        });
+    });
 
     group.on('dblclick', (e) => handleGroupDoubleClick(e, group));
 
