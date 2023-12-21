@@ -9,19 +9,11 @@
     <title>
         Ayasa Note Designer
     </title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #f0f0f0;
-        }
-    </style>
 </head>
 <body>
-
-<div class="sidebar" style="left: 0px; z-index: 1; overflow: visible; top: 0px; width: 260px; bottom: 0px;">
-    <h2>Ayasa Note Designer</h2>
+<div class="sidebar" style="left: 0px; z-index: 1; top: 0px; width: 260px; bottom: 0px;">
+    <img src="img/logo.png" alt="" width="120" height="120" class="d-block-my-1" id="logo"><br>
+    <hr>
     <div>Vorm:
         <select id="shapeSelect">
             <option value="circle">Cirkel</option>
@@ -58,14 +50,15 @@
     </div>
 </div>
 
-<div id="container"></div>
+<div id="container" class="col-md-8 col-8"></div>
+
+
 <script>//begin van de script
 console.log('Welkom bij de Ayasa Note Designer!');
 
 function resetKonvaStage() {
     attributeLayer.destroyChildren();
 }
-
 
 document.getElementById('resetButton').addEventListener('click', resetKonvaStage);
 
@@ -77,11 +70,15 @@ let ellipses = []; // globale array voor de ovalen
 let selectedShapes = [];// globale array voor de geselecteerde vormen
 
 let stage = new Konva.Stage({
+    width: window.innerWidth + 170, // 170 verplaatst de stage naar rechts
+    height: window.innerHeight,
     container: 'container',
-    width: width,
-    height: height,
 });
 
+window.addEventListener('resize', function() {
+    stage.width(window.innerWidth + 170);
+    stage.height(window.innerHeight);
+});
 //maak de layer aan
 let attributeLayer = new Konva.Layer();
 let backgroundLayer = new Konva.Layer();
@@ -94,7 +91,7 @@ const square = new Konva.Rect({
     height: 900,
     draggable: false,
     fill: 'white',
-    stroke: 'black',
+    stroke: 'white',
     strokeWidth: 4,
 });
 
@@ -628,7 +625,6 @@ document.getElementById('jsonButton').addEventListener('click', function () {
     a.click();
 });
 
-
 function attachEventListeners(group) {
     return;
     
@@ -680,6 +676,7 @@ function attachEventListeners(group) {
         });
 }
 
+window.onload.addEventListener('resize', fitStageIntoParentContainer);
 
 // window.addEventListener('beforeunload', (event) => event.preventDefault())
 
