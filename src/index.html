@@ -22,8 +22,8 @@
             </select>
         </div>
         <div>Tekst: <input type="text" id="shapeText"></div>
-        <div>Kies vorm kleur: <br><br><input type="color" id="shapeColor"></div>
-        <div>Kies tekst kleur: <br><br><input type="color" id="textColor"></div>
+        <div>Kies vorm kleur: <br><input type="color" id="shapeColor"></div>
+        <div>Kies tekst kleur: <br><input type="color" id="textColor"></div>
         <div>
             <button class="createShape">Vorm toevoegen</button>
         </div>
@@ -51,8 +51,8 @@
         </div>
     </div>
     
-    <div id="container" style="background-color: red;">
-        <div id="canvas" style="background-color: blue; border: 2px solid black"></div>
+    <div id="container">
+        <div id="canvas" style=" border: 2px solid black"></div>
     </div>
 </div>
 <script>//begin van de script
@@ -77,10 +77,6 @@ let stage = new Konva.Stage({
     container: '#canvas',
 });
 
-// window.addEventListener('resize', function() {
-//     stage.width(window.innerWidth + 170);
-//     stage.height(window.innerHeight);
-// });
 //maak de layer aan
 let attributeLayer = new Konva.Layer();
 let backgroundLayer = new Konva.Layer();
@@ -96,11 +92,6 @@ const square = new Konva.Rect({
     stroke: 'white',
     strokeWidth: 4,
 });
-
-// window.addEventListener('resize', function() {
-//     square.width(stage.width() - 230);
-//     square.height(stage.height());
-// });
 
 //text van cirkel 1
 const text1 = new Konva.Text({
@@ -187,7 +178,7 @@ function createCircle(text, textColor, backgroundColor) {
 
     //const circle is de cirkel die in de groep zit.
     const circle = new Konva.Circle({
-        x: stage.width() / 2 +50,
+        x: stage.width() / 2 ,
         y: stage.height() / 2,
         radius: 40,
         fill: backgroundColor,
@@ -334,7 +325,7 @@ function createEllipse(text, textColor, backgroundColor) {
     });
     //const ellipse is de ellipse die in de groep zit.
     const ellipse = new Konva.Ellipse({
-        x: stage.width() / 2 + 50,
+        x: stage.width() / 2 ,
         y: stage.height() / 2,
         radiusX: 80,
         radiusY: 30,
@@ -358,34 +349,6 @@ function createEllipse(text, textColor, backgroundColor) {
         }
     });
 
-    // attachEventListeners(ellipse);
-
-    // const dialog = document.querySelector('dialog');
-
-    //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
-    // ellipse.on('dblclick', () => {
-        
-    //    dialog.showModal();
-
-    //    const inputdialog = document.querySelector('#inputdialog');
-
-    //    const input = dialog.querySelector('input');
-
-    //    input.value = textNode.text();
-
-    //    // Voeg een event listener toe aan de OK knop in het dialog
-    //     dialog.querySelector('#ok-button').addEventListener('click', () => {
-    //     // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
-    //     // en de x-offset, en teken het stage opnieuw
-    //     let newText = input.value;
-    //     textNode.text(newText);
-    //     textNode.offsetX(newText.length * 10 / 2);
-    //     stage.draw();
-
-    //     // Sluit de dialog
-    //     dialog.close();
-    //     });
-    // });
     group.add(ellipse);
     group.add(textNode);
     attributeLayer.add(group);
@@ -618,7 +581,6 @@ document.getElementById('jsonFile').addEventListener('change', function () {
     reader.readAsText(file);
 });
 
-
 //exporteer json
 document.getElementById('jsonButton').addEventListener('click', function () {
     const shapes = stage.find('.objectGroup').map(x => x.toObject());
@@ -680,12 +642,8 @@ function attachEventListeners(group) {
                      attributeLayer.draw();
                  }
              });
-        });
+    });
 }
-
-
-// window.addEventListener('beforeunload', (event) => event.preventDefault())
-
 //einde json import en export
 
 </script>
