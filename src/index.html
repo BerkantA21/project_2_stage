@@ -11,19 +11,27 @@
     </title>
 </head>
 <body>
-<div class="container-fluid" style="display: flex; flex-direction: row;">
+<div class="d-flex flex-row container-fluid p-0">
     <div class="sidebar">
-        <img src="img/logo.png" alt="" width="120" height="120" id="logo"><br>
+        <img src="img/logo.png" alt="" width="120" height="120" class="d-block mx-auto img-fluid ">
         <hr>
-        <div>Vorm:
-            <select id="shapeSelect">
-                <option value="circle">Cirkel</option>
-                <option value="ellipse">Ovaal</option>
+        <div>
+            <label for="shapeSelect">Vorm: </label>
+            <div class="d-flex justify-content-start align-items-center gap-1">
+                <select id="shapeSelect">
+                    <option value="circle">Cirkel</option>
+                    <option value="ellipse">Ovaal</option>
+                </select>
                 <input type="color" id="shapeColor">
-            </select>
+            </div>
         </div>
-        <div>Tekst: <input type="text" id="shapeText">
-        <input type="color" id="textColor"></div>
+        <div>
+            <label for="shapeText">Tekst: </label>
+            <div class="d-flex justify-content-start align-items-center gap-1">
+                <input type="text" id="shapeText">
+                <input type="color" id="textColor">
+            </div>
+        </div>
         <div>
             <button class="createShape">Vorm toevoegen</button>
         </div>
@@ -52,7 +60,7 @@
     </div>
     
     <div id="container">
-        <div id="canvas" style=" border: 2px solid black"></div>
+        <div id="canvas" class="border border-dark"></div>
     </div>
 </div>
 <script>//begin van de script
@@ -72,7 +80,7 @@ let ellipses = []; // globale array voor de ovalen
 let selectedShapes = [];// globale array voor de geselecteerde vormen
 
 let stage = new Konva.Stage({
-    width: 1200, 
+    width: 1200, // 170 verplaatst de stage naar rechts
     height: 800,
     container: '#canvas',
 });
@@ -550,14 +558,6 @@ document.getElementById('jsonFile').addEventListener('change', function () {
 
 //exporteer json
 document.getElementById('jsonButton').addEventListener('click', function () {
-
-    const yes = confirm('something')
-    if (yes) {
-        alert(1234);
-    } else {
-        
-    }
-
     const shapes = stage.find('.objectGroup').map(x => x.toObject());
 
     var blob = new Blob([JSON.stringify(shapes)], {type: "application/json"});
@@ -590,7 +590,7 @@ function attachEventListeners(group) {
                 const input = dialog.querySelector('input');
                 input.value = textNode.text();
 
-                // Add event listener to the OK button in the dialog
+                // Add event listener to the OK button in the dialog 
                 dialog.querySelector('#ok-button').addEventListener('click', () => {
                     // wanneer de OK knop wordt geklikt, update de tekst van de textNode
                     // en de x-offset, en teken de stage opnieuw
