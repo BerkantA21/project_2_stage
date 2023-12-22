@@ -90,9 +90,10 @@ label[for="jsonFile"]:hover {
     overflow: hidden;
     
 }
-dialog, #dialog-text{
+dialog, .dialog-text{
     font-size: 24px;
     text-align: center;
+    color: white;
 
 }
 ::backdrop, .ok-button {
