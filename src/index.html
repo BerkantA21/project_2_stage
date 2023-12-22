@@ -4,16 +4,16 @@
     <script src="https://unpkg.com/konva@9.2.0/konva.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./build/assets/styles.css">
     <meta charset="utf-8"/>
     <title>
         Ayasa Note Designer
     </title>
 </head>
 <body>
-<div style="display: flex; flex-direction: row;">
-    <div class="sidebar" style="left: 0px; z-index: 1; top: 0px; width: 260px; bottom: 0px;">
-        <img src="img/logo.png" alt="" width="120" height="120" class="d-block-my-1" id="logo"><br>
+<div class="container-fluid" style="display: flex; flex-direction: row;">
+    <div class="sidebar">
+        <img src="img/logo.png" alt="" width="120" height="120" id="logo"><br>
         <hr>
         <div>Vorm:
             <select id="shapeSelect">
@@ -22,8 +22,8 @@
             </select>
         </div>
         <div>Tekst: <input type="text" id="shapeText"></div>
-        <div>Kies vorm kleur: <br><br><input type="color" id="shapeColor"></div>
-        <div>Kies tekst kleur: <br><br><input type="color" id="textColor"></div>
+        <div>Kies vorm kleur: <br><input type="color" id="shapeColor"></div>
+        <div>Kies tekst kleur: <br><input type="color" id="textColor"></div>
         <div>
             <button class="createShape">Vorm toevoegen</button>
         </div>
@@ -52,7 +52,7 @@
     </div>
     
     <div id="container">
-        <div id="canvas" style="border: 2px solid black"></div>
+        <div id="canvas" style=" border: 2px solid black"></div>
     </div>
 </div>
 <script>//begin van de script
@@ -77,19 +77,15 @@ let stage = new Konva.Stage({
     container: '#canvas',
 });
 
-// window.addEventListener('resize', function() {
-//     stage.width(window.innerWidth + 170);
-//     stage.height(window.innerHeight);
-// });
 //maak de layer aan
 let attributeLayer = new Konva.Layer();
 let backgroundLayer = new Konva.Layer();
 
 // de vierkant die de achtergrond van de cirkels en ovalen is
 const square = new Konva.Rect({
-    x: 230, // 
+    x: 0, // 
     y: 0,
-    width: stage.width() - 230,
+    width: stage.width(),
     height: stage.height(),
     draggable: false,
     fill: 'white',
@@ -97,14 +93,9 @@ const square = new Konva.Rect({
     strokeWidth: 4,
 });
 
-window.addEventListener('resize', function() {
-    square.width(stage.width() - 230);
-    square.height(stage.height());
-});
-
 //text van cirkel 1
 const text1 = new Konva.Text({
-    x: stage.width() / 2 - 350,
+    x: stage.width() / 2 - 360,
     y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
     text: 'Voorkant',
     fontSize: 30,
@@ -115,9 +106,9 @@ const text1 = new Konva.Text({
 
 // maak cirkel 1
 const circle = new Konva.Circle({
-    x: stage.width() / 2 - 290, // move de cirkel naar links
+    x: stage.width() / 2 - 300, // move de cirkel naar links
     y: stage.height() / 2,
-    radius: 230,
+    radius: 210,
     draggable: false,
     fill: 'white',
     stroke: 'black',
@@ -127,7 +118,7 @@ const circle = new Konva.Circle({
 
 //text van cirkel 2
 const text2 = new Konva.Text({
-    x: stage.width() / 2 + 330,
+    x: stage.width() / 2 + 235,
     y: stage.height() / 2 - 200 - 150, // position de tekst boven de cirkel
     text: 'Achterkant',
     fontSize: 30,
@@ -138,9 +129,9 @@ const text2 = new Konva.Text({
 
 // maak cirkel 2
 const circle2 = new Konva.Circle({
-    x: stage.width() / 2 + 400, // move de cirkel naar rechts
+    x: stage.width() / 2 + 300, // move de cirkel naar rechts
     y: stage.height() / 2,
-    radius: 230,
+    radius: 210,
     draggable: false,
     fill: 'white',
     stroke: 'black',
@@ -187,7 +178,7 @@ function createCircle(text, textColor, backgroundColor) {
 
     //const circle is de cirkel die in de groep zit.
     const circle = new Konva.Circle({
-        x: stage.width() / 2 +50,
+        x: stage.width() / 2 ,
         y: stage.height() / 2,
         radius: 40,
         fill: backgroundColor,
@@ -334,7 +325,7 @@ function createEllipse(text, textColor, backgroundColor) {
     });
     //const ellipse is de ellipse die in de groep zit.
     const ellipse = new Konva.Ellipse({
-        x: stage.width() / 2 + 50,
+        x: stage.width() / 2 ,
         y: stage.height() / 2,
         radiusX: 80,
         radiusY: 30,
@@ -358,34 +349,6 @@ function createEllipse(text, textColor, backgroundColor) {
         }
     });
 
-    // attachEventListeners(ellipse);
-
-    // const dialog = document.querySelector('dialog');
-
-    //deze code zorgt ervoor dat je de tekst kan aanpassen door erop te dubbelklikken
-    // ellipse.on('dblclick', () => {
-        
-    //    dialog.showModal();
-
-    //    const inputdialog = document.querySelector('#inputdialog');
-
-    //    const input = dialog.querySelector('input');
-
-    //    input.value = textNode.text();
-
-    //    // Voeg een event listener toe aan de OK knop in het dialog
-    //     dialog.querySelector('#ok-button').addEventListener('click', () => {
-    //     // Wanneer de OK knop wordt geklikt, update de tekst van de textNode
-    //     // en de x-offset, en teken het stage opnieuw
-    //     let newText = input.value;
-    //     textNode.text(newText);
-    //     textNode.offsetX(newText.length * 10 / 2);
-    //     stage.draw();
-
-    //     // Sluit de dialog
-    //     dialog.close();
-    //     });
-    // });
     group.add(ellipse);
     group.add(textNode);
     attributeLayer.add(group);
@@ -618,7 +581,6 @@ document.getElementById('jsonFile').addEventListener('change', function () {
     reader.readAsText(file);
 });
 
-
 //exporteer json
 document.getElementById('jsonButton').addEventListener('click', function () {
     const shapes = stage.find('.objectGroup').map(x => x.toObject());
@@ -680,13 +642,8 @@ function attachEventListeners(group) {
                      attributeLayer.draw();
                  }
              });
-        });
+    });
 }
-
-window.onload.addEventListener('resize', fitStageIntoParentContainer);
-
-// window.addEventListener('beforeunload', (event) => event.preventDefault())
-
 //einde json import en export
 
 </script>
