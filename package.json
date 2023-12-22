@@ -1,5 +1,25 @@
 {
   "dependencies": {
-    "konva": "^9.2.3"
-  }
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.2",
+    "konva": "^9.2.3",
+    "laravel-vite-plugin": "^1.0.0"
+  },
+  "name": "project_2_stage",
+  "description": "test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "sass": "^1.69.5",
+    "vite": "^5.0.8"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
 }
