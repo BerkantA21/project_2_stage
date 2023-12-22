@@ -30,9 +30,16 @@
     - exporteren werkt maar importeren niet meer. Datum sinds: 18-12-2023. DONE
 
 5. last fixes .
-    -select box doet het niet meer na reset canvas
-    -maak de layout een grid
-    -logo toevoegen inplaats van de h2 titel
-    -scrollbar toevoegen
-    -de sidebar mag geen position fixed
+    - select box doet het niet meer na reset canvas
+    - maak de layout een grid
+    - logo toevoegen inplaats van de h2 titel
+    - scrollbar toevoegen
+    - de sidebar mag geen position fixed
     - de positie van x en y assen zijn anders per scherm maar mischien kunnen we dit fixen met een 2json functie
+
+6. extra DLC fixes
+    - kleuren selector naast de vorm en tekst input field //Done
+    - scrollbar moet weg //Done
+    - maak de default bestand naam, de datum zelf
+    - zorg ervoor dat de user een optie window heeft om een eigen bestand naam te verzinnen.
+    - cancel knop voor de dialog
