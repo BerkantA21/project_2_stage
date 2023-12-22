@@ -19,18 +19,19 @@
             <select id="shapeSelect">
                 <option value="circle">Cirkel</option>
                 <option value="ellipse">Ovaal</option>
+                <input type="color" id="shapeColor">
             </select>
         </div>
-        <div>Tekst: <input type="text" id="shapeText"></div>
-        <div>Kies vorm kleur: <br><input type="color" id="shapeColor"></div>
-        <div>Kies tekst kleur: <br><input type="color" id="textColor"></div>
+        <div>Tekst: <input type="text" id="shapeText">
+        <input type="color" id="textColor"></div>
         <div>
             <button class="createShape">Vorm toevoegen</button>
         </div>
         <dialog>
             <p class="dialog-text">Voer een nieuwe tekst in</p>
             <input id ="inputdialog" type="text" >
-            <button id="ok-button">OK</button>
+            <button id="ok-button" class="btn btn-success" >OK</button>
+            <button id="cancel-button" class="btn btn-danger">Annuleren</button>
         </dialog>
         <div>
             <button class="delete">Vorm verwijder</button>
@@ -72,7 +73,7 @@ let ellipses = []; // globale array voor de ovalen
 let selectedShapes = [];// globale array voor de geselecteerde vormen
 
 let stage = new Konva.Stage({
-    width: 1200, // 170 verplaatst de stage naar rechts
+    width: 1200, 
     height: 800,
     container: '#canvas',
 });
@@ -519,6 +520,13 @@ const saveName = () => {
     dialog.close();
 };
 
+const cancel = () => {
+    dialog.close();
+};
+
+//voeg een event listener toe aan de cancel button in de dialog
+dialog.querySelector('#cancel-button').addEventListener('click', cancel);
+
 dialog.querySelector('#ok-button').addEventListener('click', saveName);
 
 const handleGroupDoubleClick = (e, node) => {  
@@ -551,12 +559,26 @@ document.getElementById('jsonFile').addEventListener('change', function () {
 //exporteer json
 document.getElementById('jsonButton').addEventListener('click', function () {
     const shapes = stage.find('.objectGroup').map(x => x.toObject());
-
+    const date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
     var blob = new Blob([JSON.stringify(shapes)], {type: "application/json"});
     var url  = URL.createObjectURL(blob);
 
     var a = document.createElement('a');
-    a.download = 'backup.json';
+
+    var filename = prompt('Geef een bestandsnaam op', 'Naam.json');
+    if (filename) {
+        a.download = filename;
+    } else if (filename === '') {
+        //als de gebruiker geen bestandsnaam opgeeft, gebruik dan de standaard bestandsnaam(datum.json)
+        filename = `${day}-${month}-${year}.json`;
+        a.download = filename;
+    } else {
+        return;
+    }
+
     a.href = url;
     a.click();
 });
