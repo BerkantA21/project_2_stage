@@ -92,6 +92,7 @@ label[for="jsonFile"]:hover {
 }
 dialog, #dialog-text{
     font-size: 24px;
+    text-align: center;
 
 }
 ::backdrop, .ok-button {
@@ -159,4 +160,22 @@ color: white;
 
 .container {
     padding-left: 0%;
+}
+
+#ok-button{
+width: 49%;
+height: 30%;
+align-items: flex-start;
+justify-content: space-between;
+margin-right: 20px;
+}
+
+#cancel-button{
+width: 45%;
+height: 30%;
+
+}
+
+#inputdialog{
+width: 100%;
 }

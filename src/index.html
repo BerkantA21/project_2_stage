@@ -30,7 +30,8 @@
         <dialog>
             <p class="dialog-text">Voer een nieuwe tekst in</p>
             <input id ="inputdialog" type="text" >
-            <button id="ok-button">OK</button>
+            <button id="ok-button" class="btn btn-success" >OK</button>
+            <button id="cancel-button" class="btn btn-danger">Annuleren</button>
         </dialog>
         <div>
             <button class="delete">Vorm verwijder</button>
@@ -518,6 +519,13 @@ const saveName = () => {
     // Close the dialog
     dialog.close();
 };
+
+const cancel = () => {
+    dialog.close();
+};
+
+//voeg een event listener toe aan de cancel button in de dialog
+dialog.querySelector('#cancel-button').addEventListener('click', cancel);
 
 dialog.querySelector('#ok-button').addEventListener('click', saveName);
 
